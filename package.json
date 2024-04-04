@@ -37,7 +37,11 @@
   },
   "type": "module",
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
     "@tauri-apps/api": "^1.5.3",
-    "dexie": "^4.0.1"
+    "dexie": "^4.0.1",
+    "flowbite": "^2.3.0",
+    "flowbite-svelte": "^0.44.24",
+    "tailwind-merge": "^2.2.2"
   }
 }

@@ -18,6 +18,3 @@
         {/if}
     {/if}
 </body>
-
-<style lang="postcss">
-</style>
