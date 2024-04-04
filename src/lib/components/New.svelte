@@ -11,9 +11,6 @@
             });
 
             status = `Congregation: ${congregation_name} successfully added. Got id ${id}`;
-
-            congregation_name = "";
-            n_carts = 1;
         } catch (error) {
             status = `Failed to add ${congregation_name}: ${error}`;
         }
