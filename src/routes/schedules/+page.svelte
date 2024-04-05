@@ -13,7 +13,7 @@
 		TableBodyCell,
 		TableBodyRow
 	} from 'flowbite-svelte';
-	import { SearchSolid } from 'flowbite-svelte-icons';
+	import { SearchSolid, ExclamationCircleOutline } from 'flowbite-svelte-icons';
 	import Timepicker from '$lib/components/Timepicker.svelte';
 	import Datepicker from '$lib/components/Datepicker.svelte';
 	import { db } from '$lib/db';
@@ -21,13 +21,15 @@
 	import { liveQuery } from 'dexie';
 
 	let createModal = false;
+	let deleteModal = false;
 	let selected_weekday: string,
 		start_time: string,
 		end_time: string,
 		n_carts: number,
 		location: string,
 		n_brothers: number,
-		n_sisters: number;
+		n_sisters: number,
+		deletedId: number;
 	let weekdays = [
 		{ value: 'monday', name: 'Monday' },
 		{ value: 'tuesday', name: 'Tuesday' },
@@ -65,6 +67,15 @@
 			}, 8000);
 		}
 	}
+
+	async function deleteSchedule() {
+		await db.schedule.delete(deletedId);
+		$toastMessageSuccess = 'Schedule deleted successfully';
+		$toastSuccess = true;
+		setTimeout(() => {
+			$toastSuccess = false;
+		}, 8000);
+	}
 </script>
 
 <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto">
@@ -87,7 +98,14 @@
 						<Card class="mt-2 mb-2 max-w-full">
 							<div class="flex flex-row justify-between">
 								<Button color="blue">Edit</Button>
-								<Button color="red">Delete</Button>
+								<Button
+									color="red"
+									id="delete-{schedule.id}"
+									on:click={() => {
+										deleteModal = true;
+										deletedId = schedule.id;
+									}}>Delete</Button
+								>
 							</div>
 							<Table striped={true}>
 								<TableBody>
@@ -165,6 +183,17 @@
 		<div class="text-center">
 			<Button color="red" class="me-2" on:click={createSchedule}>Create</Button>
 			<Button color="alternative">Cancel</Button>
+		</div>
+	</Modal>
+
+	<Modal bind:open={deleteModal} size="xs" autoclose>
+		<div class="text-center">
+			<ExclamationCircleOutline class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" />
+			<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+				Are you sure you want to delete this schedule?
+			</h3>
+			<Button color="red" class="me-2" on:click={deleteSchedule}>Yes, I'm sure</Button>
+			<Button color="alternative">No, cancel</Button>
 		</div>
 	</Modal>
 </div>
