@@ -67,7 +67,7 @@
 </script>
 
 {#if $congregation}
-	<div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+	<div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-5/6 lg:py-0">
 		<Card size="lg">
 			<h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
 				Congregation Settings

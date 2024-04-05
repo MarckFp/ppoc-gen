@@ -17,7 +17,7 @@
 	};
 </script>
 
-<div class="flex items-center flex-col p-5">
+<div class="flex items-center flex-col">
 	{#if $congregation}
 		<Card class="text-center m-5" size="xl" padding="xl">
 			<h5 class="mb-2 text-3xl font-bold text-gray-900 dark:text-white">

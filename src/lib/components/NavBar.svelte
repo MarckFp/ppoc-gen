@@ -10,6 +10,8 @@
 		Button,
 		DarkMode
 	} from 'flowbite-svelte';
+
+	import { UserSolid, CalendarMonthSolid, BellRingSolid, AdjustmentsVerticalSolid, EditSolid } from 'flowbite-svelte-icons'
 </script>
 
 <Navbar let:NavContainer>
@@ -30,11 +32,11 @@
 			<NavHamburger />
 		</div>
 		<NavUl class="order-1">
-			<NavLi href="/publishers">Publishers</NavLi>
-			<NavLi href="/schedules">Schedules</NavLi>
-			<NavLi href="/turns">Turns</NavLi>
-			<NavLi href="/incidences">Incidences</NavLi>
-			<NavLi href="/settings">Settings</NavLi>
+			<NavLi href="/publishers">Publishers <UserSolid /></NavLi>
+			<NavLi href="/schedules">Schedules <CalendarMonthSolid /></NavLi>
+			<NavLi href="/turns">Turns <EditSolid /></NavLi>
+			<NavLi href="/incidences">Incidences <BellRingSolid /></NavLi>
+			<NavLi href="/settings">Settings <AdjustmentsVerticalSolid /></NavLi>
 		</NavUl>
 	</NavContainer>
 </Navbar>

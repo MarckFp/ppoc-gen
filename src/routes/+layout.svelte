@@ -24,7 +24,7 @@
 	let congregation = liveQuery(() => db.congregation.toArray());
 </script>
 
-<main class="bg-white dark:bg-gray-800">
+<main class="bg-white dark:bg-gray-800 h-screen">
 	{#if $congregation}
 		{#if !$congregation[0]}
 			<New />
