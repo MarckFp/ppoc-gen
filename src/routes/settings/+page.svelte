@@ -5,7 +5,7 @@
     import { db } from "$lib/db";
     import { liveQuery } from "dexie";
 	import { goto, invalidateAll } from '$app/navigation';
-    import { toastMessage, toastSuccess} from '$lib/store';
+    import { toastMessageSuccess, toastSuccess} from '$lib/store';
 
     let popupModal = false;
 
@@ -27,9 +27,11 @@
 
     function updateCongregation(){
         db.congregation.update($congregation[0].id, $congregation[0]);
-        $toastMessage = 'Congregation updated correctly';
-        $toastSuccess = 'true';
-        console.log($toastMessage)
+        $toastMessageSuccess = 'Congregation updated correctly';
+        $toastSuccess = true;
+        setTimeout(() => {
+            $toastSuccess = false;
+        }, 6000);
     }
 </script>
 

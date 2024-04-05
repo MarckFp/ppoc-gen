@@ -1,5 +1,5 @@
 <script>
-	import { Navbar, NavBrand, NavLi, NavUl, NavHamburger, Dropdown, DropdownItem, Button } from 'flowbite-svelte';
+	import { Navbar, NavBrand, NavLi, NavUl, NavHamburger, Dropdown, DropdownItem, Button, DarkMode } from 'flowbite-svelte';
 </script>
 
 <Navbar let:NavContainer>
@@ -21,6 +21,7 @@
 					Spanish
 				</DropdownItem>
 			</Dropdown>
+			<DarkMode class="text-primary-500 dark:text-primary-600 border dark:border-gray-800 ml-2" />
 			<NavHamburger />
 		</div>
 		<NavUl class="order-1">

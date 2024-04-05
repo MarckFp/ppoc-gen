@@ -5,49 +5,50 @@
 	import NavBar from '$lib/components/NavBar.svelte';
 	import New from '$lib/components/New.svelte';
 	import { Toast } from 'flowbite-svelte';
+	import { slide } from 'svelte/transition';
 	import {
 		CheckCircleSolid,
 		ExclamationCircleSolid,
 		FireOutline,
 		CloseCircleSolid
 	} from 'flowbite-svelte-icons';
+	import { toastMessageAlert, toastMessageWarning, toastMessageSuccess, toastSuccess, toastWarning, toastAlert } from '$lib/store';
 
-    let success: boolean, error: boolean, warning: boolean;
 	let congregation = liveQuery(() => db.congregation.toArray());
 
 </script>
 
-<body>
+<body class="bg-white dark:bg-gray-800">
 	{#if $congregation}
 		{#if !$congregation[0]}
 			<New />
 		{:else}
 			<NavBar />
-			{#if success}
-				<Toast color="green" id="toast-success" position="bottom-right">
+			{#if $toastSuccess}
+				<Toast color="green" id="toast-success" position="bottom-right" transition={slide}>
 					<svelte:fragment slot="icon">
 						<CheckCircleSolid class="w-5 h-5" />
 						<span class="sr-only">Check icon</span>
 					</svelte:fragment>
-					Item moved successfully.
+					{$toastMessageSuccess}
 				</Toast>
 			{/if}
-			{#if error}
-				<Toast color="red" id="toast-error" position="bottom-right">
+			{#if $toastAlert}
+				<Toast color="red" id="toast-error" position="bottom-right" transition={slide}>
 					<svelte:fragment slot="icon">
 						<CloseCircleSolid class="w-5 h-5" />
 						<span class="sr-only">Error icon</span>
 					</svelte:fragment>
-					Item has been deleted.
+					{$toastMessageAlert}
 				</Toast>
 			{/if}
-			{#if warning}
-				<Toast color="orange" id="toast-warning" position="bottom-right">
+			{#if $toastWarning}
+				<Toast color="orange" id="toast-warning" position="bottom-right" transition={slide}>
 					<svelte:fragment slot="icon">
 						<ExclamationCircleSolid class="w-5 h-5" />
 						<span class="sr-only">Warning icon</span>
 					</svelte:fragment>
-					Improve password difficulty.
+					{$toastMessageWarning}
 				</Toast>
 			{/if}
 			<slot />
