@@ -61,7 +61,13 @@
 			setTimeout(() => {
 				$toastSuccess = false;
 			}, 8000);
-
+		} catch (error) {
+			$toastMessageAlert = `Failed to create schedule: ${error}`;
+			$toastAlert = true;
+			setTimeout(() => {
+				$toastAlert = false;
+			}, 8000);
+		} finally {
 			selected_weekday = 'monday';
 			start_time = '00:00';
 			end_time = '00:00';
@@ -69,12 +75,6 @@
 			location = '';
 			n_brothers = 1;
 			n_sisters = 1;
-		} catch (error) {
-			$toastMessageAlert = `Failed to create schedule: ${error}`;
-			$toastAlert = true;
-			setTimeout(() => {
-				$toastAlert = false;
-			}, 8000);
 		}
 	}
 
@@ -121,6 +121,7 @@
 				<Button class="ml-2"><SearchSolid /></Button>
 			</div>
 			<Button
+				color="blue"
 				on:click={() => {
 					createModal = true;
 					selected_weekday = 'monday';
