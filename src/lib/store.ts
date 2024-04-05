@@ -1,4 +1,4 @@
-import { writable } from "svelte/store";
+import { writable } from 'svelte/store';
 
 export const toastMessageAlert = writable('Default message');
 export const toastMessageWarning = writable('Default message');

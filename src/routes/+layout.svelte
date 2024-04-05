@@ -12,13 +12,19 @@
 		FireOutline,
 		CloseCircleSolid
 	} from 'flowbite-svelte-icons';
-	import { toastMessageAlert, toastMessageWarning, toastMessageSuccess, toastSuccess, toastWarning, toastAlert } from '$lib/store';
+	import {
+		toastMessageAlert,
+		toastMessageWarning,
+		toastMessageSuccess,
+		toastSuccess,
+		toastWarning,
+		toastAlert
+	} from '$lib/store';
 
 	let congregation = liveQuery(() => db.congregation.toArray());
-
 </script>
 
-<body class="bg-white dark:bg-gray-800">
+<main class="bg-white dark:bg-gray-800">
 	{#if $congregation}
 		{#if !$congregation[0]}
 			<New />
@@ -54,4 +60,4 @@
 			<slot />
 		{/if}
 	{/if}
-</body>
+</main>
