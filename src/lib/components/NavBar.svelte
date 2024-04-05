@@ -11,7 +11,13 @@
 		DarkMode
 	} from 'flowbite-svelte';
 
-	import { UserSolid, CalendarMonthSolid, BellRingSolid, AdjustmentsVerticalSolid, EditSolid } from 'flowbite-svelte-icons'
+	import {
+		UserSolid,
+		CalendarMonthSolid,
+		BellRingSolid,
+		AdjustmentsVerticalSolid,
+		EditSolid
+	} from 'flowbite-svelte-icons';
 </script>
 
 <Navbar let:NavContainer>
@@ -32,11 +38,21 @@
 			<NavHamburger />
 		</div>
 		<NavUl class="order-1">
-			<NavLi href="/publishers">Publishers <UserSolid /></NavLi>
-			<NavLi href="/schedules">Schedules <CalendarMonthSolid /></NavLi>
-			<NavLi href="/turns">Turns <EditSolid /></NavLi>
-			<NavLi href="/incidences">Incidences <BellRingSolid /></NavLi>
-			<NavLi href="/settings">Settings <AdjustmentsVerticalSolid /></NavLi>
+			<NavLi href="/publishers">
+				<div class="flex flex-row">
+					Publishers <UserSolid color="red" />
+				</div>
+			</NavLi>
+			<NavLi href="/schedules"
+				><div class="flex flex-row">Schedules <CalendarMonthSolid color="red" /></div></NavLi
+			>
+			<NavLi href="/turns"><div class="flex flex-row">Turns <EditSolid color="red" /></div></NavLi>
+			<NavLi href="/incidences"
+				><div class="flex flex-row">Incidences <BellRingSolid color="red" /></div></NavLi
+			>
+			<NavLi href="/settings"
+				><div class="flex flex-row">Settings <AdjustmentsVerticalSolid color="red" /></div></NavLi
+			>
 		</NavUl>
 	</NavContainer>
 </Navbar>

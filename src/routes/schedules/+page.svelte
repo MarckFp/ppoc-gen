@@ -1,7 +1,5 @@
 <script lang="ts">
 	import {
-		Pagination,
-		PaginationItem,
 		Card,
 		Button,
 		Modal,
@@ -22,14 +20,15 @@
 
 	let createModal = false;
 	let deleteModal = false;
-	let selected_weekday: string,
-		start_time: string,
-		end_time: string,
-		n_carts: number,
-		location: string,
-		n_brothers: number,
-		n_sisters: number,
-		deletedId: number;
+	let edit = false;
+	let selected_weekday = 'monday';
+	let start_time = '00:00';
+	let end_time = '00:00';
+	let n_carts = 1;
+	let location = '';
+	let n_brothers = 1;
+	let n_sisters = 1;
+	let selectedId: number;
 	let weekdays = [
 		{ value: 'monday', name: 'Monday' },
 		{ value: 'tuesday', name: 'Tuesday' },
@@ -43,6 +42,9 @@
 	let schedules = liveQuery(() => db.schedule.toArray());
 
 	async function createSchedule() {
+		if (edit) {
+			return editSchedule();
+		}
 		try {
 			const id = await db.schedule.add({
 				weekday: selected_weekday,
@@ -59,6 +61,14 @@
 			setTimeout(() => {
 				$toastSuccess = false;
 			}, 8000);
+
+			selected_weekday = 'monday';
+			start_time = '00:00';
+			end_time = '00:00';
+			n_carts = 1;
+			location = '';
+			n_brothers = 1;
+			n_sisters = 1;
 		} catch (error) {
 			$toastMessageAlert = `Failed to create schedule: ${error}`;
 			$toastAlert = true;
@@ -69,12 +79,37 @@
 	}
 
 	async function deleteSchedule() {
-		await db.schedule.delete(deletedId);
+		await db.schedule.delete(selectedId);
 		$toastMessageSuccess = 'Schedule deleted successfully';
 		$toastSuccess = true;
 		setTimeout(() => {
 			$toastSuccess = false;
 		}, 8000);
+	}
+
+	function editSchedule() {
+		db.schedule.update(selectedId, {
+			weekday: selected_weekday,
+			start_time: start_time,
+			end_time: end_time,
+			n_carts: n_carts,
+			location: location,
+			n_brothers: n_brothers,
+			n_sisters: n_sisters
+		});
+		$toastMessageSuccess = 'Schedule modified successfully';
+		$toastSuccess = true;
+		setTimeout(() => {
+			$toastSuccess = false;
+		}, 8000);
+		selected_weekday = 'monday';
+		start_time = '00:00';
+		end_time = '00:00';
+		n_carts = 1;
+		location = '';
+		n_brothers = 1;
+		n_sisters = 1;
+		edit = false;
 	}
 </script>
 
@@ -85,7 +120,19 @@
 				<Datepicker />
 				<Button class="ml-2"><SearchSolid /></Button>
 			</div>
-			<Button on:click={() => (createModal = true)}>Create new Schedule</Button>
+			<Button
+				on:click={() => {
+					createModal = true;
+					selected_weekday = 'monday';
+					start_time = '00:00';
+					end_time = '00:00';
+					n_carts = 1;
+					location = '';
+					n_brothers = 1;
+					n_sisters = 1;
+					edit = false;
+				}}>Create new Schedule</Button
+			>
 		</div>
 		{#if $schedules}
 			{#if $schedules.length == 0}
@@ -97,13 +144,28 @@
 					{#each $schedules as schedule}
 						<Card class="mt-2 mb-2 max-w-full">
 							<div class="flex flex-row justify-between">
-								<Button color="blue">Edit</Button>
+								<Button
+									color="blue"
+									id="edit-{schedule.id}"
+									on:click={() => {
+										createModal = true;
+										selectedId = schedule.id;
+										edit = true;
+										selected_weekday = schedule.weekday;
+										n_brothers = schedule.n_brothers;
+										n_sisters = schedule.n_sisters;
+										n_carts = schedule.n_carts;
+										location = schedule.location;
+										start_time = schedule.start_time;
+										end_time = schedule.end_time;
+									}}>Edit</Button
+								>
 								<Button
 									color="red"
 									id="delete-{schedule.id}"
 									on:click={() => {
 										deleteModal = true;
-										deletedId = schedule.id;
+										selectedId = schedule.id;
 									}}>Delete</Button
 								>
 							</div>
@@ -149,7 +211,7 @@
 		{/if}
 	</Card>
 
-	<Modal bind:open={createModal} size="xs" autoclose>
+	<Modal bind:open={createModal} size="xs" autoclose outsideclose>
 		<Label>
 			Weekday:
 			<Select class="mt-2" items={weekdays} bind:value={selected_weekday} />
@@ -181,12 +243,18 @@
 			</div>
 		</div>
 		<div class="text-center">
-			<Button color="red" class="me-2" on:click={createSchedule}>Create</Button>
+			<Button color="red" class="me-2" on:click={createSchedule}>
+				{#if edit}
+					Edit
+				{:else}
+					Create
+				{/if}
+			</Button>
 			<Button color="alternative">Cancel</Button>
 		</div>
 	</Modal>
 
-	<Modal bind:open={deleteModal} size="xs" autoclose>
+	<Modal bind:open={deleteModal} size="xs" autoclose outsideclose>
 		<div class="text-center">
 			<ExclamationCircleOutline class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" />
 			<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
