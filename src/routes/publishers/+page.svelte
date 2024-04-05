@@ -37,18 +37,23 @@
 		(user) => user.firstname.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
 	);
 
-	//TODO: counter should be the greatest counter value if it does not exist then 0
 	async function createPublisher() {
 		if (edit) {
 			return editUser();
 		}
 		try {
-			const id = await db.user.add({
+			const maxUser = await db.user.orderBy('counter').last();
+			let maxCounter = 0;
+			if (maxUser?.counter !== undefined) {
+				maxCounter = maxUser?.counter;
+			}
+
+			await db.user.add({
 				firstname: firstname,
 				lastname: lastname,
 				gender: gender,
 				weight: weight,
-				counter: 0
+				counter: maxCounter
 			});
 
 			$toastMessageSuccess = `Publisher ${firstname + ' ' + lastname} created successfully`;
@@ -190,7 +195,7 @@
 		</Label>
 		<Label>
 			Weight:
-			<Input type="number" id="n_carts" min="1" bind:value={weight} required />
+			<Input type="number" id="n_carts" min="1" max="5" step=".1" bind:value={weight} required />
 		</Label>
 		<div class="text-center">
 			<Button color="red" class="me-2" on:click={createPublisher}>
