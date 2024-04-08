@@ -33,6 +33,7 @@
 		{ value: 'male', name: 'Male' },
 		{ value: 'female', name: 'Female' }
 	];
+	let availabilities: boolean[] = [];
 	let users = liveQuery(() => db.user.toArray());
 	let schedules = liveQuery(() => db.schedule.toArray());
 
@@ -52,12 +53,21 @@
 				maxCounter = maxUser?.counter;
 			}
 
-			await db.user.add({
+			const id = await db.user.add({
 				firstname: firstname,
 				lastname: lastname,
 				gender: gender,
 				weight: weight,
 				counter: maxCounter
+			});
+
+			availabilities.forEach(async (availability, availability_id) => {
+				if (availability) {
+					await db.availability.add({
+						user_id: id,
+						schedule_id: availability_id
+					});
+				}
 			});
 
 			$toastMessageSuccess = `Publisher ${firstname + ' ' + lastname} created successfully`;
@@ -76,6 +86,7 @@
 			lastname = '';
 			gender = 'male';
 			weight = 1;
+			availabilities = [];
 		}
 	}
 
@@ -86,6 +97,21 @@
 			gender: gender,
 			weight: weight
 		});
+
+		const availability_list = await db.availability.where({user_id: selectedId}).toArray();
+		availability_list.forEach(async (availability) => {
+			await db.availability.delete(availability.id);
+		});
+
+		availabilities.forEach(async (availability, availability_id) => {
+			if (availability) {
+				await db.availability.add({
+					user_id: selectedId,
+					schedule_id: availability_id
+				});
+			}
+		});
+
 		$toastMessageSuccess = 'User modified successfully';
 		$toastSuccess = true;
 		setTimeout(() => {
@@ -95,16 +121,34 @@
 		lastname = '';
 		gender = 'male';
 		weight = 1;
+		availabilities = [];
 		edit = false;
 	}
 
 	async function deleteUser() {
 		await db.user.delete(selectedId);
+		const availability_list = await db.availability.where({user_id: selectedId}).toArray();
+		availability_list.forEach(async (availability) => {
+			await db.availability.delete(availability.id);
+		});
+
 		$toastMessageSuccess = 'Publisher deleted successfully';
 		$toastSuccess = true;
 		setTimeout(() => {
 			$toastSuccess = false;
 		}, 8000);
+	}
+
+	async function retrieveAvailabilities(user_id: number) {
+		availabilities = [];
+		const availability_list = await db.availability.where({user_id: user_id}).toArray();
+		if (availability_list.length == 0) {
+			availabilities = [];
+			return;
+		}
+		availability_list.forEach((availability) => {
+			availabilities[availability.schedule_id] = true;
+		});
 	}
 </script>
 
@@ -119,6 +163,7 @@
 				firstname = '';
 				lastname = '';
 				gender = 'male';
+				availabilities = [];
 				weight = 1;
 			}}>Create new Publisher</Button
 		>
@@ -164,6 +209,7 @@
 											lastname = user.lastname;
 											gender = user.gender;
 											weight = user.weight;
+											retrieveAvailabilities(user.id);
 											edit = true;
 										}}>Edit</Button
 									>
@@ -210,7 +256,7 @@
 				{:else}
 					<ul class="items-center grid grid-cols-1 w-full rounded-lg">
 						{#each $schedules as schedule}
-							<li class="w-full border"><Checkbox class="p-3"><Badge color="red" class="m-1">{schedule.weekday.charAt(0).toUpperCase() + schedule.weekday.slice(1)}</Badge><Badge color="indigo">{schedule.start_time + '-' + schedule.end_time}</Badge><Badge class="m-1" color="pink">{schedule.location}</Badge></Checkbox></li>
+							<li class="w-full border"><Checkbox class="p-3" bind:checked={availabilities[schedule.id]}><Badge color="red" class="m-1">{schedule.weekday.charAt(0).toUpperCase() + schedule.weekday.slice(1)}</Badge><Badge color="indigo">{schedule.start_time + '-' + schedule.end_time}</Badge><Badge class="m-1" color="pink">{schedule.location}</Badge></Checkbox></li>
 						{/each}
 					</ul>
 				{/if}
