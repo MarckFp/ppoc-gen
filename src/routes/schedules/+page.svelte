@@ -14,9 +14,8 @@
 		TableSearch,
 		TableHead
 	} from 'flowbite-svelte';
-	import { SearchSolid, ExclamationCircleOutline } from 'flowbite-svelte-icons';
+	import { ExclamationCircleOutline } from 'flowbite-svelte-icons';
 	import Timepicker from '$lib/components/Timepicker.svelte';
-	import Datepicker from '$lib/components/Datepicker.svelte';
 	import { db } from '$lib/db';
 	import { toastMessageSuccess, toastSuccess, toastMessageAlert, toastAlert } from '$lib/store';
 	import { liveQuery } from 'dexie';

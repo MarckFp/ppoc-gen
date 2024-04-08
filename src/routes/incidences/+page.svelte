@@ -13,11 +13,10 @@
 		TableHead,
 		TableHeadCell
 	} from 'flowbite-svelte';
-	import { SearchSolid, ExclamationCircleOutline } from 'flowbite-svelte-icons';
+	import { ExclamationCircleOutline } from 'flowbite-svelte-icons';
 	import { db } from '$lib/db';
 	import { toastMessageSuccess, toastSuccess, toastMessageAlert, toastAlert } from '$lib/store';
 	import { liveQuery } from 'dexie';
-	import { onMount } from 'svelte';
 
 	let createModal = false;
 	let deleteModal = false;
@@ -31,8 +30,8 @@
 		month,
 		day,
 		year;
-	let start_date: string;
-	let end_date: string;
+	let start_date = new Date().toISOString().split('T')[0];
+	let end_date = new Date().toISOString().split('T')[0];
 
 	let incidences = liveQuery(() => db.incidence.toArray());
 	let users = db.user.toArray().then(() => {
@@ -42,15 +41,6 @@
 		});
 	});
 
-	onMount(() => {
-		(month = '' + (now.getMonth() + 1)), (day = '' + now.getDate()), (year = now.getFullYear());
-
-		if (month.length < 2) month = '0' + month;
-		if (day.length < 2) day = '0' + day;
-
-		start_date = [year, month, day].join('-');
-		end_date = [year, month, day].join('-');
-	});
 
 	$: filteredItems = $incidences?.filter(
 		(incidence) => incidence.start_date.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
@@ -87,7 +77,8 @@
 			}, 8000);
 		} finally {
 			user_id = 0;
-			currentDate();
+			start_date = new Date().toISOString().split('T')[0];
+			end_date = new Date().toISOString().split('T')[0];
 		}
 	}
 
@@ -103,7 +94,8 @@
 			$toastSuccess = false;
 		}, 8000);
 		user_id = 0;
-		currentDate();
+		start_date = new Date().toISOString().split('T')[0];
+		end_date = new Date().toISOString().split('T')[0];
 		edit = false;
 	}
 
@@ -114,16 +106,6 @@
 		setTimeout(() => {
 			$toastSuccess = false;
 		}, 8000);
-	}
-
-	function currentDate() {
-		(month = '' + (now.getMonth() + 1)), (day = '' + now.getDate()), (year = now.getFullYear());
-
-		if (month.length < 2) month = '0' + month;
-		if (day.length < 2) day = '0' + day;
-
-		start_date = [year, month, day].join('-');
-		end_date = [year, month, day].join('-');
 	}
 </script>
 
@@ -136,7 +118,8 @@
 				createModal = true;
 				edit = false;
 				user_id = 0;
-				currentDate();
+				start_date = new Date().toISOString().split('T')[0];
+				end_date = new Date().toISOString().split('T')[0];
 			}}>Create new Incidence</Button
 		>
 		{#if $incidences}
