@@ -9,7 +9,10 @@
 		Table,
 		TableBody,
 		TableBodyCell,
-		TableBodyRow
+		TableBodyRow,
+		TableHeadCell,
+		TableSearch,
+		TableHead
 	} from 'flowbite-svelte';
 	import { SearchSolid, ExclamationCircleOutline } from 'flowbite-svelte-icons';
 	import Timepicker from '$lib/components/Timepicker.svelte';
@@ -21,6 +24,7 @@
 	let createModal = false;
 	let deleteModal = false;
 	let edit = false;
+	let searchTerm = '';
 	let selected_weekday = 'monday';
 	let start_time = '00:00';
 	let end_time = '00:00';
@@ -40,6 +44,9 @@
 	];
 
 	let schedules = liveQuery(() => db.schedule.toArray());
+	$: filteredItems = $schedules?.filter(
+		(schedule) => schedule.weekday.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
+	);
 
 	async function createSchedule() {
 		if (edit) {
@@ -115,99 +122,90 @@
 
 <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto">
 	<Card size="xl">
-		<div class="flex flex-row justify-between">
-			<div class="flex flex-row">
-				<Datepicker />
-				<Button class="ml-2"><SearchSolid /></Button>
-			</div>
-			<Button
-				color="blue"
-				on:click={() => {
-					createModal = true;
-					selected_weekday = 'monday';
-					start_time = '00:00';
-					end_time = '00:00';
-					n_carts = 1;
-					location = '';
-					n_brothers = 1;
-					n_sisters = 1;
-					edit = false;
-				}}>Create new Schedule</Button
-			>
-		</div>
+		<Button
+			color="blue"
+			class="mt-1 mb-4"
+			on:click={() => {
+				createModal = true;
+				selected_weekday = 'monday';
+				start_time = '00:00';
+				end_time = '00:00';
+				n_carts = 1;
+				location = '';
+				n_brothers = 1;
+				n_sisters = 1;
+				edit = false;
+			}}>Create new Schedule</Button
+		>
 		{#if $schedules}
 			{#if $schedules.length == 0}
 				<Card size="xl" class="mt-5">
 					<h1 class="text-center">No schedules yet</h1>
 				</Card>
 			{:else}
-				<Card size="xl" class="mt-5 grid grid-cols-2 gap-3">
-					{#each $schedules as schedule}
-						<Card class="mt-2 mb-2 max-w-full">
-							<div class="flex flex-row justify-between">
-								<Button
-									color="blue"
-									id="edit-{schedule.id}"
-									on:click={() => {
-										createModal = true;
-										selectedId = schedule.id;
-										edit = true;
-										selected_weekday = schedule.weekday;
-										n_brothers = schedule.n_brothers;
-										n_sisters = schedule.n_sisters;
-										n_carts = schedule.n_carts;
-										location = schedule.location;
-										start_time = schedule.start_time;
-										end_time = schedule.end_time;
-									}}>Edit</Button
+				<TableSearch
+					placeholder="Search by Weekday"
+					striped={true}
+					hoverable={true}
+					bind:inputValue={searchTerm}
+				>
+					<TableHead>
+						<TableHeadCell>WeekDay</TableHeadCell>
+						<TableHeadCell>Start Time</TableHeadCell>
+						<TableHeadCell>End Time</TableHeadCell>
+						<TableHeadCell>Location</TableHeadCell>
+						<TableHeadCell>Nº of Carts</TableHeadCell>
+						<TableHeadCell>Nº of Brothers</TableHeadCell>
+						<TableHeadCell>Nº of Sisters</TableHeadCell>
+						<TableHeadCell>
+							<span class="sr-only">Actions</span>
+						</TableHeadCell>
+					</TableHead>
+					<TableBody>
+						{#each filteredItems as schedule}
+							<TableBodyRow>
+								<TableBodyCell
+									>{schedule.weekday.charAt(0).toUpperCase() +
+										schedule.weekday.slice(1)}</TableBodyCell
 								>
-								<Button
-									color="red"
-									id="delete-{schedule.id}"
-									on:click={() => {
-										deleteModal = true;
-										selectedId = schedule.id;
-									}}>Delete</Button
-								>
-							</div>
-							<Table striped={true}>
-								<TableBody>
-									<TableBodyRow>
-										<TableBodyCell>Weekday</TableBodyCell>
-										<TableBodyCell
-											>{schedule.weekday.charAt(0).toUpperCase() +
-												schedule.weekday.slice(1)}</TableBodyCell
-										>
-									</TableBodyRow>
-									<TableBodyRow>
-										<TableBodyCell>Start Time</TableBodyCell>
-										<TableBodyCell>{schedule.start_time}</TableBodyCell>
-									</TableBodyRow>
-									<TableBodyRow>
-										<TableBodyCell>End Time</TableBodyCell>
-										<TableBodyCell>{schedule.end_time}</TableBodyCell>
-									</TableBodyRow>
-									<TableBodyRow>
-										<TableBodyCell>Location</TableBodyCell>
-										<TableBodyCell>{schedule.location}</TableBodyCell>
-									</TableBodyRow>
-									<TableBodyRow>
-										<TableBodyCell>Nº Carts</TableBodyCell>
-										<TableBodyCell>{schedule.n_carts}</TableBodyCell>
-									</TableBodyRow>
-									<TableBodyRow>
-										<TableBodyCell>Nº Brothers</TableBodyCell>
-										<TableBodyCell>{schedule.n_brothers}</TableBodyCell>
-									</TableBodyRow>
-									<TableBodyRow>
-										<TableBodyCell>Nº Sisters</TableBodyCell>
-										<TableBodyCell>{schedule.n_sisters}</TableBodyCell>
-									</TableBodyRow>
-								</TableBody>
-							</Table>
-						</Card>
-					{/each}
-				</Card>
+								<TableBodyCell>{schedule.start_time}</TableBodyCell>
+								<TableBodyCell>{schedule.end_time}</TableBodyCell>
+								<TableBodyCell>{schedule.location}</TableBodyCell>
+								<TableBodyCell>{schedule.n_carts}</TableBodyCell>
+								<TableBodyCell>{schedule.n_brothers}</TableBodyCell>
+								<TableBodyCell>{schedule.n_sisters}</TableBodyCell>
+								<TableBodyCell>
+									<Button
+										color="blue"
+										class="mr-2"
+										id="edit-{schedule.id}"
+										on:click={() => {
+											createModal = true;
+											selectedId = schedule.id;
+											edit = true;
+											selected_weekday = schedule.weekday;
+											n_brothers = schedule.n_brothers;
+											n_sisters = schedule.n_sisters;
+											n_carts = schedule.n_carts;
+											location = schedule.location;
+											start_time = schedule.start_time;
+											end_time = schedule.end_time;
+										}}>Edit</Button
+									>
+									<Button
+										color="red"
+										class="ml-2"
+										id="delete-{schedule.id}"
+										on:click={() => {
+											deleteModal = true;
+											selectedId = schedule.id;
+										}}>Delete</Button
+									>
+								</TableBodyCell>
+							</TableBodyRow>
+						{/each}
+					</TableBody>
+				</TableSearch>
 			{/if}
 		{/if}
 	</Card>

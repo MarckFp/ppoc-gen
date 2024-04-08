@@ -111,6 +111,7 @@
 			class="mt-1 mb-4"
 			on:click={() => {
 				createModal = true;
+				edit = false;
 				firstname = '';
 				lastname = '';
 				gender = 'male';
