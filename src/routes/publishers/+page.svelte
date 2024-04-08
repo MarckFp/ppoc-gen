@@ -11,7 +11,9 @@
 		TableBodyRow,
 		TableBodyCell,
 		TableHead,
-		TableHeadCell
+		TableHeadCell,
+		Checkbox,
+		Badge
 	} from 'flowbite-svelte';
 	import { SearchSolid, ExclamationCircleOutline } from 'flowbite-svelte-icons';
 	import { db } from '$lib/db';
@@ -32,11 +34,13 @@
 		{ value: 'female', name: 'Female' }
 	];
 	let users = liveQuery(() => db.user.toArray());
+	let schedules = liveQuery(() => db.schedule.toArray());
 
 	$: filteredItems = $users?.filter(
 		(user) => user.firstname.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
 	);
 
+	//TODO: Rework weight with range or radio and change name to importance so the UX is more legible
 	async function createPublisher() {
 		if (edit) {
 			return editUser();
@@ -125,7 +129,7 @@
 				</Card>
 			{:else}
 				<TableSearch
-					placeholder="Search by publisher name"
+					placeholder="Search by Publisher name"
 					striped={true}
 					hoverable={true}
 					bind:inputValue={searchTerm}
@@ -197,6 +201,20 @@
 		<Label>
 			Weight:
 			<Input type="number" id="n_carts" min="1" max="5" step=".1" bind:value={weight} required />
+		</Label>
+		<Label>
+			Availability:
+			{#if $schedules}
+				{#if $schedules.length == 0}
+					<p class="text-center">No schedules created yet</p>
+				{:else}
+					<ul class="items-center grid grid-cols-1 w-full rounded-lg">
+						{#each $schedules as schedule}
+							<li class="w-full border"><Checkbox class="p-3"><Badge color="red" class="m-1">{schedule.weekday.charAt(0).toUpperCase() + schedule.weekday.slice(1)}</Badge><Badge color="indigo">{schedule.start_time + '-' + schedule.end_time}</Badge><Badge class="m-1" color="pink">{schedule.location}</Badge></Checkbox></li>
+						{/each}
+					</ul>
+				{/if}
+			{/if}
 		</Label>
 		<div class="text-center">
 			<Button color="red" class="me-2" on:click={createPublisher}>

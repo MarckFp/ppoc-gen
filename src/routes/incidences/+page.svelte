@@ -56,6 +56,7 @@
 		(incidence) => incidence.start_date.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
 	);
 
+	//TODO: Handle exceptions when start date is after end date
 	async function createIncidence() {
 		if (edit) {
 			return editIncidence();
@@ -145,7 +146,7 @@
 				</Card>
 			{:else}
 				<TableSearch
-					placeholder="Search by start date"
+					placeholder="Search by Start date"
 					striped={true}
 					hoverable={true}
 					bind:inputValue={searchTerm}

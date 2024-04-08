@@ -1,7 +1,7 @@
 import Dexie, { type Table } from 'dexie';
 import type { Congregation } from './models/congregation';
 import type { User } from './models/user';
-import type { Availability } from './models/avaialbility';
+import type { Availability } from './models/availability';
 import type { Incidence } from './models/incidence';
 import type { Schedule } from './models/schedule';
 import type { Turn } from './models/turn';
