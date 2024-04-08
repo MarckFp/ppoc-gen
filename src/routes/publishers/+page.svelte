@@ -31,8 +31,8 @@
 	let gender = 'male';
 	let weight = 1;
 	let genders = [
-		{ value: 'male', name: 'Male' },
-		{ value: 'female', name: 'Female' }
+		{ value: 'male', name: $_('general.male') },
+		{ value: 'female', name: $_('general.female') }
 	];
 	let availabilities: boolean[] = [];
 	let users = liveQuery(() => db.user.toArray());
@@ -71,13 +71,13 @@
 				}
 			});
 
-			$toastMessageSuccess = `Publisher ${firstname + ' ' + lastname} created successfully`;
+			$toastMessageSuccess = $_('publishers.pub-create');
 			$toastSuccess = true;
 			setTimeout(() => {
 				$toastSuccess = false;
 			}, 8000);
 		} catch (error) {
-			$toastMessageAlert = `Failed to create publisher: ${error}`;
+			$toastMessageAlert = $_('publishers.pub-create-failed') + error;
 			$toastAlert = true;
 			setTimeout(() => {
 				$toastAlert = false;
@@ -113,7 +113,7 @@
 			}
 		});
 
-		$toastMessageSuccess = 'User modified successfully';
+		$toastMessageSuccess = $_('publishers.pub-modified');
 		$toastSuccess = true;
 		setTimeout(() => {
 			$toastSuccess = false;
@@ -133,7 +133,7 @@
 			await db.availability.delete(availability.id);
 		});
 
-		$toastMessageSuccess = 'Publisher deleted successfully';
+		$toastMessageSuccess = $_('publishers.pub-deleted');
 		$toastSuccess = true;
 		setTimeout(() => {
 			$toastSuccess = false;
@@ -171,11 +171,11 @@
 		{#if $users}
 			{#if $users.length == 0}
 				<Card size="xl" class="mt-5">
-					<h1 class="text-center">No Publishers yet</h1>
+					<h1 class="text-center">{$_('publishers.no-publishers')}</h1>
 				</Card>
 			{:else}
 				<TableSearch
-					placeholder="Search by Publisher name"
+					placeholder={$_('publishers.search-inp')}
 					striped={true}
 					hoverable={true}
 					bind:inputValue={searchTerm}
@@ -234,26 +234,26 @@
 
 	<Modal bind:open={createModal} size="xs" autoclose outsideclose>
 		<Label>
-			Firstname:
+			{$_('publishers.firstname')}:
 			<Input type="text" id="location" bind:value={firstname} required />
 		</Label>
 		<Label>
-			Lastname:
+			{$_('publishers.lastname')}:
 			<Input type="text" id="location" bind:value={lastname} required />
 		</Label>
 		<Label>
-			Gender:
+			{$_('publishers.gender')}:
 			<Select class="mt-2" items={genders} bind:value={gender} />
 		</Label>
 		<Label>
-			Weight:
+			{$_('publishers.weight')}:
 			<Input type="number" id="n_carts" min="1" max="5" step=".1" bind:value={weight} required />
 		</Label>
 		<Label>
 			{$_('publishers.availability')}:
 			{#if $schedules}
 				{#if $schedules.length == 0}
-					<p class="text-center">No schedules created yet</p>
+					<p class="text-center">{$_('publishers.no-schedules')}</p>
 				{:else}
 					<ul class="items-center grid grid-cols-1 w-full rounded-lg">
 						{#each $schedules as schedule}
@@ -279,7 +279,7 @@
 		<div class="text-center">
 			<ExclamationCircleOutline class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" />
 			<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-				Are you sure you want to delete this publisher?
+				{$_('publishers.are-you-sure')}
 			</h3>
 			<Button color="red" class="me-2" on:click={deleteUser}>{$_('general.yes-sure')}</Button>
 			<Button color="alternative">{$_('general.no-cancel')}</Button>

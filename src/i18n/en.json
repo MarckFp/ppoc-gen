@@ -7,7 +7,9 @@
     "settings": "Settings",
     "language": "Language",
     "english": "English",
-    "spanish": "Spanish"
+    "en": "English",
+    "spanish": "Spanish",
+    "es": "Spanish"
   },
   "home": {
     "welcome": "Welcome"
@@ -36,7 +38,14 @@
     "lastname": "Lastname",
     "gender": "Gender",
     "weight": "Weight",
-    "availability": "Availability"
+    "availability": "Availability",
+    "are-you-sure": "Are you sure you want to delete this publisher?",
+    "no-schedules": "No schedules created yet",
+    "no-publishers": "No publishers created yet",
+    "pub-deleted": "Publisher deleted successfully",
+    "pub-modified": "Publisher modified successfully",
+    "pub-create-failed": "Failed to create Publisher, error:",
+    "pub-create": "Publisher created successfully"
   },
   "schedule": {
     "search-inp": "Search by Weekday",

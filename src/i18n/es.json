@@ -7,7 +7,9 @@
     "settings": "Configuración",
     "language": "Idioma",
     "english": "Inglés",
-    "spanish": "Español"
+    "en": "Inglés",
+    "spanish": "Español",
+    "es": "Español"
   },
   "home": {
     "welcome": "Bienvenido"
@@ -30,13 +32,20 @@
       "no-cancel": "No, Cancelar"
     },
     "publishers": {
-      "create-btn": "Crear nuev Publicador",
+      "create-btn": "Crear nuevo Publicador",
       "search-inp": "Buscar por Nombre de Publicador",
       "firstname": "Nombre",
       "lastname": "Apellidos",
       "gender": "Género",
       "weight": "Peso",
-      "availability": "Disponibilidad"
+      "availability": "Disponibilidad",
+      "are-you-sure": "¿Estás seguro de querer eliminar este Publicador?",
+      "no-schedules": "No hay horario creados todavía",
+      "no-publishers": "No hay publicadores creados todavía",
+      "pub-deleted": "Publicador eliminado correctamente",
+      "pub-modified": "Publicador modificado correctamente",
+      "pub-create-failed": "Error al crear publicador, fallo:",
+      "pub-create": "Publicador creado correctamente"
     },
     "schedule": {
       "search-inp": "Buscar por Día de la Semana",

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Card, Button, Label, Input, ButtonGroup, Modal } from 'flowbite-svelte';
+	import { Card, Button, Label, Input, ButtonGroup, Modal, Select } from 'flowbite-svelte';
 	import {
 		CloudArrowUpSolid,
 		DownloadSolid,
@@ -10,6 +10,8 @@
 	import { goto, invalidateAll } from '$app/navigation';
 	import { toastMessageSuccess, toastSuccess } from '$lib/store';
 	import { exportDB, importInto } from 'dexie-export-import';
+	import { locale, locales, _ } from 'svelte-i18n';
+
 
 	let deleteModal = false;
 	let importModal = false;
@@ -64,6 +66,12 @@
 			$toastSuccess = false;
 		}, 8000);
 	}
+
+	let langs = [];
+
+	$locales.forEach((lang) => {
+		langs.push({value: lang, name: $_('navbar.' + lang)});
+	})
 </script>
 
 {#if $congregation}
@@ -74,11 +82,11 @@
 			</h3>
 			<form class="flex flex-col space-y-6" action="/">
 				<Label class="space-y-2">
-					<span>Congregation Name</span>
+					<span>Congregation Name:</span>
 					<Input type="text" name="name" bind:value={$congregation[0].name} required />
 				</Label>
 				<Label class="space-y-2">
-					<span>Number of Carts</span>
+					<span>Number of Carts:</span>
 					<Input
 						type="number"
 						name="n_carts"
@@ -87,6 +95,10 @@
 						bind:value={$congregation[0].n_carts}
 						required
 					/>
+				</Label>
+				<Label class="space-y-2">
+					<span>Language:</span>
+					<Select items={langs} bind:value={$locale} />
 				</Label>
 				<Button color="blue" on:click={updateCongregation}>Update Congregation</Button>
 				<Button color="red" on:click={() => (deleteModal = true)}>Delete Congregation</Button>
@@ -117,8 +129,8 @@
 				<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
 					Are you sure you want to delete your congregation? All the data will be lost!
 				</h3>
-				<Button color="red" class="me-2" on:click={deleteCongregation}>Yes, I'm sure</Button>
-				<Button color="alternative">No, cancel</Button>
+				<Button color="red" class="me-2" on:click={deleteCongregation}>{$_('general.yes-sure')}</Button>
+				<Button color="alternative">{$_('general.no-cancel')}</Button>
 			</div>
 		</Modal>
 
@@ -128,8 +140,8 @@
 				<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
 					Are you sure you want to import all data? Your current data will be lost!
 				</h3>
-				<Button color="red" class="me-2" on:click={importDataBtn}>Yes, I'm sure</Button>
-				<Button color="alternative">No, cancel</Button>
+				<Button color="red" class="me-2" on:click={importDataBtn}>{$_('general.yes-sure')}</Button>
+				<Button color="alternative">{$_('general.no-cancel')}</Button>
 			</div>
 		</Modal>
 	</div>

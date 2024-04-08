@@ -5,9 +5,6 @@
 		NavLi,
 		NavUl,
 		NavHamburger,
-		Dropdown,
-		DropdownItem,
-		Button,
 		DarkMode
 	} from 'flowbite-svelte';
 	import { base } from '$app/paths';
@@ -30,11 +27,6 @@
 			>
 		</NavBrand>
 		<div class="flex md:order-2">
-			<Button color="light">{$_('navbar.language')}</Button>
-			<Dropdown class="w-44 z-20">
-				<DropdownItem href="{base}/">{$_('navbar.english')}</DropdownItem>
-				<DropdownItem href="{base}/">{$_('navbar.spanish')}</DropdownItem>
-			</Dropdown>
 			<DarkMode class="text-primary-500 dark:text-primary-600 border dark:border-gray-800 ml-2" />
 			<NavHamburger />
 		</div>
