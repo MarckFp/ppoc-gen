@@ -17,6 +17,7 @@
 	import { db } from '$lib/db';
 	import { toastMessageSuccess, toastSuccess, toastMessageAlert, toastAlert } from '$lib/store';
 	import { liveQuery } from 'dexie';
+	import { _ } from 'svelte-i18n';
 
 	let createModal = false;
 	let deleteModal = false;
@@ -64,13 +65,13 @@
 				end_date: end_date
 			});
 
-			$toastMessageSuccess = `Incidence created successfully`;
+			$toastMessageSuccess = $_('incidences.created');
 			$toastSuccess = true;
 			setTimeout(() => {
 				$toastSuccess = false;
 			}, 8000);
 		} catch (error) {
-			$toastMessageAlert = `Failed to create incidence: ${error}`;
+			$toastMessageAlert = $_('incidences.failed') + error;
 			$toastAlert = true;
 			setTimeout(() => {
 				$toastAlert = false;
@@ -88,7 +89,7 @@
 			start_date: start_date,
 			end_date: end_date
 		});
-		$toastMessageSuccess = 'Incidence modified successfully';
+		$toastMessageSuccess = $_('incidences.modified');
 		$toastSuccess = true;
 		setTimeout(() => {
 			$toastSuccess = false;
@@ -101,7 +102,7 @@
 
 	async function deleteIncidence() {
 		await db.incidence.delete(selectedId);
-		$toastMessageSuccess = 'Incidence deleted successfully';
+		$toastMessageSuccess = $_('incidences.deleted');
 		$toastSuccess = true;
 		setTimeout(() => {
 			$toastSuccess = false;
@@ -120,24 +121,24 @@
 				user_id = 0;
 				start_date = new Date().toISOString().split('T')[0];
 				end_date = new Date().toISOString().split('T')[0];
-			}}>Create new Incidence</Button
+			}}>{$_('incidences.create-btn')}</Button
 		>
 		{#if $incidences}
 			{#if $incidences.length == 0}
 				<Card size="xl" class="mt-5">
-					<h1 class="text-center">No Incidences yet</h1>
+					<h1 class="text-center">{$_('incidences.no-incidences')}</h1>
 				</Card>
 			{:else}
 				<TableSearch
-					placeholder="Search by Start date"
+					placeholder={$_('incidences.search-by')}
 					striped={true}
 					hoverable={true}
 					bind:inputValue={searchTerm}
 				>
 					<TableHead>
-						<TableHeadCell>Publisher</TableHeadCell>
-						<TableHeadCell>Start Date</TableHeadCell>
-						<TableHeadCell>End Date</TableHeadCell>
+						<TableHeadCell>{$_('incidences.publisher')}</TableHeadCell>
+						<TableHeadCell>{$_('incidences.start-date')}</TableHeadCell>
+						<TableHeadCell>{$_('incidences.end-date')}</TableHeadCell>
 						<TableHeadCell>
 							<span class="sr-only">Actions</span>
 						</TableHeadCell>
@@ -160,7 +161,7 @@
 											start_date = incidence.start_date;
 											end_date = incidence.end_date;
 											edit = true;
-										}}>Edit</Button
+										}}>{$_('general.edit-btn')}</Button
 									>
 									<Button
 										color="red"
@@ -169,7 +170,7 @@
 										on:click={() => {
 											deleteModal = true;
 											selectedId = incidence.id;
-										}}>Delete</Button
+										}}>{$_('general.delete-btn')}</Button
 									>
 								</TableBodyCell>
 							</TableBodyRow>
@@ -182,26 +183,26 @@
 
 	<Modal bind:open={createModal} size="xs" autoclose outsideclose>
 		<Label>
-			Publisher:
+			{$_('incidences.publisher')}:
 			<Select id="publisher" bind:value={user_id} items={userSelect} required />
 		</Label>
 		<Label>
-			Start Date:
+			{$_('incidences.start-date')}:
 			<Input type="date" id="start_date" bind:value={start_date} required />
 		</Label>
 		<Label>
-			End Date:
+			{$_('incidences.end-date')}:
 			<Input type="date" id="end_date" bind:value={end_date} required />
 		</Label>
 		<div class="text-center">
 			<Button color="red" class="me-2" on:click={createIncidence}>
 				{#if edit}
-					Edit
+					{$_('general.edit-btn')}
 				{:else}
-					Create
+					{$_('general.create-btn')}
 				{/if}
 			</Button>
-			<Button color="alternative">Cancel</Button>
+			<Button color="alternative">{$_('general.cancel-btn')}</Button>
 		</div>
 	</Modal>
 
@@ -209,10 +210,10 @@
 		<div class="text-center">
 			<ExclamationCircleOutline class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" />
 			<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-				Are you sure you want to delete this incidence?
+				{$_('incidences.are-you-sure')}
 			</h3>
-			<Button color="red" class="me-2" on:click={deleteIncidence}>Yes, I'm sure</Button>
-			<Button color="alternative">No, cancel</Button>
+			<Button color="red" class="me-2" on:click={deleteIncidence}>{$_('general.yes-sure')}</Button>
+			<Button color="alternative">{$_('general.no-cancel')}</Button>
 		</div>
 	</Modal>
 </div>

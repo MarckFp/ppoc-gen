@@ -19,6 +19,7 @@
 	import { db } from '$lib/db';
 	import { toastMessageSuccess, toastSuccess, toastMessageAlert, toastAlert } from '$lib/store';
 	import { liveQuery } from 'dexie';
+	import { _ } from 'svelte-i18n';
 
 	let createModal = false;
 	let deleteModal = false;
@@ -33,13 +34,13 @@
 	let n_sisters = 1;
 	let selectedId: number;
 	let weekdays = [
-		{ value: 'monday', name: 'Monday' },
-		{ value: 'tuesday', name: 'Tuesday' },
-		{ value: 'wednesday', name: 'Wednesday' },
-		{ value: 'thursday', name: 'Thursday' },
-		{ value: 'friday', name: 'Friday' },
-		{ value: 'saturday', name: 'Saturday' },
-		{ value: 'sunday', name: 'Sunday' }
+		{ value: 'monday', name: $_('general.monday') },
+		{ value: 'tuesday', name: $_('general.tuesday') },
+		{ value: 'wednesday', name: $_('general.wednesday') },
+		{ value: 'thursday', name: $_('general.thursday') },
+		{ value: 'friday', name: $_('general.friday') },
+		{ value: 'saturday', name: $_('general.saturday') },
+		{ value: 'sunday', name: $_('general.sunday') }
 	];
 
 	let schedules = liveQuery(() => db.schedule.toArray());
@@ -48,6 +49,7 @@
 	);
 
 	//TODO: Add a check to see if we've exceeded the nº of carts for the congregation in a schedule
+	//TODO: Delete availabilities when a schedule is deleted
 	async function createSchedule() {
 		if (edit) {
 			return editSchedule();
@@ -63,13 +65,13 @@
 				n_sisters: n_sisters
 			});
 
-			$toastMessageSuccess = 'Schedule created successfully';
+			$toastMessageSuccess = $_('schedule.created');
 			$toastSuccess = true;
 			setTimeout(() => {
 				$toastSuccess = false;
 			}, 8000);
 		} catch (error) {
-			$toastMessageAlert = `Failed to create schedule: ${error}`;
+			$toastMessageAlert = $_('schedule.failed') + error;
 			$toastAlert = true;
 			setTimeout(() => {
 				$toastAlert = false;
@@ -87,7 +89,7 @@
 
 	async function deleteSchedule() {
 		await db.schedule.delete(selectedId);
-		$toastMessageSuccess = 'Schedule deleted successfully';
+		$toastMessageSuccess = $_('schedule.deleted');
 		$toastSuccess = true;
 		setTimeout(() => {
 			$toastSuccess = false;
@@ -104,7 +106,7 @@
 			n_brothers: n_brothers,
 			n_sisters: n_sisters
 		});
-		$toastMessageSuccess = 'Schedule modified successfully';
+		$toastMessageSuccess = $_('schedule.modified');
 		$toastSuccess = true;
 		setTimeout(() => {
 			$toastSuccess = false;
@@ -135,28 +137,28 @@
 				n_brothers = 1;
 				n_sisters = 1;
 				edit = false;
-			}}>Create new Schedule</Button
+			}}>{$_('schedule.create-btn')}</Button
 		>
 		{#if $schedules}
 			{#if $schedules.length == 0}
 				<Card size="xl" class="mt-5">
-					<h1 class="text-center">No schedules yet</h1>
+					<h1 class="text-center">{$_('schedule.no-schedules')}</h1>
 				</Card>
 			{:else}
 				<TableSearch
-					placeholder="Search by Weekday"
+					placeholder={$_('schedule.search-inp')}
 					striped={true}
 					hoverable={true}
 					bind:inputValue={searchTerm}
 				>
 					<TableHead>
-						<TableHeadCell>WeekDay</TableHeadCell>
-						<TableHeadCell>Start Time</TableHeadCell>
-						<TableHeadCell>End Time</TableHeadCell>
-						<TableHeadCell>Location</TableHeadCell>
-						<TableHeadCell>Nº of Carts</TableHeadCell>
-						<TableHeadCell>Nº of Brothers</TableHeadCell>
-						<TableHeadCell>Nº of Sisters</TableHeadCell>
+						<TableHeadCell>{$_('schedule.weekday')}</TableHeadCell>
+						<TableHeadCell>{$_('schedule.start-time')}</TableHeadCell>
+						<TableHeadCell>{$_('schedule.end-time')}</TableHeadCell>
+						<TableHeadCell>{$_('schedule.location')}</TableHeadCell>
+						<TableHeadCell>{$_('schedule.n-carts')}</TableHeadCell>
+						<TableHeadCell>{$_('schedule.n-bro')}</TableHeadCell>
+						<TableHeadCell>{$_('schedule.n-sis')}</TableHeadCell>
 						<TableHeadCell>
 							<span class="sr-only">Actions</span>
 						</TableHeadCell>
@@ -164,10 +166,7 @@
 					<TableBody>
 						{#each filteredItems as schedule}
 							<TableBodyRow>
-								<TableBodyCell
-									>{schedule.weekday.charAt(0).toUpperCase() +
-										schedule.weekday.slice(1)}</TableBodyCell
-								>
+								<TableBodyCell>{$_('general.' + schedule.weekday)}</TableBodyCell>
 								<TableBodyCell>{schedule.start_time}</TableBodyCell>
 								<TableBodyCell>{schedule.end_time}</TableBodyCell>
 								<TableBodyCell>{schedule.location}</TableBodyCell>
@@ -190,7 +189,7 @@
 											location = schedule.location;
 											start_time = schedule.start_time;
 											end_time = schedule.end_time;
-										}}>Edit</Button
+										}}>{$_('general.edit-btn')}</Button
 									>
 									<Button
 										color="red"
@@ -199,7 +198,7 @@
 										on:click={() => {
 											deleteModal = true;
 											selectedId = schedule.id;
-										}}>Delete</Button
+										}}>{$_('general.delete-btn')}</Button
 									>
 								</TableBodyCell>
 							</TableBodyRow>
@@ -212,44 +211,44 @@
 
 	<Modal bind:open={createModal} size="xs" autoclose outsideclose>
 		<Label>
-			Weekday:
+			{$_('schedule.weekday')}:
 			<Select class="mt-2" items={weekdays} bind:value={selected_weekday} />
 		</Label>
 		<Label>
-			Start Time:
+			{$_('schedule.start-time')}:
 			<Timepicker bind:selectedTime={start_time} />
 		</Label>
 		<Label>
-			End Time:
+			{$_('schedule.end-time')}:
 			<Timepicker bind:selectedTime={end_time} />
 		</Label>
 		<Label>
-			Location:
+			{$_('schedule.location')}:
 			<Input type="text" id="location" bind:value={location} required />
 		</Label>
 		<Label>
-			Number of Carts:
+			{$_('schedule.n-carts')}:
 			<Input type="number" id="n_carts" min="1" bind:value={n_carts} required />
 		</Label>
 		<div class="grid gap-6 mb-6 md:grid-cols-2">
 			<div>
-				<Label for="n_brothers" class="mb-2">Number of Brothers:</Label>
+				<Label for="n_brothers" class="mb-2">{$_('schedule.n-bro')}:</Label>
 				<Input type="number" id="n_brothers" bind:value={n_brothers} required />
 			</div>
 			<div>
-				<Label for="n_sisters" class="mb-2">Number of Sisters:</Label>
+				<Label for="n_sisters" class="mb-2">{$_('schedule.n-sis')}:</Label>
 				<Input type="number" id="n_sisters" bind:value={n_sisters} required />
 			</div>
 		</div>
 		<div class="text-center">
 			<Button color="red" class="me-2" on:click={createSchedule}>
 				{#if edit}
-					Edit
+					{$_('general.edit-btn')}
 				{:else}
-					Create
+					{$_('general.create-btn')}
 				{/if}
 			</Button>
-			<Button color="alternative">Cancel</Button>
+			<Button color="alternative">{$_('general.cancel-btn')}</Button>
 		</div>
 	</Modal>
 
@@ -257,10 +256,10 @@
 		<div class="text-center">
 			<ExclamationCircleOutline class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" />
 			<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-				Are you sure you want to delete this schedule?
+				{$_('schedule.are-you-sure')}
 			</h3>
-			<Button color="red" class="me-2" on:click={deleteSchedule}>Yes, I'm sure</Button>
-			<Button color="alternative">No, cancel</Button>
+			<Button color="red" class="me-2" on:click={deleteSchedule}>{$_('general.yes-sure')}</Button>
+			<Button color="alternative">{$_('general.no-cancel')}</Button>
 		</div>
 	</Modal>
 </div>

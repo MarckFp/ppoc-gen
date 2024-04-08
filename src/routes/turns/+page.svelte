@@ -3,6 +3,7 @@
     import { toastMessageSuccess, toastSuccess, toastMessageAlert, toastAlert, toastMessageWarning, toastWarning } from '$lib/store';
     import { db } from '$lib/db';
 	import { liveQuery } from 'dexie';
+    import { _ } from 'svelte-i18n';
 
     var date = new Date();
     var firstDay = new Date(date.getFullYear(), date.getMonth(), 2).toISOString().split('T')[0];
@@ -81,19 +82,19 @@
 	<Card size="xl" class="mb-2">
         <div class="mt-1 mb-4 flex flex-row justify-around">
             <Label>
-                From:
+                {$_('turns.from')}:
                 <Input type="date" bind:value={fromDate}/>
             </Label>
             <Label>
-                To:
+                {$_('turns.to')}:
                 <Input type="date" bind:value={toDate}/>
             </Label>
 		    <Button color="blue" class="w-8/12" on:click={createTurns}>
                 {#if loading}
                     <Spinner class="me-3" size="4" color="white" />
-                    Creating...
+                    {$_('turns.creating')}
                 {:else}
-                    Create Turns
+                    {$_('turns.create-btn')}
                 {/if}
             </Button>
         </div>
@@ -101,7 +102,7 @@
     {#if $turns}
         <Card size="xl" class="mt-2">
             {#if $turns.length == 0}
-                <p class="text-center">No turns yet created</p>
+                <p class="text-center">{$_('turns.no-turns')}</p>
             {:else}
                 <p class="text-center">There are turns created</p>
             {/if}

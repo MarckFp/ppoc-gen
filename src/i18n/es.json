@@ -4,12 +4,7 @@
     "schedules": "Horarios",
     "incidences": "Incidencias",
     "turns": "Turnos",
-    "settings": "Configuración",
-    "language": "Idioma",
-    "english": "Inglés",
-    "en": "Inglés",
-    "spanish": "Español",
-    "es": "Español"
+    "settings": "Configuración"
   },
   "home": {
     "welcome": "Bienvenido"
@@ -28,8 +23,12 @@
       "sunday": "Domingo",
       "male": "Hombre",
       "female": "Mujer",
-      "yes-sure": "Sí, Estoy seguro",
-      "no-cancel": "No, Cancelar"
+      "yes-sure": "Sí, estoy seguro",
+      "no-cancel": "No, cancelar",
+      "english": "Inglés",
+      "en": "Inglés",
+      "spanish": "Español",
+      "es": "Español"
     },
     "publishers": {
       "create-btn": "Crear nuevo Publicador",
@@ -55,6 +54,47 @@
       "location": "Ubicación",
       "n-carts": "Nº de Carritos",
       "n-bro": "Nº de Hermanos",
-      "n-sis": "Nº de Hermanas"
+      "n-sis": "Nº de Hermanas",
+      "create-btn": "Crear nuevo Horario",
+      "no-schedules": "No hay horarios aún",
+      "are-you-sure": "¿Está seguro de eliminar este horario?",
+      "modified": "Horario modificado correctamente",
+      "deleted": "Horario eliminado correctamente",
+      "failed": "Fallo al crear horario, error:",
+      "created": "Horario creado correctamente"
+    },
+    "turns": {
+      "create-btn": "Crear Turnos",
+      "from": "Desde",
+      "to": "Hasta",
+      "no-turns": "No hay turnos aún creados",
+      "creating": "Creando..."
+    },
+    "incidences": {
+      "create-btn": "Crear nueva Incidencia",
+      "no-incidences": "No hay incidencias",
+      "publisher": "Publicador",
+      "start-date": "Fecha de Inicio",
+      "end-date": "Fecha de Finalización",
+      "search-by": "Buscar por Fecha de Inicio",
+      "are-you-sure": "¿Está seguro de eliminar está incidencia?",
+      "modified": "Incidencia modificada correctamente",
+      "deleted": "Incidencia eliminada correctamente",
+      "failed": "Fallo al crear la incidencia, error:",
+      "created": "Incidencia creada correctamente"
+    },
+    "settings": {
+      "cong-settings": "Ajustes de Congregación",
+      "cong-name": "Nombre de la Congregación",
+      "n-carts": "Número de Carritos",
+      "language": "Idioma",
+      "update-cong": "Modificar Congregación",
+      "delete-cong": "Eliminar Congregación",
+      "import": "Importar Datos",
+      "export": "Exportar Datos",
+      "are-you-sure": "¿Está seguro de eliminar su congregación? ¡Todos los datos se perderán!",
+      "are-you-sure-import": "¿Está seguro que desea importar todos los datos? ¡Tus datos actuales se perderán!",
+      "imported-successfully": "Datos de la congregación importados correctamente",
+      "updated-successfully": "Congregación modificada correctamente"
     }
   }

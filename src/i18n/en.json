@@ -4,12 +4,7 @@
     "schedules": "Schedules",
     "incidences": "Incidences",
     "turns": "Turns",
-    "settings": "Settings",
-    "language": "Language",
-    "english": "English",
-    "en": "English",
-    "spanish": "Spanish",
-    "es": "Spanish"
+    "settings": "Settings"
   },
   "home": {
     "welcome": "Welcome"
@@ -29,7 +24,11 @@
     "male": "Male",
     "female": "Female",
     "yes-sure": "Yes, I'm sure",
-    "no-cancel": "No, cancel"
+    "no-cancel": "No, cancel",
+    "english": "English",
+    "en": "English",
+    "spanish": "Spanish",
+    "es": "Spanish"
   },
   "publishers": {
     "create-btn": "Create new Publisher",
@@ -55,6 +54,47 @@
     "location": "Location",
     "n-carts": "Nº of Carts",
     "n-bro": "Nº of Brothers",
-    "n-sis": "Nº of Sisters"
+    "n-sis": "Nº of Sisters",
+    "create-btn": "Create new Schedule",
+    "no-schedules": "No schedules yet",
+    "are-you-sure": "Are you sure you want to delete this schedule?",
+    "modified": "Schedule modified successfully",
+    "deleted": "Schedule deleted successfully",
+    "failed": "Failed to create schedule, error:",
+    "created": "Schedule created successfully"
+  },
+  "turns": {
+    "create-btn": "Create Turns",
+    "from": "From",
+    "to": "To",
+    "no-turns": "No turns yet created",
+    "creating": "Creating..."
+  },
+  "incidences": {
+    "create-btn": "Create new Incidence",
+    "no-incidences": "No Incidences yet",
+    "publisher": "Publisher",
+    "start-date": "Start Date",
+    "end-date": "End Date",
+    "search-by": "Search by Start Date",
+    "are-you-sure": "Are you sure you want to delete this incidence?",
+    "modified": "Incidence modified successfully",
+    "deleted": "Incidence deleted successfully",
+    "failed": "Incidence to create schedule, error:",
+    "created": "Incidence created successfully"
+  },
+  "settings": {
+    "cong-settings": "Congregation Settings",
+    "cong-name": "Congregation Name",
+    "n-carts": "Number of Carts",
+    "language": "Language",
+    "update-cong": "Update Congregation",
+    "delete-cong": "Delete Congregation",
+    "import": "Import Data",
+    "export": "Export Data",
+    "are-you-sure": "Are you sure you want to delete your congregation? All the data will be lost!",
+    "are-you-sure-import": "Are you sure you want to import all data? Your current data will be lost!",
+    "imported-successfully": "Congregation Imported successfully",
+    "updated-successfully": "Congregation Updated successfully"
   }
 }

@@ -32,7 +32,7 @@
 
 	function updateCongregation() {
 		db.congregation.update($congregation[0].id, $congregation[0]);
-		$toastMessageSuccess = 'Congregation updated correctly';
+		$toastMessageSuccess = $_('settings.updated-successfully');
 		$toastSuccess = true;
 		setTimeout(() => {
 			$toastSuccess = false;
@@ -57,7 +57,7 @@
 	async function importData() {
 		await importInto(db, files[0], { clearTablesBeforeImport: true, overwriteValues: true }).then(
 			() => {
-				$toastMessageSuccess = 'Congregation imported successfully';
+				$toastMessageSuccess = $_('settings.imported-successfully');
 				$toastSuccess = true;
 			}
 		);
@@ -70,7 +70,7 @@
 	let langs = [];
 
 	$locales.forEach((lang) => {
-		langs.push({value: lang, name: $_('navbar.' + lang)});
+		langs.push({value: lang, name: $_('general.' + lang)});
 	})
 </script>
 
@@ -78,15 +78,15 @@
 	<div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-5/6 lg:py-0">
 		<Card size="lg">
 			<h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-				Congregation Settings
+				{$_('settings.cong-settings')}
 			</h3>
 			<form class="flex flex-col space-y-6" action="/">
 				<Label class="space-y-2">
-					<span>Congregation Name:</span>
+					<span>{$_('settings.cong-name')}:</span>
 					<Input type="text" name="name" bind:value={$congregation[0].name} required />
 				</Label>
 				<Label class="space-y-2">
-					<span>Number of Carts:</span>
+					<span>{$_('settings.n-carts')}:</span>
 					<Input
 						type="number"
 						name="n_carts"
@@ -97,11 +97,11 @@
 					/>
 				</Label>
 				<Label class="space-y-2">
-					<span>Language:</span>
+					<span>{$_('settings.language')}:</span>
 					<Select items={langs} bind:value={$locale} />
 				</Label>
-				<Button color="blue" on:click={updateCongregation}>Update Congregation</Button>
-				<Button color="red" on:click={() => (deleteModal = true)}>Delete Congregation</Button>
+				<Button color="blue" on:click={updateCongregation}>{$_('settings.update-cong')}</Button>
+				<Button color="red" on:click={() => (deleteModal = true)}>{$_('settings.delete-cong')}</Button>
 				<input
 					bind:files
 					id="import"
@@ -113,11 +113,11 @@
 				<ButtonGroup class="flex justify-center">
 					<Button on:click={() => (importModal = true)}>
 						<CloudArrowUpSolid class="w-6 h-6 me-3" />
-						Import Data
+						{$_('settings.import')}
 					</Button>
 					<Button on:click={exportData}>
 						<DownloadSolid class="w-6 h-6 me-3" />
-						Export Data
+						{$_('settings.export')}
 					</Button>
 				</ButtonGroup>
 			</form>
@@ -127,7 +127,7 @@
 			<div class="text-center">
 				<ExclamationCircleOutline class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" />
 				<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-					Are you sure you want to delete your congregation? All the data will be lost!
+					{$_('settings.are-you-sure')}
 				</h3>
 				<Button color="red" class="me-2" on:click={deleteCongregation}>{$_('general.yes-sure')}</Button>
 				<Button color="alternative">{$_('general.no-cancel')}</Button>
@@ -138,7 +138,7 @@
 			<div class="text-center">
 				<ExclamationCircleOutline class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" />
 				<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-					Are you sure you want to import all data? Your current data will be lost!
+					{$_('settings.are-you-sure-import')}
 				</h3>
 				<Button color="red" class="me-2" on:click={importDataBtn}>{$_('general.yes-sure')}</Button>
 				<Button color="alternative">{$_('general.no-cancel')}</Button>
