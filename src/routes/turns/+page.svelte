@@ -72,8 +72,8 @@
             });
         }
 
-        //fromDate = '';
-        //toDate = '';
+        fromDate = '';
+        toDate = '';
         loading = false;
     }
 </script>
@@ -81,15 +81,15 @@
 <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto">
 	<Card size="xl" class="mb-2">
         <div class="mt-1 mb-4 flex flex-row justify-around">
-            <Label>
+            <Label class="w-3/12 mr-2">
                 {$_('turns.from')}:
                 <Input type="date" bind:value={fromDate}/>
             </Label>
-            <Label>
+            <Label class="w-3/12 mr-2 ml-2">
                 {$_('turns.to')}:
                 <Input type="date" bind:value={toDate}/>
             </Label>
-		    <Button color="blue" class="w-8/12" on:click={createTurns}>
+		    <Button color="blue" class="w-6/12 ml-2" on:click={createTurns}>
                 {#if loading}
                     <Spinner class="me-3" size="4" color="white" />
                     {$_('turns.creating')}
