@@ -14,6 +14,7 @@ export class MySubClassedDexie extends Dexie {
 	schedule!: Table<Schedule>;
 	turn!: Table<Turn>;
 
+	//TODO: Create Assignment, the relation of turn and user
 	constructor() {
 		super('ppocgen');
 		this.version(1).stores({

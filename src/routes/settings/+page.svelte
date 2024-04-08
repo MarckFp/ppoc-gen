@@ -30,6 +30,11 @@
 
 	let congregation = liveQuery(() => db.congregation.toArray());
 
+	let langs = [];
+	$locales.forEach((lang) => {
+		langs.push({value: lang, name: $_('general.' + lang)});
+	})
+
 	function updateCongregation() {
 		db.congregation.update($congregation[0].id, $congregation[0]);
 		$toastMessageSuccess = $_('settings.updated-successfully');
@@ -66,12 +71,6 @@
 			$toastSuccess = false;
 		}, 8000);
 	}
-
-	let langs = [];
-
-	$locales.forEach((lang) => {
-		langs.push({value: lang, name: $_('general.' + lang)});
-	})
 </script>
 
 {#if $congregation}

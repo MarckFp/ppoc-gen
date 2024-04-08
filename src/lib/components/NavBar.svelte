@@ -21,7 +21,7 @@
 <Navbar let:NavContainer>
 	<NavContainer class="border px-5 py-2 rounded-lg bg-white dark:bg-gray-600">
 		<NavBrand href="{base}/">
-			<img src="favicon.png" class="me-3 h-6 sm:h-9" alt="PPOC Gen Logo" />
+			<img src="favicon.ico" class="me-3 h-6 sm:h-9 rounded-lg" alt="PPOC Gen Logo" />
 			<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white"
 				>PPOC Gen</span
 			>

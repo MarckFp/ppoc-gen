@@ -1,6 +1,3 @@
-export const prerender = true;
-export const ssr = false;
-
 import { addMessages, init, getLocaleFromNavigator } from 'svelte-i18n';
 
 import en from '../i18n/en.json'
@@ -11,3 +8,6 @@ init({
     fallbackLocale: 'en',
     initialLocale: getLocaleFromNavigator(),
 });
+
+export const prerender = true;
+export const ssr = false;

@@ -22,6 +22,7 @@
         if (from > to) {
             fromDate = '';
             toDate = '';
+            loading = false;
 
             $toastMessageAlert = `From Date cannot be bigger than To Date`;
 			$toastAlert = true;
@@ -31,7 +32,7 @@
             return;
         }
 
-        let weekday: string, userList, users, incidences, exit = false, continueLoop = false;
+        let weekday: string, userList, users, incidences;
 
         for (var d = from; d <= to; d.setDate(d.getDate() + 1)) {
             weekday = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d.getDay()]
@@ -40,7 +41,7 @@
                 if (schedule.weekday === weekday) {
                     userList = await db.availability.where({schedule_id: schedule.id}).toArray();
                     if (userList.length == 0) {
-                        $toastMessageWarning = `There is no publishers that can be assigned on ${d.toISOString().split('T')[0]}`;
+                        $toastMessageWarning = `There is no publishers with availability on ${weekday}`;
                         $toastWarning = true;
                         setTimeout(() => {
                             $toastWarning = false;
@@ -62,7 +63,6 @@
                             //Loop over incidences
                             incidences.forEach(async (incidence) => {
                                 if (incidence.start_date >= d.toISOString().split('T')[0] && d.toISOString().split('T')[0] <= incidence.end_date) {
-                                    continueLoop = true;
                                     return;
                                 }
                             });
