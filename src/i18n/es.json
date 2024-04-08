@@ -1,0 +1,51 @@
+{
+  "navbar": {
+    "publishers": "Publicadores",
+    "schedules": "Horarios",
+    "incidences": "Incidencias",
+    "turns": "Turnos",
+    "settings": "Configuración",
+    "language": "Idioma",
+    "english": "Inglés",
+    "spanish": "Español"
+  },
+  "home": {
+    "welcome": "Bienvenido"
+  },
+  "general": {
+      "edit-btn": "Editar",
+      "create-btn": "Crear",
+      "delete-btn": "Eliminar",
+      "cancel-btn": "Cancelar",
+      "monday": "Lunes",
+      "tuesday": "Martes",
+      "wednesday": "Miercoles",
+      "thursday": "Jueves",
+      "friday": "Viernes",
+      "saturday": "Sábado",
+      "sunday": "Domingo",
+      "male": "Hombre",
+      "female": "Mujer",
+      "yes-sure": "Sí, Estoy seguro",
+      "no-cancel": "No, Cancelar"
+    },
+    "publishers": {
+      "create-btn": "Crear nuev Publicador",
+      "search-inp": "Buscar por Nombre de Publicador",
+      "firstname": "Nombre",
+      "lastname": "Apellidos",
+      "gender": "Género",
+      "weight": "Peso",
+      "availability": "Disponibilidad"
+    },
+    "schedule": {
+      "search-inp": "Buscar por Día de la Semana",
+      "weekday": "Día de la Semana",
+      "start-time": "Hora de inicio",
+      "end-time": "Hora de finalización",
+      "location": "Ubicación",
+      "n-carts": "Nº de Carritos",
+      "n-bro": "Nº de Hermanos",
+      "n-sis": "Nº de Hermanas"
+    }
+  }

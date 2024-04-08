@@ -19,6 +19,7 @@
 	import { db } from '$lib/db';
 	import { liveQuery } from 'dexie';
 	import { toastMessageSuccess, toastSuccess, toastMessageAlert, toastAlert } from '$lib/store';
+	import { _ } from 'svelte-i18n';
 
 	let createModal = false;
 	let deleteModal = false;
@@ -165,7 +166,7 @@
 				gender = 'male';
 				availabilities = [];
 				weight = 1;
-			}}>Create new Publisher</Button
+			}}>{$_('publishers.create-btn')}</Button
 		>
 		{#if $users}
 			{#if $users.length == 0}
@@ -180,10 +181,10 @@
 					bind:inputValue={searchTerm}
 				>
 					<TableHead>
-						<TableHeadCell>Firstname</TableHeadCell>
-						<TableHeadCell>Lastname</TableHeadCell>
-						<TableHeadCell>Gender</TableHeadCell>
-						<TableHeadCell>Weight</TableHeadCell>
+						<TableHeadCell>{$_('publishers.firstname')}</TableHeadCell>
+						<TableHeadCell>{$_('publishers.lastname')}</TableHeadCell>
+						<TableHeadCell>{$_('publishers.gender')}</TableHeadCell>
+						<TableHeadCell>{$_('publishers.weight')}</TableHeadCell>
 						<TableHeadCell>
 							<span class="sr-only">Actions</span>
 						</TableHeadCell>
@@ -194,7 +195,7 @@
 								<TableBodyCell>{user.firstname}</TableBodyCell>
 								<TableBodyCell>{user.lastname}</TableBodyCell>
 								<TableBodyCell
-									>{user.gender.charAt(0).toUpperCase() + user.gender.slice(1)}</TableBodyCell
+									>{$_('general.' + user.gender)}</TableBodyCell
 								>
 								<TableBodyCell>{user.weight}</TableBodyCell>
 								<TableBodyCell>
@@ -211,7 +212,7 @@
 											weight = user.weight;
 											retrieveAvailabilities(user.id);
 											edit = true;
-										}}>Edit</Button
+										}}>{$_('general.edit-btn')}</Button
 									>
 									<Button
 										color="red"
@@ -220,7 +221,7 @@
 										on:click={() => {
 											deleteModal = true;
 											selectedId = user.id;
-										}}>Delete</Button
+										}}>{$_('general.delete-btn')}</Button
 									>
 								</TableBodyCell>
 							</TableBodyRow>
@@ -249,14 +250,14 @@
 			<Input type="number" id="n_carts" min="1" max="5" step=".1" bind:value={weight} required />
 		</Label>
 		<Label>
-			Availability:
+			{$_('publishers.availability')}:
 			{#if $schedules}
 				{#if $schedules.length == 0}
 					<p class="text-center">No schedules created yet</p>
 				{:else}
 					<ul class="items-center grid grid-cols-1 w-full rounded-lg">
 						{#each $schedules as schedule}
-							<li class="w-full border"><Checkbox class="p-3" bind:checked={availabilities[schedule.id]}><Badge color="red" class="m-1">{schedule.weekday.charAt(0).toUpperCase() + schedule.weekday.slice(1)}</Badge><Badge color="indigo">{schedule.start_time + '-' + schedule.end_time}</Badge><Badge class="m-1" color="pink">{schedule.location}</Badge></Checkbox></li>
+							<li class="w-full border"><Checkbox class="p-3" bind:checked={availabilities[schedule.id]}><Badge color="red" class="m-1">{$_('general.'+schedule.weekday)}</Badge><Badge color="indigo">{schedule.start_time + '-' + schedule.end_time}</Badge><Badge class="m-1" color="pink">{schedule.location}</Badge></Checkbox></li>
 						{/each}
 					</ul>
 				{/if}
@@ -265,12 +266,12 @@
 		<div class="text-center">
 			<Button color="red" class="me-2" on:click={createPublisher}>
 				{#if edit}
-					Edit
+					{$_('general.edit-btn')}
 				{:else}
-					Create
+					{$_('general.create-btn')}
 				{/if}
 			</Button>
-			<Button color="alternative">Cancel</Button>
+			<Button color="alternative">{$_('general.cancel-btn')}</Button>
 		</div>
 	</Modal>
 
@@ -280,8 +281,8 @@
 			<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
 				Are you sure you want to delete this publisher?
 			</h3>
-			<Button color="red" class="me-2" on:click={deleteUser}>Yes, I'm sure</Button>
-			<Button color="alternative">No, cancel</Button>
+			<Button color="red" class="me-2" on:click={deleteUser}>{$_('general.yes-sure')}</Button>
+			<Button color="alternative">{$_('general.no-cancel')}</Button>
 		</div>
 	</Modal>
 </div>

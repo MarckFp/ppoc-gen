@@ -18,6 +18,7 @@
 		AdjustmentsVerticalSolid,
 		EditSolid
 	} from 'flowbite-svelte-icons';
+	import { _ } from 'svelte-i18n';
 </script>
 
 <Navbar let:NavContainer>
@@ -29,10 +30,10 @@
 			>
 		</NavBrand>
 		<div class="flex md:order-2">
-			<Button color="light">Language</Button>
+			<Button color="light">{$_('navbar.language')}</Button>
 			<Dropdown class="w-44 z-20">
-				<DropdownItem href="{base}/">English</DropdownItem>
-				<DropdownItem href="{base}/">Spanish</DropdownItem>
+				<DropdownItem href="{base}/">{$_('navbar.english')}</DropdownItem>
+				<DropdownItem href="{base}/">{$_('navbar.spanish')}</DropdownItem>
 			</Dropdown>
 			<DarkMode class="text-primary-500 dark:text-primary-600 border dark:border-gray-800 ml-2" />
 			<NavHamburger />
@@ -40,18 +41,18 @@
 		<NavUl class="order-1">
 			<NavLi href="{base}/publishers">
 				<div class="flex flex-row">
-					Publishers <UserSolid color="red" />
+					{$_('navbar.publishers')} <UserSolid color="red" />
 				</div>
 			</NavLi>
 			<NavLi href="{base}/schedules"
-				><div class="flex flex-row">Schedules <CalendarMonthSolid color="red" /></div></NavLi
+				><div class="flex flex-row">{$_('navbar.schedules')} <CalendarMonthSolid color="red" /></div></NavLi
 			>
-			<NavLi href="{base}/turns"><div class="flex flex-row">Turns <EditSolid color="red" /></div></NavLi>
+			<NavLi href="{base}/turns"><div class="flex flex-row">{$_('navbar.turns')} <EditSolid color="red" /></div></NavLi>
 			<NavLi href="{base}/incidences"
-				><div class="flex flex-row">Incidences <BellRingSolid color="red" /></div></NavLi
+				><div class="flex flex-row">{$_('navbar.incidences')} <BellRingSolid color="red" /></div></NavLi
 			>
 			<NavLi href="{base}/settings"
-				><div class="flex flex-row">Settings <AdjustmentsVerticalSolid color="red" /></div></NavLi
+				><div class="flex flex-row">{$_('navbar.settings')} <AdjustmentsVerticalSolid color="red" /></div></NavLi
 			>
 		</NavUl>
 	</NavContainer>

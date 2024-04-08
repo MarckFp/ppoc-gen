@@ -1,0 +1,51 @@
+{
+  "navbar": {
+    "publishers": "Publishers",
+    "schedules": "Schedules",
+    "incidences": "Incidences",
+    "turns": "Turns",
+    "settings": "Settings",
+    "language": "Language",
+    "english": "English",
+    "spanish": "Spanish"
+  },
+  "home": {
+    "welcome": "Welcome"
+  },
+  "general": {
+    "edit-btn": "Edit",
+    "create-btn": "Create",
+    "delete-btn": "Delete",
+    "cancel-btn": "Cancel",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday",
+    "male": "Male",
+    "female": "Female",
+    "yes-sure": "Yes, I'm sure",
+    "no-cancel": "No, cancel"
+  },
+  "publishers": {
+    "create-btn": "Create new Publisher",
+    "search-inp": "Search by Publisher name",
+    "firstname": "Firstname",
+    "lastname": "Lastname",
+    "gender": "Gender",
+    "weight": "Weight",
+    "availability": "Availability"
+  },
+  "schedule": {
+    "search-inp": "Search by Weekday",
+    "weekday": "Weekday",
+    "start-time": "Start time",
+    "end-time": "End time",
+    "location": "Location",
+    "n-carts": "Nº of Carts",
+    "n-bro": "Nº of Brothers",
+    "n-sis": "Nº of Sisters"
+  }
+}
