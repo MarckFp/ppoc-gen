@@ -1,8 +1,12 @@
 <script lang="ts">
 	import { db } from '$lib/db';
 	import { toastMessageSuccess, toastSuccess, toastMessageAlert, toastAlert } from '$lib/store';
+	import { Button } from 'flowbite-svelte';
+	import { CloudArrowUpSolid } from 'flowbite-svelte-icons';
+	import { importInto } from 'dexie-export-import';
 
 	let congregation_name: string,
+		files: FileList,
 		n_carts: number = 1;
 
 	async function createCongregation() {
@@ -24,6 +28,24 @@
 				$toastAlert = false;
 			}, 8000);
 		}
+	}
+
+	function importDataBtn() {
+		const inputFile = document.getElementById('import');
+		inputFile?.click();
+	}
+
+	async function importData() {
+		await importInto(db, files[0], { clearTablesBeforeImport: true, overwriteValues: true }).then(
+			() => {
+				$toastMessageSuccess = 'Congregation imported successfully';
+				$toastSuccess = true;
+			}
+		);
+
+		setTimeout(() => {
+			$toastSuccess = false;
+		}, 8000);
 	}
 </script>
 
@@ -82,10 +104,23 @@
 								bind:value={n_carts}
 							/>
 						</div>
-						<button
-							class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-							on:click={createCongregation}>Create Congregation</button
+						<Button
+							class="w-full"
+							on:click={createCongregation}>Create Congregation</Button
 						>
+						<p class="text-center">- Or -</p>
+						<input
+							bind:files
+							id="import"
+							name="import"
+							type="file"
+							class="hidden"
+							on:change={importData}
+						/>
+						<Button class="w-full" on:click={importDataBtn}>
+							<CloudArrowUpSolid class="w-6 h-6 me-3" />
+							Import Data
+						</Button>
 						<p class="text-sm font-light text-gray-500 dark:text-gray-400">
 							Read the official <a
 								href="/documentation"

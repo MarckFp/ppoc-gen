@@ -48,6 +48,7 @@
 		(schedule) => schedule.weekday.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
 	);
 
+	//TODO: Add a check to see if we've exceeded the nº of carts for the congregation in a schedule
 	async function createSchedule() {
 		if (edit) {
 			return editSchedule();
