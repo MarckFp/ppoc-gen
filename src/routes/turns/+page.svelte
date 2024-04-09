@@ -11,8 +11,11 @@
 		TableBodyRow,
 		TableHeadCell,
 		TableSearch,
-		TableHead
+		TableHead,
+		Modal,
+		P
 	} from 'flowbite-svelte'
+	import {ExclamationCircleOutline, ArrowLeftOutline, ArrowRightOutline, FilePdfSolid} from 'flowbite-svelte-icons'
 	import {
 		toastMessageSuccess,
 		toastSuccess,
@@ -26,21 +29,18 @@
 	import {_} from 'svelte-i18n'
 
 	var date = new Date()
-	let turnList: number[] = []
-	var firstDay = new Date(date.getFullYear(), date.getMonth(), 2).toISOString().split('T')[0]
-	var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0]
-	let turns = liveQuery(() => db.turn.where('date').between(firstDay, lastDay).toArray())
-
-	$: {
-		$turns?.forEach(turn => {
-			turnList.push(turn.id)
-		})
-	}
-	let assignments = liveQuery(() => db.assignment.where('turn_id').anyOf(turnList).toArray())
+	let turns = liveQuery(() =>
+		db.turn
+			.where('date')
+			.between(
+				new Date(date.getFullYear(), date.getMonth(), 2).toISOString().split('T')[0],
+				new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0]
+			)
+			.toArray()
+	)
+	let assignments = liveQuery(() => db.assignment.toArray())
 	let showUsers = liveQuery(() => db.user.toArray())
-
 	let schedules = liveQuery(() => db.schedule.toArray())
-
 	let fromDate: string, toDate: string
 	let loading: boolean = false
 	let weekday: string,
@@ -48,9 +48,10 @@
 		users,
 		incidences,
 		userList: number[] = [],
-		skip: boolean = false,
 		brothers: number = 0,
-		sisters: number = 0
+		sisters: number = 0,
+		deleteModal = false,
+		selectedId: number
 
 	async function createTurns() {
 		loading = true
@@ -71,12 +72,17 @@
 		}
 
 		//Loop over weekdays
-		for (var d = from; d <= to; d.setDate(d.getDate() + 1)) {
-			weekday = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d.getDay()]
+		weekdayLoop: for (var d = from; d <= to; d.setDate(d.getDate() + 1)) {
+			weekday = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'][d.getDay()]
 			//Loop over schedules
-			$schedules.forEach(async schedule => {
-				if (schedule.weekday === weekday) {
-					const turn_id = await db.turn.add({
+			scheduleLoop: for (let schedule of $schedules) {
+				if (schedule.weekday === weekday && schedule.id != undefined) {
+					const exists = await db.turn.where({date: d.toISOString().split('T')[0], schedule_id: schedule.id}).first()
+					if (exists) {
+						continue
+					}
+
+					const turn_id: number = await db.turn.add({
 						date: d.toISOString().split('T')[0],
 						schedule_id: schedule.id
 					})
@@ -90,9 +96,9 @@
 						}, 8000)
 					}
 					//Loop over availabilities
-					availabilities.forEach(async availability => {
+					availabilityLoop: for (let availability of availabilities) {
 						userList.push(availability.user_id)
-					})
+					}
 					users = await db.user.where('id').anyOf(userList).reverse().sortBy('counter')
 					if (users.length == 0) {
 						$toastMessageWarning = `There is no publishers that can be assigned on ${d.toISOString().split('T')[0]}`
@@ -102,54 +108,64 @@
 						}, 8000)
 					}
 					//Loop over users
-					users.forEach(async user => {
+					userLoop: for (let user of users) {
 						incidences = await db.incidence.where({user_id: user.id}).toArray()
 						//Loop over incidences
-						incidences.forEach(async incidence => {
+						incidenceLoop: for (let incidence of incidences) {
 							if (
 								incidence.start_date >= d.toISOString().split('T')[0] &&
 								d.toISOString().split('T')[0] <= incidence.end_date
 							) {
-								skip = true
-							}
-						})
-						//If user doesn't have incidences
-						if (skip === false) {
-							if (user.gender === 'male' && brothers < parseInt(schedule.n_brothers)) {
-								const counter = parseFloat(user.counter) + parseFloat(user.weight)
-								db.assignment.add({
-									user_id: user.id,
-									turn_id: turn_id
-								})
-								db.user.update(user.id, {
-									counter: counter
-								})
-								brothers++
-							}
-							if (user.gender === 'female' && sisters < parseInt(schedule.n_sisters)) {
-								const counter = parseFloat(user.counter) + parseFloat(user.weight)
-								db.assignment.add({
-									user_id: user.id,
-									turn_id: turn_id
-								})
-								db.user.update(user.id, {
-									counter: parseFloat(counter)
-								})
-								sisters++
+								continue userLoop
 							}
 						}
-						skip = false
-					})
+						if (user.gender === 'male' && brothers < parseInt(schedule.n_brothers) && user.id != undefined) {
+							const counter = parseFloat(user.counter) + parseFloat(user.weight)
+							db.assignment.add({
+								user_id: user.id,
+								turn_id: turn_id
+							})
+							db.user.update(user.id, {
+								counter: counter
+							})
+							brothers++
+						}
+						if (user.gender === 'female' && sisters < parseInt(schedule.n_sisters) && user.id != undefined) {
+							const counter = parseFloat(user.counter) + parseFloat(user.weight)
+							db.assignment.add({
+								user_id: user.id,
+								turn_id: turn_id
+							})
+							db.user.update(user.id, {
+								counter: parseFloat(counter)
+							})
+							sisters++
+						}
+					}
 					userList = []
 					brothers = 0
 					sisters = 0
 				}
-			})
+			}
 		}
 
 		fromDate = ''
 		toDate = ''
 		loading = false
+	}
+
+	async function deleteTurn() {
+		await db.turn.delete(selectedId)
+		const assignments = await db.assignment.where({turn_id: selectedId}).toArray()
+		assignments.forEach(async assignment => {
+			await db.assignment.delete(assignment.id)
+		})
+
+		$toastMessageSuccess = $_('publishers.pub-deleted')
+		$toastSuccess = true
+		setTimeout(() => {
+			$toastSuccess = false
+		}, 8000)
 	}
 </script>
 
@@ -176,8 +192,61 @@
 	</Card>
 	{#if $turns && $schedules && $assignments && $showUsers}
 		<Card size="xl" class="mt-2">
+			<div class="flex flex-row justify-around mb-2 mt-2">
+				<Button
+					class="w-2/12 ml-2 mr-2"
+					on:click={() => {
+						date = new Date(date.setMonth(date.getMonth() - 1))
+						turns = liveQuery(() =>
+							db.turn
+								.where('date')
+								.between(
+									new Date(date.getFullYear(), date.getMonth(), 2).toISOString().split('T')[0],
+									new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0]
+								)
+								.toArray()
+						)
+					}}><ArrowLeftOutline></ArrowLeftOutline></Button
+				>
+				<Button
+					class="w-2/12 ml-2 mr-2"
+					on:click={() => {
+						date = new Date()
+						turns = liveQuery(() =>
+							db.turn
+								.where('date')
+								.between(
+									new Date(date.getFullYear(), date.getMonth(), 2).toISOString().split('T')[0],
+									new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0]
+								)
+								.toArray()
+						)
+					}}>Today</Button
+				>
+				<Badge rounded border color="red" class="w-5/12 ml-2 mr-2"
+					><P size="lg"
+						>{$_('general.' + date.toLocaleString('default', {month: 'long'}).toLowerCase())} {date.getFullYear()}</P
+					></Badge
+				>
+				<Button class="w-1/12 ml-2 mr-2"><FilePdfSolid></FilePdfSolid></Button>
+				<Button
+					class="w-2/12 ml-2 mr-2"
+					on:click={() => {
+						date = new Date(date.setMonth(date.getMonth() + 1))
+						turns = liveQuery(() =>
+							db.turn
+								.where('date')
+								.between(
+									new Date(date.getFullYear(), date.getMonth(), 2).toISOString().split('T')[0],
+									new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0]
+								)
+								.toArray()
+						)
+					}}><ArrowRightOutline></ArrowRightOutline></Button
+				>
+			</div>
 			{#if $turns.length == 0 || $schedules.length == 0}
-				<p class="text-center">{$_('turns.no-turns')}</p>
+				<p class="text-center mt-8">{$_('turns.no-turns')}</p>
 			{:else}
 				<TableSearch placeholder="busqueda" striped={true} hoverable={true}>
 					<TableHead>
@@ -214,7 +283,15 @@
 										</TableBodyCell>
 										<TableBodyCell>
 											<Button color="blue" class="mr-2" id="edit-{turn.id}">{$_('general.edit-btn')}</Button>
-											<Button color="red" class="ml-2" id="delete-{turn.id}">{$_('general.delete-btn')}</Button>
+											<Button
+												color="red"
+												class="ml-2"
+												id="delete-{turn.id}"
+												on:click={() => {
+													deleteModal = true
+													selectedId = turn.id
+												}}>{$_('general.delete-btn')}</Button
+											>
 										</TableBodyCell>
 									</TableBodyRow>
 								{/if}
@@ -224,5 +301,16 @@
 				</TableSearch>
 			{/if}
 		</Card>
+
+		<Modal bind:open={deleteModal} size="xs" autoclose outsideclose>
+			<div class="text-center">
+				<ExclamationCircleOutline class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" />
+				<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+					{$_('publishers.are-you-sure')}
+				</h3>
+				<Button color="red" class="me-2" on:click={deleteTurn}>{$_('general.yes-sure')}</Button>
+				<Button color="alternative">{$_('general.no-cancel')}</Button>
+			</div>
+		</Modal>
 	{/if}
 </div>

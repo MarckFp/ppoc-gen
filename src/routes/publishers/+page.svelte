@@ -15,7 +15,7 @@
 		Checkbox,
 		Badge
 	} from 'flowbite-svelte'
-	import {SearchSolid, ExclamationCircleOutline} from 'flowbite-svelte-icons'
+	import {ExclamationCircleOutline} from 'flowbite-svelte-icons'
 	import {db} from '$lib/db'
 	import {liveQuery} from 'dexie'
 	import {toastMessageSuccess, toastSuccess, toastMessageAlert, toastAlert} from '$lib/store'
