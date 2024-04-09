@@ -99,7 +99,7 @@
 					availabilityLoop: for (let availability of availabilities) {
 						userList.push(availability.user_id)
 					}
-					users = await db.user.where('id').anyOf(userList).reverse().sortBy('counter')
+					users = await db.user.where('id').anyOf(userList).sortBy('counter')
 					if (users.length == 0) {
 						$toastMessageWarning = `There is no publishers that can be assigned on ${d.toISOString().split('T')[0]}`
 						$toastWarning = true
@@ -166,6 +166,10 @@
 		setTimeout(() => {
 			$toastSuccess = false
 		}, 8000)
+	}
+
+	function exportToPDF() {
+		
 	}
 </script>
 
