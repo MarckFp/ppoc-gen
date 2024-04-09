@@ -12,46 +12,46 @@
 		TableHeadCell,
 		TableSearch,
 		TableHead
-	} from 'flowbite-svelte';
-	import { ExclamationCircleOutline } from 'flowbite-svelte-icons';
-	import Timepicker from '$lib/components/Timepicker.svelte';
-	import { db } from '$lib/db';
-	import { toastMessageSuccess, toastSuccess, toastMessageAlert, toastAlert } from '$lib/store';
-	import { liveQuery } from 'dexie';
-	import { _ } from 'svelte-i18n';
+	} from 'flowbite-svelte'
+	import {ExclamationCircleOutline} from 'flowbite-svelte-icons'
+	import Timepicker from '$lib/components/Timepicker.svelte'
+	import {db} from '$lib/db'
+	import {toastMessageSuccess, toastSuccess, toastMessageAlert, toastAlert} from '$lib/store'
+	import {liveQuery} from 'dexie'
+	import {_} from 'svelte-i18n'
 
-	let createModal = false;
-	let deleteModal = false;
-	let edit = false;
-	let searchTerm = '';
-	let selected_weekday = 'monday';
-	let start_time = '00:00';
-	let end_time = '00:00';
-	let n_carts = 1;
-	let location = '';
-	let n_brothers = 1;
-	let n_sisters = 1;
-	let selectedId: number;
+	let createModal = false
+	let deleteModal = false
+	let edit = false
+	let searchTerm = ''
+	let selected_weekday = 'monday'
+	let start_time = '00:00'
+	let end_time = '00:00'
+	let n_carts = 1
+	let location = ''
+	let n_brothers = 1
+	let n_sisters = 1
+	let selectedId: number
 	let weekdays = [
-		{ value: 'monday', name: $_('general.monday') },
-		{ value: 'tuesday', name: $_('general.tuesday') },
-		{ value: 'wednesday', name: $_('general.wednesday') },
-		{ value: 'thursday', name: $_('general.thursday') },
-		{ value: 'friday', name: $_('general.friday') },
-		{ value: 'saturday', name: $_('general.saturday') },
-		{ value: 'sunday', name: $_('general.sunday') }
-	];
+		{value: 'monday', name: $_('general.monday')},
+		{value: 'tuesday', name: $_('general.tuesday')},
+		{value: 'wednesday', name: $_('general.wednesday')},
+		{value: 'thursday', name: $_('general.thursday')},
+		{value: 'friday', name: $_('general.friday')},
+		{value: 'saturday', name: $_('general.saturday')},
+		{value: 'sunday', name: $_('general.sunday')}
+	]
 
-	let schedules = liveQuery(() => db.schedule.toArray());
+	let schedules = liveQuery(() => db.schedule.toArray())
 	$: filteredItems = $schedules?.filter(
-		(schedule) => schedule.weekday.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
-	);
+		schedule => schedule.weekday.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
+	)
 
 	//TODO: Add a check to see if we've exceeded the nº of carts for the congregation in a schedule
 	//TODO: Delete availabilities when a schedule is deleted
 	async function createSchedule() {
 		if (edit) {
-			return editSchedule();
+			return editSchedule()
 		}
 		try {
 			const id = await db.schedule.add({
@@ -62,37 +62,37 @@
 				location: location,
 				n_brothers: parseInt(n_brothers),
 				n_sisters: parseInt(n_sisters)
-			});
+			})
 
-			$toastMessageSuccess = $_('schedule.created');
-			$toastSuccess = true;
+			$toastMessageSuccess = $_('schedule.created')
+			$toastSuccess = true
 			setTimeout(() => {
-				$toastSuccess = false;
-			}, 8000);
+				$toastSuccess = false
+			}, 8000)
 		} catch (error) {
-			$toastMessageAlert = $_('schedule.failed') + error;
-			$toastAlert = true;
+			$toastMessageAlert = $_('schedule.failed') + error
+			$toastAlert = true
 			setTimeout(() => {
-				$toastAlert = false;
-			}, 8000);
+				$toastAlert = false
+			}, 8000)
 		} finally {
-			selected_weekday = 'monday';
-			start_time = '00:00';
-			end_time = '00:00';
-			n_carts = 1;
-			location = '';
-			n_brothers = 1;
-			n_sisters = 1;
+			selected_weekday = 'monday'
+			start_time = '00:00'
+			end_time = '00:00'
+			n_carts = 1
+			location = ''
+			n_brothers = 1
+			n_sisters = 1
 		}
 	}
 
 	async function deleteSchedule() {
-		await db.schedule.delete(selectedId);
-		$toastMessageSuccess = $_('schedule.deleted');
-		$toastSuccess = true;
+		await db.schedule.delete(selectedId)
+		$toastMessageSuccess = $_('schedule.deleted')
+		$toastSuccess = true
 		setTimeout(() => {
-			$toastSuccess = false;
-		}, 8000);
+			$toastSuccess = false
+		}, 8000)
 	}
 
 	function editSchedule() {
@@ -104,20 +104,20 @@
 			location: location,
 			n_brothers: parseInt(n_brothers),
 			n_sisters: parseInt(n_sisters)
-		});
-		$toastMessageSuccess = $_('schedule.modified');
-		$toastSuccess = true;
+		})
+		$toastMessageSuccess = $_('schedule.modified')
+		$toastSuccess = true
 		setTimeout(() => {
-			$toastSuccess = false;
-		}, 8000);
-		selected_weekday = 'monday';
-		start_time = '00:00';
-		end_time = '00:00';
-		n_carts = 1;
-		location = '';
-		n_brothers = 1;
-		n_sisters = 1;
-		edit = false;
+			$toastSuccess = false
+		}, 8000)
+		selected_weekday = 'monday'
+		start_time = '00:00'
+		end_time = '00:00'
+		n_carts = 1
+		location = ''
+		n_brothers = 1
+		n_sisters = 1
+		edit = false
 	}
 </script>
 
@@ -127,15 +127,15 @@
 			color="blue"
 			class="mt-1 mb-4"
 			on:click={() => {
-				createModal = true;
-				selected_weekday = 'monday';
-				start_time = '00:00';
-				end_time = '00:00';
-				n_carts = 1;
-				location = '';
-				n_brothers = 1;
-				n_sisters = 1;
-				edit = false;
+				createModal = true
+				selected_weekday = 'monday'
+				start_time = '00:00'
+				end_time = '00:00'
+				n_carts = 1
+				location = ''
+				n_brothers = 1
+				n_sisters = 1
+				edit = false
 			}}>{$_('schedule.create-btn')}</Button
 		>
 		{#if $schedules}
@@ -178,16 +178,16 @@
 										class="mr-2"
 										id="edit-{schedule.id}"
 										on:click={() => {
-											createModal = true;
-											selectedId = schedule.id;
-											edit = true;
-											selected_weekday = schedule.weekday;
-											n_brothers = schedule.n_brothers;
-											n_sisters = schedule.n_sisters;
-											n_carts = schedule.n_carts;
-											location = schedule.location;
-											start_time = schedule.start_time;
-											end_time = schedule.end_time;
+											createModal = true
+											selectedId = schedule.id
+											edit = true
+											selected_weekday = schedule.weekday
+											n_brothers = schedule.n_brothers
+											n_sisters = schedule.n_sisters
+											n_carts = schedule.n_carts
+											location = schedule.location
+											start_time = schedule.start_time
+											end_time = schedule.end_time
 										}}>{$_('general.edit-btn')}</Button
 									>
 									<Button
@@ -195,8 +195,8 @@
 										class="ml-2"
 										id="delete-{schedule.id}"
 										on:click={() => {
-											deleteModal = true;
-											selectedId = schedule.id;
+											deleteModal = true
+											selectedId = schedule.id
 										}}>{$_('general.delete-btn')}</Button
 									>
 								</TableBodyCell>

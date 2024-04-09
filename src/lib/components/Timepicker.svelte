@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let selectedTime = '00:00';
+	export let selectedTime = '00:00'
 </script>
 
 <form class="w-full mx-auto">

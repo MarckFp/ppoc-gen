@@ -1,24 +1,24 @@
-import Dexie, { type Table } from 'dexie';
-import type { Congregation } from './models/congregation';
-import type { User } from './models/user';
-import type { Availability } from './models/availability';
-import type { Incidence } from './models/incidence';
-import type { Schedule } from './models/schedule';
-import type { Turn } from './models/turn';
-import type { Assignment } from './models/assignment';
+import Dexie, {type Table} from 'dexie'
+import type {Congregation} from './models/congregation'
+import type {User} from './models/user'
+import type {Availability} from './models/availability'
+import type {Incidence} from './models/incidence'
+import type {Schedule} from './models/schedule'
+import type {Turn} from './models/turn'
+import type {Assignment} from './models/assignment'
 
 export class MySubClassedDexie extends Dexie {
-	congregation!: Table<Congregation>;
-	user!: Table<User>;
-	availability!: Table<Availability>;
-	incidence!: Table<Incidence>;
-	schedule!: Table<Schedule>;
-	turn!: Table<Turn>;
-	assignment!: Table<Assignment>;
+	congregation!: Table<Congregation>
+	user!: Table<User>
+	availability!: Table<Availability>
+	incidence!: Table<Incidence>
+	schedule!: Table<Schedule>
+	turn!: Table<Turn>
+	assignment!: Table<Assignment>
 
 	//TODO: Create Assignment, the relation of turn and user
 	constructor() {
-		super('ppocgen');
+		super('ppocgen')
 		this.version(1).stores({
 			congregation: '++id, name, n_carts',
 			user: '++id,firstname, lastname, gender, weight, counter',
@@ -27,8 +27,8 @@ export class MySubClassedDexie extends Dexie {
 			schedule: '++id, weekday, start_time, end_time, n_carts, location, n_brothers, n_sisters',
 			turn: '++id, date, schedule_id',
 			assignment: '++id, user_id, turn_id'
-		});
+		})
 	}
 }
 
-export const db = new MySubClassedDexie();
+export const db = new MySubClassedDexie()

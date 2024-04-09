@@ -12,74 +12,73 @@
 		TableBodyCell,
 		TableHead,
 		TableHeadCell
-	} from 'flowbite-svelte';
-	import { ExclamationCircleOutline } from 'flowbite-svelte-icons';
-	import { db } from '$lib/db';
-	import { toastMessageSuccess, toastSuccess, toastMessageAlert, toastAlert } from '$lib/store';
-	import { liveQuery } from 'dexie';
-	import { _ } from 'svelte-i18n';
+	} from 'flowbite-svelte'
+	import {ExclamationCircleOutline} from 'flowbite-svelte-icons'
+	import {db} from '$lib/db'
+	import {toastMessageSuccess, toastSuccess, toastMessageAlert, toastAlert} from '$lib/store'
+	import {liveQuery} from 'dexie'
+	import {_} from 'svelte-i18n'
 
-	let createModal = false;
-	let deleteModal = false;
-	let edit = false;
-	let selectedId: number;
-	let searchTerm = '';
-	let user_id = 0;
-	let userSelect: Array<{ value: number; name: string }> = [];
-	let userList: string[] = [];
+	let createModal = false
+	let deleteModal = false
+	let edit = false
+	let selectedId: number
+	let searchTerm = ''
+	let user_id = 0
+	let userSelect: Array<{value: number; name: string}> = []
+	let userList: string[] = []
 	let now = new Date(),
 		month,
 		day,
-		year;
-	let start_date = new Date().toISOString().split('T')[0];
-	let end_date = new Date().toISOString().split('T')[0];
+		year
+	let start_date = new Date().toISOString().split('T')[0]
+	let end_date = new Date().toISOString().split('T')[0]
 
-	let incidences = liveQuery(() => db.incidence.toArray());
+	let incidences = liveQuery(() => db.incidence.toArray())
 	let users = db.user.toArray().then(() => {
-		db.user.each((user) => {
-			userSelect.push({ value: user.id, name: user.firstname + ' ' + user.lastname });
-			userList[user.id] = user.firstname + ' ' + user.lastname;
-		});
-	});
-
+		db.user.each(user => {
+			userSelect.push({value: user.id, name: user.firstname + ' ' + user.lastname})
+			userList[user.id] = user.firstname + ' ' + user.lastname
+		})
+	})
 
 	$: filteredItems = $incidences?.filter(
-		(incidence) => incidence.start_date.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
-	);
+		incidence => incidence.start_date.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
+	)
 
 	//TODO: Handle exceptions when start date is after end date
 	async function createIncidence() {
 		if (edit) {
-			return editIncidence();
+			return editIncidence()
 		}
 		try {
-			const maxUser = await db.user.orderBy('counter').last();
-			let maxCounter = 0;
+			const maxUser = await db.user.orderBy('counter').last()
+			let maxCounter = 0
 			if (maxUser?.counter !== undefined) {
-				maxCounter = maxUser?.counter;
+				maxCounter = maxUser?.counter
 			}
 
 			await db.incidence.add({
 				user_id: user_id,
 				start_date: start_date,
 				end_date: end_date
-			});
+			})
 
-			$toastMessageSuccess = $_('incidences.created');
-			$toastSuccess = true;
+			$toastMessageSuccess = $_('incidences.created')
+			$toastSuccess = true
 			setTimeout(() => {
-				$toastSuccess = false;
-			}, 8000);
+				$toastSuccess = false
+			}, 8000)
 		} catch (error) {
-			$toastMessageAlert = $_('incidences.failed') + error;
-			$toastAlert = true;
+			$toastMessageAlert = $_('incidences.failed') + error
+			$toastAlert = true
 			setTimeout(() => {
-				$toastAlert = false;
-			}, 8000);
+				$toastAlert = false
+			}, 8000)
 		} finally {
-			user_id = 0;
-			start_date = new Date().toISOString().split('T')[0];
-			end_date = new Date().toISOString().split('T')[0];
+			user_id = 0
+			start_date = new Date().toISOString().split('T')[0]
+			end_date = new Date().toISOString().split('T')[0]
 		}
 	}
 
@@ -88,25 +87,25 @@
 			user_id: user_id,
 			start_date: start_date,
 			end_date: end_date
-		});
-		$toastMessageSuccess = $_('incidences.modified');
-		$toastSuccess = true;
+		})
+		$toastMessageSuccess = $_('incidences.modified')
+		$toastSuccess = true
 		setTimeout(() => {
-			$toastSuccess = false;
-		}, 8000);
-		user_id = 0;
-		start_date = new Date().toISOString().split('T')[0];
-		end_date = new Date().toISOString().split('T')[0];
-		edit = false;
+			$toastSuccess = false
+		}, 8000)
+		user_id = 0
+		start_date = new Date().toISOString().split('T')[0]
+		end_date = new Date().toISOString().split('T')[0]
+		edit = false
 	}
 
 	async function deleteIncidence() {
-		await db.incidence.delete(selectedId);
-		$toastMessageSuccess = $_('incidences.deleted');
-		$toastSuccess = true;
+		await db.incidence.delete(selectedId)
+		$toastMessageSuccess = $_('incidences.deleted')
+		$toastSuccess = true
 		setTimeout(() => {
-			$toastSuccess = false;
-		}, 8000);
+			$toastSuccess = false
+		}, 8000)
 	}
 </script>
 
@@ -116,11 +115,11 @@
 			color="blue"
 			class="mt-1 mb-4"
 			on:click={() => {
-				createModal = true;
-				edit = false;
-				user_id = 0;
-				start_date = new Date().toISOString().split('T')[0];
-				end_date = new Date().toISOString().split('T')[0];
+				createModal = true
+				edit = false
+				user_id = 0
+				start_date = new Date().toISOString().split('T')[0]
+				end_date = new Date().toISOString().split('T')[0]
 			}}>{$_('incidences.create-btn')}</Button
 		>
 		{#if $incidences}
@@ -155,12 +154,12 @@
 										class="mr-2"
 										id="edit-{incidence.id}"
 										on:click={() => {
-											createModal = true;
-											selectedId = incidence.id;
-											user_id = incidence.user_id;
-											start_date = incidence.start_date;
-											end_date = incidence.end_date;
-											edit = true;
+											createModal = true
+											selectedId = incidence.id
+											user_id = incidence.user_id
+											start_date = incidence.start_date
+											end_date = incidence.end_date
+											edit = true
 										}}>{$_('general.edit-btn')}</Button
 									>
 									<Button
@@ -168,8 +167,8 @@
 										class="ml-2"
 										id="delete-{incidence.id}"
 										on:click={() => {
-											deleteModal = true;
-											selectedId = incidence.id;
+											deleteModal = true
+											selectedId = incidence.id
 										}}>{$_('general.delete-btn')}</Button
 									>
 								</TableBodyCell>

@@ -1,17 +1,12 @@
 <script lang="ts">
-	import '../app.css';
-	import { liveQuery } from 'dexie';
-	import { db } from '$lib/db';
-	import NavBar from '$lib/components/NavBar.svelte';
-	import New from '$lib/components/New.svelte';
-	import { Toast } from 'flowbite-svelte';
-	import { slide } from 'svelte/transition';
-	import {
-		CheckCircleSolid,
-		ExclamationCircleSolid,
-		FireOutline,
-		CloseCircleSolid
-	} from 'flowbite-svelte-icons';
+	import '../app.css'
+	import {liveQuery} from 'dexie'
+	import {db} from '$lib/db'
+	import NavBar from '$lib/components/NavBar.svelte'
+	import New from '$lib/components/New.svelte'
+	import {Toast} from 'flowbite-svelte'
+	import {slide} from 'svelte/transition'
+	import {CheckCircleSolid, ExclamationCircleSolid, FireOutline, CloseCircleSolid} from 'flowbite-svelte-icons'
 	import {
 		toastMessageAlert,
 		toastMessageWarning,
@@ -19,8 +14,8 @@
 		toastSuccess,
 		toastWarning,
 		toastAlert
-	} from '$lib/store';
-	import { registerSW } from 'virtual:pwa-register'
+	} from '$lib/store'
+	import {registerSW} from 'virtual:pwa-register'
 
 	//TODO: Add Callbacks when app is offline or need refresh following https://vite-pwa-org.netlify.app/guide/prompt-for-update.html
 	const intervalMS = 60 * 60 * 1000
@@ -29,12 +24,13 @@
 		onOfflineReady() {},
 		onNeedRefresh() {},
 		onRegistered(r) {
-			r && setInterval(() => {
-			r.update()
-			}, intervalMS)
+			r &&
+				setInterval(() => {
+					r.update()
+				}, intervalMS)
 		}
-	});
-	let congregation = liveQuery(() => db.congregation.toArray());
+	})
+	let congregation = liveQuery(() => db.congregation.toArray())
 </script>
 
 <main class="bg-white dark:bg-gray-800 h-screen">

@@ -14,44 +14,42 @@
 		TableHeadCell,
 		Checkbox,
 		Badge
-	} from 'flowbite-svelte';
-	import { SearchSolid, ExclamationCircleOutline } from 'flowbite-svelte-icons';
-	import { db } from '$lib/db';
-	import { liveQuery } from 'dexie';
-	import { toastMessageSuccess, toastSuccess, toastMessageAlert, toastAlert } from '$lib/store';
-	import { _ } from 'svelte-i18n';
+	} from 'flowbite-svelte'
+	import {SearchSolid, ExclamationCircleOutline} from 'flowbite-svelte-icons'
+	import {db} from '$lib/db'
+	import {liveQuery} from 'dexie'
+	import {toastMessageSuccess, toastSuccess, toastMessageAlert, toastAlert} from '$lib/store'
+	import {_} from 'svelte-i18n'
 
-	let createModal = false;
-	let deleteModal = false;
-	let edit = false;
-	let selectedId: number;
-	let searchTerm = '';
-	let firstname = '';
-	let lastname = '';
-	let gender = 'male';
-	let weight: number = 1;
+	let createModal = false
+	let deleteModal = false
+	let edit = false
+	let selectedId: number
+	let searchTerm = ''
+	let firstname = ''
+	let lastname = ''
+	let gender = 'male'
+	let weight: number = 1
 	let genders = [
-		{ value: 'male', name: $_('general.male') },
-		{ value: 'female', name: $_('general.female') }
-	];
-	let availabilities: boolean[] = [];
-	let users = liveQuery(() => db.user.toArray());
-	let schedules = liveQuery(() => db.schedule.toArray());
+		{value: 'male', name: $_('general.male')},
+		{value: 'female', name: $_('general.female')}
+	]
+	let availabilities: boolean[] = []
+	let users = liveQuery(() => db.user.toArray())
+	let schedules = liveQuery(() => db.schedule.toArray())
 
-	$: filteredItems = $users?.filter(
-		(user) => user.firstname.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
-	);
+	$: filteredItems = $users?.filter(user => user.firstname.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1)
 
 	//TODO: Rework weight with range or radio and change name to importance so the UX is more legible
 	async function createPublisher() {
 		if (edit) {
-			return editUser();
+			return editUser()
 		}
 		try {
-			const maxUser = await db.user.orderBy('counter').last();
-			let maxCounter: number = 0;
+			const maxUser = await db.user.orderBy('counter').last()
+			let maxCounter: number = 0
 			if (maxUser?.counter !== undefined) {
-				maxCounter = maxUser?.counter;
+				maxCounter = maxUser?.counter
 			}
 
 			const id = await db.user.add({
@@ -60,34 +58,34 @@
 				gender: gender,
 				weight: parseFloat(weight),
 				counter: maxCounter
-			});
+			})
 
 			availabilities.forEach(async (availability, availability_id) => {
 				if (availability) {
 					await db.availability.add({
 						user_id: id,
 						schedule_id: availability_id
-					});
+					})
 				}
-			});
+			})
 
-			$toastMessageSuccess = $_('publishers.pub-create');
-			$toastSuccess = true;
+			$toastMessageSuccess = $_('publishers.pub-create')
+			$toastSuccess = true
 			setTimeout(() => {
-				$toastSuccess = false;
-			}, 8000);
+				$toastSuccess = false
+			}, 8000)
 		} catch (error) {
-			$toastMessageAlert = $_('publishers.pub-create-failed') + error;
-			$toastAlert = true;
+			$toastMessageAlert = $_('publishers.pub-create-failed') + error
+			$toastAlert = true
 			setTimeout(() => {
-				$toastAlert = false;
-			}, 8000);
+				$toastAlert = false
+			}, 8000)
 		} finally {
-			firstname = '';
-			lastname = '';
-			gender = 'male';
-			weight = 1;
-			availabilities = [];
+			firstname = ''
+			lastname = ''
+			gender = 'male'
+			weight = 1
+			availabilities = []
 		}
 	}
 
@@ -97,59 +95,59 @@
 			lastname: lastname,
 			gender: gender,
 			weight: parseFloat(weight)
-		});
+		})
 
-		const availability_list = await db.availability.where({user_id: selectedId}).toArray();
-		availability_list.forEach(async (availability) => {
-			await db.availability.delete(availability.id);
-		});
+		const availability_list = await db.availability.where({user_id: selectedId}).toArray()
+		availability_list.forEach(async availability => {
+			await db.availability.delete(availability.id)
+		})
 
 		availabilities.forEach(async (availability, availability_id) => {
 			if (availability) {
 				await db.availability.add({
 					user_id: selectedId,
 					schedule_id: availability_id
-				});
+				})
 			}
-		});
+		})
 
-		$toastMessageSuccess = $_('publishers.pub-modified');
-		$toastSuccess = true;
+		$toastMessageSuccess = $_('publishers.pub-modified')
+		$toastSuccess = true
 		setTimeout(() => {
-			$toastSuccess = false;
-		}, 8000);
-		firstname = '';
-		lastname = '';
-		gender = 'male';
-		weight = 1;
-		availabilities = [];
-		edit = false;
+			$toastSuccess = false
+		}, 8000)
+		firstname = ''
+		lastname = ''
+		gender = 'male'
+		weight = 1
+		availabilities = []
+		edit = false
 	}
 
 	async function deleteUser() {
-		await db.user.delete(selectedId);
-		const availability_list = await db.availability.where({user_id: selectedId}).toArray();
-		availability_list.forEach(async (availability) => {
-			await db.availability.delete(availability.id);
-		});
+		await db.user.delete(selectedId)
+		const availability_list = await db.availability.where({user_id: selectedId}).toArray()
+		availability_list.forEach(async availability => {
+			await db.availability.delete(availability.id)
+		})
 
-		$toastMessageSuccess = $_('publishers.pub-deleted');
-		$toastSuccess = true;
+		$toastMessageSuccess = $_('publishers.pub-deleted')
+		$toastSuccess = true
 		setTimeout(() => {
-			$toastSuccess = false;
-		}, 8000);
+			$toastSuccess = false
+		}, 8000)
 	}
 
 	async function retrieveAvailabilities(user_id: number) {
-		availabilities = [];
-		const availability_list = await db.availability.where({user_id: user_id}).toArray();
+		availabilities = []
+		const availability_list = await db.availability.where({user_id: user_id}).toArray()
 		if (availability_list.length == 0) {
-			availabilities = [];
-			return;
+			availabilities = []
+			return
 		}
-		availability_list.forEach((availability) => {
-			availabilities[availability.schedule_id] = true;
-		});
+		availability_list.forEach(availability => {
+			availabilities[availability.schedule_id] = true
+		})
 	}
 </script>
 
@@ -159,13 +157,13 @@
 			color="blue"
 			class="mt-1 mb-4"
 			on:click={() => {
-				createModal = true;
-				edit = false;
-				firstname = '';
-				lastname = '';
-				gender = 'male';
-				availabilities = [];
-				weight = 1;
+				createModal = true
+				edit = false
+				firstname = ''
+				lastname = ''
+				gender = 'male'
+				availabilities = []
+				weight = 1
 			}}>{$_('publishers.create-btn')}</Button
 		>
 		{#if $users}
@@ -194,9 +192,7 @@
 							<TableBodyRow>
 								<TableBodyCell>{user.firstname}</TableBodyCell>
 								<TableBodyCell>{user.lastname}</TableBodyCell>
-								<TableBodyCell
-									>{$_('general.' + user.gender)}</TableBodyCell
-								>
+								<TableBodyCell>{$_('general.' + user.gender)}</TableBodyCell>
 								<TableBodyCell>{user.weight}</TableBodyCell>
 								<TableBodyCell>
 									<Button
@@ -204,14 +200,14 @@
 										class="mr-2"
 										id="edit-{user.id}"
 										on:click={() => {
-											createModal = true;
-											selectedId = user.id;
-											firstname = user.firstname;
-											lastname = user.lastname;
-											gender = user.gender;
-											weight = user.weight;
-											retrieveAvailabilities(user.id);
-											edit = true;
+											createModal = true
+											selectedId = user.id
+											firstname = user.firstname
+											lastname = user.lastname
+											gender = user.gender
+											weight = user.weight
+											retrieveAvailabilities(user.id)
+											edit = true
 										}}>{$_('general.edit-btn')}</Button
 									>
 									<Button
@@ -219,8 +215,8 @@
 										class="ml-2"
 										id="delete-{user.id}"
 										on:click={() => {
-											deleteModal = true;
-											selectedId = user.id;
+											deleteModal = true
+											selectedId = user.id
 										}}>{$_('general.delete-btn')}</Button
 									>
 								</TableBodyCell>
@@ -257,7 +253,13 @@
 				{:else}
 					<ul class="items-center grid grid-cols-1 w-full rounded-lg">
 						{#each $schedules as schedule}
-							<li class="w-full border"><Checkbox class="p-3" bind:checked={availabilities[schedule.id]}><Badge color="red" class="m-1">{$_('general.'+schedule.weekday)}</Badge><Badge color="indigo">{schedule.start_time + '-' + schedule.end_time}</Badge><Badge class="m-1" color="pink">{schedule.location}</Badge></Checkbox></li>
+							<li class="w-full border">
+								<Checkbox class="p-3" bind:checked={availabilities[schedule.id]}
+									><Badge color="red" class="m-1">{$_('general.' + schedule.weekday)}</Badge><Badge color="indigo"
+										>{schedule.start_time + '-' + schedule.end_time}</Badge
+									><Badge class="m-1" color="pink">{schedule.location}</Badge></Checkbox
+								>
+							</li>
 						{/each}
 					</ul>
 				{/if}
