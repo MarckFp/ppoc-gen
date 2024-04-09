@@ -4,6 +4,7 @@
 	import { Button } from 'flowbite-svelte';
 	import { CloudArrowUpSolid } from 'flowbite-svelte-icons';
 	import { importInto } from 'dexie-export-import';
+	import { _ } from 'svelte-i18n';
 
 	let congregation_name: string,
 		files: FileList,
@@ -16,13 +17,13 @@
 				n_carts: n_carts
 			});
 
-			$toastMessageSuccess = `Congregation: ${congregation_name} successfully added`;
+			$toastMessageSuccess = $_('settings.created-successfully');
 			$toastSuccess = true;
 			setTimeout(() => {
 				$toastSuccess = false;
 			}, 8000);
 		} catch (error) {
-			$toastMessageAlert = `Failed to add ${congregation_name}: ${error}`;
+			$toastMessageAlert = $_('settings.create-failed') + error;
 			$toastAlert = true;
 			setTimeout(() => {
 				$toastAlert = false;
@@ -38,7 +39,7 @@
 	async function importData() {
 		await importInto(db, files[0], { clearTablesBeforeImport: true, overwriteValues: true }).then(
 			() => {
-				$toastMessageSuccess = 'Congregation imported successfully';
+				$toastMessageSuccess = $_('settings.imported-successfully');
 				$toastSuccess = true;
 			}
 		);
@@ -58,7 +59,7 @@
 			>
 				<img
 					class="w-8 h-8 mr-2"
-					src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
+					src="favicon.ico"
 					alt="logo"
 				/>
 				PPOC Gen
@@ -70,12 +71,12 @@
 					<h1
 						class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
 					>
-						Create a New Congregation
+						{$_('settings.create-new-cong')}
 					</h1>
 					<form class="space-y-4 md:space-y-6" action="#">
 						<div>
 							<label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-								>Congregation name</label
+								>{$_('settings.cong-name')}</label
 							>
 							<input
 								type="text"
@@ -91,7 +92,7 @@
 							<label
 								for="n_carts"
 								class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-								>Number of Carts</label
+								>{$_('settings.n-carts')}</label
 							>
 							<input
 								type="number"
@@ -106,9 +107,9 @@
 						</div>
 						<Button
 							class="w-full"
-							on:click={createCongregation}>Create Congregation</Button
+							on:click={createCongregation}>{$_('settings.create-cong')}</Button
 						>
-						<p class="text-center">- Or -</p>
+						<p class="text-center">- {$_('settings.or')} -</p>
 						<input
 							bind:files
 							id="import"
@@ -119,13 +120,13 @@
 						/>
 						<Button class="w-full" on:click={importDataBtn}>
 							<CloudArrowUpSolid class="w-6 h-6 me-3" />
-							Import Data
+							{$_('settings.import')}
 						</Button>
 						<p class="text-sm font-light text-gray-500 dark:text-gray-400">
-							Read the official <a
+							{$_('settings.read-official')} <a
 								href="/documentation"
 								class="font-medium text-primary-600 hover:underline dark:text-primary-500"
-								>Documentation</a
+								>{$_('settings.documentation')}</a
 							>
 						</p>
 					</form>
