@@ -29,7 +29,7 @@
 	let firstname = '';
 	let lastname = '';
 	let gender = 'male';
-	let weight = 1;
+	let weight: number = 1;
 	let genders = [
 		{ value: 'male', name: $_('general.male') },
 		{ value: 'female', name: $_('general.female') }
@@ -49,7 +49,7 @@
 		}
 		try {
 			const maxUser = await db.user.orderBy('counter').last();
-			let maxCounter = 0;
+			let maxCounter: number = 0;
 			if (maxUser?.counter !== undefined) {
 				maxCounter = maxUser?.counter;
 			}
@@ -58,7 +58,7 @@
 				firstname: firstname,
 				lastname: lastname,
 				gender: gender,
-				weight: weight,
+				weight: parseFloat(weight),
 				counter: maxCounter
 			});
 
@@ -96,7 +96,7 @@
 			firstname: firstname,
 			lastname: lastname,
 			gender: gender,
-			weight: weight
+			weight: parseFloat(weight)
 		});
 
 		const availability_list = await db.availability.where({user_id: selectedId}).toArray();

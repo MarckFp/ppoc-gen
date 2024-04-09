@@ -5,6 +5,7 @@ import type { Availability } from './models/availability';
 import type { Incidence } from './models/incidence';
 import type { Schedule } from './models/schedule';
 import type { Turn } from './models/turn';
+import type { Assignment } from './models/assignment';
 
 export class MySubClassedDexie extends Dexie {
 	congregation!: Table<Congregation>;
@@ -13,17 +14,19 @@ export class MySubClassedDexie extends Dexie {
 	incidence!: Table<Incidence>;
 	schedule!: Table<Schedule>;
 	turn!: Table<Turn>;
+	assignment!: Table<Assignment>;
 
 	//TODO: Create Assignment, the relation of turn and user
 	constructor() {
 		super('ppocgen');
 		this.version(1).stores({
-			congregation: '++id, name, n_carts', // Primary key and indexed props
+			congregation: '++id, name, n_carts',
 			user: '++id,firstname, lastname, gender, weight, counter',
 			availability: '++id, user_id, schedule_id',
 			incidence: '++id, user_id, start_date, end_date',
 			schedule: '++id, weekday, start_time, end_time, n_carts, location, n_brothers, n_sisters',
-			turn: '++id, date, start_time, end_time'
+			turn: '++id, date, schedule_id',
+			assignment: '++id, user_id, turn_id'
 		});
 	}
 }

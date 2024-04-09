@@ -6,7 +6,6 @@
 		Label,
 		Input,
 		Select,
-		Table,
 		TableBody,
 		TableBodyCell,
 		TableBodyRow,
@@ -59,10 +58,10 @@
 				weekday: selected_weekday,
 				start_time: start_time,
 				end_time: end_time,
-				n_carts: n_carts,
+				n_carts: parseInt(n_carts),
 				location: location,
-				n_brothers: n_brothers,
-				n_sisters: n_sisters
+				n_brothers: parseInt(n_brothers),
+				n_sisters: parseInt(n_sisters)
 			});
 
 			$toastMessageSuccess = $_('schedule.created');
@@ -101,10 +100,10 @@
 			weekday: selected_weekday,
 			start_time: start_time,
 			end_time: end_time,
-			n_carts: n_carts,
+			n_carts: parseInt(n_carts),
 			location: location,
-			n_brothers: n_brothers,
-			n_sisters: n_sisters
+			n_brothers: parseInt(n_brothers),
+			n_sisters: parseInt(n_sisters)
 		});
 		$toastMessageSuccess = $_('schedule.modified');
 		$toastSuccess = true;
