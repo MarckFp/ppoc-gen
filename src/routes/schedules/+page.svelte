@@ -47,8 +47,6 @@
 		schedule => schedule.weekday.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
 	)
 
-	//TODO: Add a check to see if we've exceeded the nº of carts for the congregation in a schedule
-	//TODO: Delete availabilities when a schedule is deleted
 	async function createSchedule() {
 		if (edit) {
 			return editSchedule()
@@ -88,8 +86,8 @@
 
 	async function deleteSchedule() {
 		await db.schedule.delete(selectedId)
-		await db.availability.where({schedule_id: selectedId}).each((user_availability) => {
-			db.availability.delete(user_availability.id);
+		await db.availability.where({schedule_id: selectedId}).each(user_availability => {
+			db.availability.delete(user_availability.id)
 		})
 		$toastMessageSuccess = $_('schedule.deleted')
 		$toastSuccess = true

@@ -54,9 +54,7 @@
 		deleteModal: boolean = false,
 		selectedId: number
 
-	$: filteredItems = $turns?.filter(
-		turn => turn.date.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
-	)
+	$: filteredItems = $turns?.filter(turn => turn.date.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1)
 
 	async function createTurns() {
 		loading = true

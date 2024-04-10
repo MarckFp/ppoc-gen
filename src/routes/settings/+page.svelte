@@ -8,9 +8,14 @@
 	import {exportDB, importInto} from 'dexie-export-import'
 	import {locale, locales, _} from 'svelte-i18n'
 
-	let deleteModal = false
-	let importModal = false
+	let deleteModal: boolean = false
+	let importModal: boolean = false
 	let files: FileList
+	let congregation = liveQuery(() => db.congregation.toArray())
+	let langs: {value: string; name: string}[] = []
+	$locales.forEach(lang => {
+		langs.push({value: lang, name: $_('general.' + lang)})
+	})
 
 	async function deleteCongregation() {
 		await db.congregation.clear()
@@ -22,13 +27,6 @@
 		await invalidateAll()
 		goto('/')
 	}
-
-	let congregation = liveQuery(() => db.congregation.toArray())
-
-	let langs = []
-	$locales.forEach(lang => {
-		langs.push({value: lang, name: $_('general.' + lang)})
-	})
 
 	function updateCongregation() {
 		db.congregation.update($congregation[0].id, $congregation[0])

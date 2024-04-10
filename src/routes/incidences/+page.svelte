@@ -27,27 +27,34 @@
 	let user_id = 0
 	let userSelect: Array<{value: number; name: string}> = []
 	let userList: string[] = []
-	let now = new Date(),
-		month,
-		day,
-		year
 	let start_date = new Date().toISOString().split('T')[0]
 	let end_date = new Date().toISOString().split('T')[0]
 
 	let incidences = liveQuery(() => db.incidence.toArray())
-	let users = db.user.toArray().then(() => {
-		db.user.each(user => {
-			userSelect.push({value: user.id, name: user.firstname + ' ' + user.lastname})
-			userList[user.id] = user.firstname + ' ' + user.lastname
-		})
+	db.user.each(user => {
+		userSelect.push({value: user.id, name: user.firstname + ' ' + user.lastname})
+		userList[user.id] = user.firstname + ' ' + user.lastname
 	})
 
 	$: filteredItems = $incidences?.filter(
 		incidence => incidence.start_date.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
 	)
 
-	//TODO: Handle exceptions when start date is after end date
 	async function createIncidence() {
+		let from = new Date(start_date)
+		let to = new Date(end_date)
+
+		if (from > to) {
+			start_date = ''
+			end_date = ''
+
+			$toastMessageAlert = $_('turns.from-bigger-to')
+			$toastAlert = true
+			setTimeout(() => {
+				$toastAlert = false
+			}, 8000)
+			return
+		}
 		if (edit) {
 			return editIncidence()
 		}
