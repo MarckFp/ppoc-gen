@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     tags:
-      - "v*.*.*"
+      - "*.*.*"
   workflow_dispatch:
 
 concurrency:
@@ -48,13 +48,13 @@ jobs:
         with:
           node-version: 21
       - uses: oven-sh/setup-bun@v1
+      - run: sudo apt-get update && sudo apt-get install libgtk-3-dev
       - run: bun install
       - run: bun tauri build
-      - run: ls -l ./src-tauri/target/release/bundle/
       - uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: ./src-tauri/target/release/bundle/deb/ppoc-gen_0.1.0.deb
+          files: ./src-tauri/target/release/bundle/deb/ppoc-gen_${{  github.ref_name }}.deb
   deploy-windows:
     runs-on: windows-latest
     permissions:
@@ -68,11 +68,12 @@ jobs:
       - uses: oven-sh/setup-bun@v1
       - run: bun install
       - run: bun tauri build
-      - run: ls -l ./src-tauri/target/release/bundle/
       - uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: ./src-tauri/target/release/bundle/msi/ppoc-gen_0.1.0.msi
+          files: |
+            ./src-tauri/target/release/bundle/msi/ppoc-gen_${{  github.ref_name }}_x64_en-US.msi
+            ./src-tauri/target/release/bundle/nsis/ppoc-gen_${{  github.ref_name }}_x64-setup.exe
   deploy-macos:
     runs-on: macos-latest
     permissions:
@@ -89,4 +90,6 @@ jobs:
       - uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: ./src-tauri/target/release/bundle/dmg/ppoc-gen_0.1.0_aarch64.dmg
+          files: |
+            ./src-tauri/target/release/bundle/macos/ppoc-gen.app
+            ./src-tauri/target/release/bundle/dmg/ppoc-gen_${{  github.ref_name }}_x64.dmg
