@@ -87,7 +87,9 @@
 		"are-you-sure": "Are you sure you want to delete this Turn?",
 		"from-bigger-to": "From date, cannot be grater than To date",
 		"no-availability": "There is no publishers with availability on: ",
-		"no-publishers": "There is no publishers that can be assigned to date: "
+		"no-publishers": "There is no publishers that can be assigned to date: ",
+		"deleted-pub": "Deleted Publisher",
+		"search-by": "Search by Date"
 	},
 	"incidences": {
 		"create-btn": "Create new Incidence",

@@ -50,8 +50,13 @@
 		userList: number[] = [],
 		brothers: number = 0,
 		sisters: number = 0,
-		deleteModal = false,
+		searchTerm: string = '',
+		deleteModal: boolean = false,
 		selectedId: number
+
+	$: filteredItems = $turns?.filter(
+		turn => turn.date.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
+	)
 
 	async function createTurns() {
 		loading = true
@@ -148,9 +153,6 @@
 				}
 			}
 		}
-
-		fromDate = ''
-		toDate = ''
 		loading = false
 	}
 
@@ -255,7 +257,7 @@
 			{#if $turns.length == 0 || $schedules.length == 0}
 				<p class="mt-8 text-center">{$_('turns.no-turns')}</p>
 			{:else}
-				<TableSearch placeholder="busqueda" striped={true} hoverable={true}>
+				<TableSearch placeholder={$_('turns.search-by')} striped={true} hoverable={true} bind:inputValue={searchTerm}>
 					<TableHead>
 						<TableHeadCell>{$_('turns.day')}</TableHeadCell>
 						<TableHeadCell>{$_('turns.time')}</TableHeadCell>
@@ -266,7 +268,7 @@
 						</TableHeadCell>
 					</TableHead>
 					<TableBody>
-						{#each $turns as turn}
+						{#each filteredItems as turn}
 							{#each $schedules as schedule}
 								{#if schedule.id === turn.schedule_id}
 									<TableBodyRow>
@@ -276,6 +278,9 @@
 										<TableBodyCell>
 											{#each $assignments as assignment}
 												{#if assignment.turn_id == turn.id}
+													{#if assignment.user_id === -1}
+														<Badge color="yellow" class="m-1">{$_('turns.deleted-pub')}</Badge>
+													{/if}
 													{#each $showUsers as user}
 														{#if user.id == assignment.user_id}
 															{#if user.gender == 'male'}

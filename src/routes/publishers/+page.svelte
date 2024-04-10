@@ -130,6 +130,10 @@
 		availability_list.forEach(async availability => {
 			await db.availability.delete(availability.id)
 		})
+		const assignment_list = await db.assignment.where({user_id: selectedId}).toArray()
+		assignment_list.forEach(async assignment => {
+			await db.assignment.update(assignment.id, {user_id: -1})
+		})
 
 		$toastMessageSuccess = $_('publishers.pub-deleted')
 		$toastSuccess = true

@@ -1,38 +1,38 @@
-# create-svelte
+# PPOC Gen
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+PPOC Gen, it's a web application in charge of managing the schedules and turns for the public preaching of the Jehovah's witnesses.
 
-## Creating a project
 
-If you're seeing this, you've probably already done this step. Congrats!
+It is built using svelte and tauri and IndexedDB as storage. I made the decision of using a database that stores the data locally to prevent any leaks of information and save costs of using servers and externally located databases, unfortunatelly this prevent us to use any type of sync with the data we use.
 
+
+## Requirements
+
+- Node 21.x
+- Bun 1.x
+- Tauri 1.x
+- Svelte 4.x
+
+## Local Usage
+
+To make the application work locally we need to:
+
+- Install all dependencies with bun
 ```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
+bun install
 ```
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
+- Then we can run the development server using
 ```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+bun run dev
 ```
 
-## Building
-
-To create a production version of your app:
-
+- Or we can build the binaries using tauri
 ```bash
-npm run build
+bun run tauri dev
 ```
 
-You can preview the production build with `npm run preview`.
+This last step is in charge of:
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+- Building the binaries for the webserver
+- Building the binaries for the current OS application

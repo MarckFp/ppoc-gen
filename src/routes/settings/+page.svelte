@@ -44,7 +44,7 @@
 		var url = window.URL || window.webkitURL
 		let link = url.createObjectURL(blob)
 		let a = document.createElement('a')
-		a.setAttribute('download', `ppoc-gen-${Date.now()}`)
+		a.setAttribute('download', `ppoc-gen-${Date.now()}.pgen`)
 		a.setAttribute('href', link)
 		a.click()
 	}
@@ -87,7 +87,7 @@
 				</Label>
 				<Button color="blue" on:click={updateCongregation}>{$_('settings.update-cong')}</Button>
 				<Button color="red" on:click={() => (deleteModal = true)}>{$_('settings.delete-cong')}</Button>
-				<input bind:files id="import" name="import" type="file" class="hidden" on:change={importData} />
+				<input bind:files id="import" name="import" type="file" accept=".pgen" class="hidden" on:change={importData} />
 				<ButtonGroup class="flex justify-center">
 					<Button on:click={() => (importModal = true)}>
 						<CloudArrowUpSolid class="me-3 h-6 w-6" />

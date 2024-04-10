@@ -88,6 +88,9 @@
 
 	async function deleteSchedule() {
 		await db.schedule.delete(selectedId)
+		await db.availability.where({schedule_id: selectedId}).each((user_availability) => {
+			db.availability.delete(user_availability.id);
+		})
 		$toastMessageSuccess = $_('schedule.deleted')
 		$toastSuccess = true
 		setTimeout(() => {

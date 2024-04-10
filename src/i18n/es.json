@@ -87,7 +87,9 @@
 		"are-you-sure": "¿Está seguro de eliminar este Turno?",
 		"from-bigger-to": "La fecha de inicio no puede ser mayor a la fecha de fin",
 		"no-availability": "No hay publicadores con disponibilidad en: ",
-		"no-publishers": "No hay publicadores que puedan ser asignados a la fecha: "
+		"no-publishers": "No hay publicadores que puedan ser asignados a la fecha: ",
+		"deleted-pub": "Publicador eliminado",
+		"search-by": "Buscar por Fecha"
 	},
 	"incidences": {
 		"create-btn": "Crear nueva Incidencia",
