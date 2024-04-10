@@ -6,6 +6,7 @@ import type {Incidence} from './models/incidence'
 import type {Schedule} from './models/schedule'
 import type {Turn} from './models/turn'
 import type {Assignment} from './models/assignment'
+import type {Affinity} from './models/affinity'
 
 export class MySubClassedDexie extends Dexie {
 	congregation!: Table<Congregation>
@@ -15,8 +16,8 @@ export class MySubClassedDexie extends Dexie {
 	schedule!: Table<Schedule>
 	turn!: Table<Turn>
 	assignment!: Table<Assignment>
+	affinity!: Table<Affinity>
 
-	//TODO: Create Assignment, the relation of turn and user
 	constructor() {
 		super('ppocgen')
 		this.version(1).stores({
@@ -26,7 +27,8 @@ export class MySubClassedDexie extends Dexie {
 			incidence: '++id, user_id, start_date, end_date',
 			schedule: '++id, weekday, start_time, end_time, n_carts, location, n_brothers, n_sisters',
 			turn: '++id, date, schedule_id',
-			assignment: '++id, user_id, turn_id'
+			assignment: '++id, user_id, turn_id',
+			affinity: '++id, source_id, destination_id'
 		})
 	}
 }
