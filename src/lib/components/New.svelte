@@ -50,42 +50,42 @@
 
 <main>
 	<section class="bg-gray-50 dark:bg-gray-900">
-		<div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-			<a href="/" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-				<img class="w-8 h-8 mr-2" src="favicon.ico" alt="logo" />
+		<div class="mx-auto flex flex-col items-center justify-center px-6 py-8 md:h-screen lg:py-0">
+			<a href="/" class="mb-6 flex items-center text-2xl font-semibold text-gray-900 dark:text-white">
+				<img class="mr-2 h-8 w-8" src="favicon.ico" alt="logo" />
 				PPOC Gen
 			</a>
 			<div
-				class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
+				class="w-full rounded-lg bg-white shadow dark:border dark:border-gray-700 dark:bg-gray-800 sm:max-w-md md:mt-0 xl:p-0"
 			>
-				<div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-					<h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+				<div class="space-y-4 p-6 sm:p-8 md:space-y-6">
+					<h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl">
 						{$_('settings.create-new-cong')}
 					</h1>
 					<form class="space-y-4 md:space-y-6" action="#">
 						<div>
-							<label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+							<label for="name" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
 								>{$_('settings.cong-name')}</label
 							>
 							<input
 								type="text"
 								name="name"
 								id="name"
-								class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+								class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-primary-600 focus:ring-primary-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 sm:text-sm"
 								placeholder="Warwick"
 								required
 								bind:value={congregation_name}
 							/>
 						</div>
 						<div>
-							<label for="n_carts" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+							<label for="n_carts" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
 								>{$_('settings.n-carts')}</label
 							>
 							<input
 								type="number"
 								name="n_carts"
 								id="n_carts"
-								class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+								class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-primary-600 focus:ring-primary-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 sm:text-sm"
 								required
 								min="1"
 								max="99"
@@ -96,7 +96,7 @@
 						<p class="text-center">- {$_('settings.or')} -</p>
 						<input bind:files id="import" name="import" type="file" class="hidden" on:change={importData} />
 						<Button class="w-full" on:click={importDataBtn}>
-							<CloudArrowUpSolid class="w-6 h-6 me-3" />
+							<CloudArrowUpSolid class="me-3 h-6 w-6" />
 							{$_('settings.import')}
 						</Button>
 						<p class="text-sm font-light text-gray-500 dark:text-gray-400">

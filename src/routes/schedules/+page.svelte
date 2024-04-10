@@ -121,11 +121,11 @@
 	}
 </script>
 
-<div class="flex flex-col items-center justify-center px-6 py-8 mx-auto">
+<div class="mx-auto flex flex-col items-center justify-center px-6 py-8">
 	<Card size="xl">
 		<Button
 			color="blue"
-			class="mt-1 mb-4"
+			class="mb-4 mt-1"
 			on:click={() => {
 				createModal = true
 				selected_weekday = 'monday'
@@ -229,7 +229,7 @@
 			{$_('schedule.n-carts')}:
 			<Input type="number" id="n_carts" min="1" bind:value={n_carts} required />
 		</Label>
-		<div class="grid gap-6 mb-6 md:grid-cols-2">
+		<div class="mb-6 grid gap-6 md:grid-cols-2">
 			<div>
 				<Label for="n_brothers" class="mb-2">{$_('schedule.n-bro')}:</Label>
 				<Input type="number" id="n_brothers" bind:value={n_brothers} required />
@@ -253,7 +253,7 @@
 
 	<Modal bind:open={deleteModal} size="xs" autoclose outsideclose>
 		<div class="text-center">
-			<ExclamationCircleOutline class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" />
+			<ExclamationCircleOutline class="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200" />
 			<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
 				{$_('schedule.are-you-sure')}
 			</h3>

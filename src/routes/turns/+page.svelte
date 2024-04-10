@@ -63,7 +63,7 @@
 			toDate = ''
 			loading = false
 
-			$toastMessageAlert = `From Date cannot be bigger than To Date`
+			$toastMessageAlert = $_('turns.from-bigger-to')
 			$toastAlert = true
 			setTimeout(() => {
 				$toastAlert = false
@@ -89,7 +89,7 @@
 
 					availabilities = await db.availability.where({schedule_id: schedule.id}).toArray()
 					if (availabilities.length == 0) {
-						$toastMessageWarning = `There is no publishers with availability on ${weekday}`
+						$toastMessageWarning = $_('turns.no-availability') + weekday
 						$toastWarning = true
 						setTimeout(() => {
 							$toastWarning = false
@@ -101,7 +101,7 @@
 					}
 					users = await db.user.where('id').anyOf(userList).sortBy('counter')
 					if (users.length == 0) {
-						$toastMessageWarning = `There is no publishers that can be assigned on ${d.toISOString().split('T')[0]}`
+						$toastMessageWarning = $_('turns.no-publishers') + d.toISOString().split('T')[0]
 						$toastWarning = true
 						setTimeout(() => {
 							$toastWarning = false
@@ -157,34 +157,37 @@
 	async function deleteTurn() {
 		await db.turn.delete(selectedId)
 		const assignments = await db.assignment.where({turn_id: selectedId}).toArray()
-		assignments.forEach(async assignment => {
+		for (let assignment of assignments) {
+			const users = await db.user.where({id: assignment.user_id}).toArray()
+			for (let user of users) {
+				const new_counter = parseFloat(user.counter) - parseFloat(user.weight)
+				await db.user.update(user.id, {counter: parseFloat(new_counter)})
+			}
 			await db.assignment.delete(assignment.id)
-		})
+		}
 
-		$toastMessageSuccess = $_('publishers.pub-deleted')
+		$toastMessageSuccess = 'Turn deleted successfully'
 		$toastSuccess = true
 		setTimeout(() => {
 			$toastSuccess = false
 		}, 8000)
 	}
 
-	function exportToPDF() {
-		
-	}
+	function exportToPDF() {}
 </script>
 
-<div class="flex flex-col items-center justify-center px-6 py-8 mx-auto">
+<div class="mx-auto flex flex-col items-center justify-center px-6 py-8">
 	<Card size="xl" class="mb-2">
-		<div class="mt-1 mb-4 flex flex-row justify-around">
-			<Label class="w-3/12 mr-2">
+		<div class="mb-4 mt-1 flex flex-row justify-around">
+			<Label class="mr-2 w-3/12">
 				{$_('turns.from')}:
 				<Input type="date" bind:value={fromDate} />
 			</Label>
-			<Label class="w-3/12 mr-2 ml-2">
+			<Label class="ml-2 mr-2 w-3/12">
 				{$_('turns.to')}:
 				<Input type="date" bind:value={toDate} />
 			</Label>
-			<Button color="blue" class="w-6/12 ml-2" on:click={createTurns}>
+			<Button color="blue" class="ml-2 w-6/12" on:click={createTurns}>
 				{#if loading}
 					<Spinner class="me-3" size="4" color="white" />
 					{$_('turns.creating')}
@@ -196,9 +199,9 @@
 	</Card>
 	{#if $turns && $schedules && $assignments && $showUsers}
 		<Card size="xl" class="mt-2">
-			<div class="flex flex-row justify-around mb-2 mt-2">
+			<div class="mb-2 mt-2 flex flex-row justify-around">
 				<Button
-					class="w-2/12 ml-2 mr-2"
+					class="w-2/12"
 					on:click={() => {
 						date = new Date(date.setMonth(date.getMonth() - 1))
 						turns = liveQuery(() =>
@@ -213,7 +216,7 @@
 					}}><ArrowLeftOutline></ArrowLeftOutline></Button
 				>
 				<Button
-					class="w-2/12 ml-2 mr-2"
+					class="ml-2 mr-2 w-2/12"
 					on:click={() => {
 						date = new Date()
 						turns = liveQuery(() =>
@@ -227,14 +230,14 @@
 						)
 					}}>Today</Button
 				>
-				<Badge rounded border color="red" class="w-5/12 ml-2 mr-2"
+				<Badge border color="red" class="w-5/12"
 					><P size="lg"
-						>{$_('general.' + date.toLocaleString('default', {month: 'long'}).toLowerCase())} {date.getFullYear()}</P
+						>{$_('general.' + date.toLocaleString('en', {month: 'long'}).toLowerCase())} {date.getFullYear()}</P
 					></Badge
 				>
-				<Button class="w-1/12 ml-2 mr-2"><FilePdfSolid></FilePdfSolid></Button>
+				<Button class="ml-2 mr-2 w-1/12" on:click={exportToPDF}><FilePdfSolid></FilePdfSolid></Button>
 				<Button
-					class="w-2/12 ml-2 mr-2"
+					class="w-2/12"
 					on:click={() => {
 						date = new Date(date.setMonth(date.getMonth() + 1))
 						turns = liveQuery(() =>
@@ -250,14 +253,14 @@
 				>
 			</div>
 			{#if $turns.length == 0 || $schedules.length == 0}
-				<p class="text-center mt-8">{$_('turns.no-turns')}</p>
+				<p class="mt-8 text-center">{$_('turns.no-turns')}</p>
 			{:else}
 				<TableSearch placeholder="busqueda" striped={true} hoverable={true}>
 					<TableHead>
-						<TableHeadCell>Day</TableHeadCell>
-						<TableHeadCell>Time</TableHeadCell>
+						<TableHeadCell>{$_('turns.day')}</TableHeadCell>
+						<TableHeadCell>{$_('turns.time')}</TableHeadCell>
 						<TableHeadCell>{$_('schedule.location')}</TableHeadCell>
-						<TableHeadCell>Assignees</TableHeadCell>
+						<TableHeadCell>{$_('turns.assignees')}</TableHeadCell>
 						<TableHeadCell>
 							<span class="sr-only">Actions</span>
 						</TableHeadCell>
@@ -308,9 +311,9 @@
 
 		<Modal bind:open={deleteModal} size="xs" autoclose outsideclose>
 			<div class="text-center">
-				<ExclamationCircleOutline class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" />
+				<ExclamationCircleOutline class="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200" />
 				<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-					{$_('publishers.are-you-sure')}
+					{$_('turns.are-you-sure')}
 				</h3>
 				<Button color="red" class="me-2" on:click={deleteTurn}>{$_('general.yes-sure')}</Button>
 				<Button color="alternative">{$_('general.no-cancel')}</Button>

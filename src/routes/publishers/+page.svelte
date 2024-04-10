@@ -151,11 +151,11 @@
 	}
 </script>
 
-<div class="flex flex-col items-center justify-center px-6 py-8 mx-auto">
+<div class="mx-auto flex flex-col items-center justify-center px-6 py-8">
 	<Card size="xl">
 		<Button
 			color="blue"
-			class="mt-1 mb-4"
+			class="mb-4 mt-1"
 			on:click={() => {
 				createModal = true
 				edit = false
@@ -251,7 +251,7 @@
 				{#if $schedules.length == 0}
 					<p class="text-center">{$_('publishers.no-schedules')}</p>
 				{:else}
-					<ul class="items-center grid grid-cols-1 w-full rounded-lg">
+					<ul class="grid w-full grid-cols-1 items-center rounded-lg">
 						{#each $schedules as schedule}
 							<li class="w-full border">
 								<Checkbox class="p-3" bind:checked={availabilities[schedule.id]}
@@ -279,7 +279,7 @@
 
 	<Modal bind:open={deleteModal} size="xs" autoclose outsideclose>
 		<div class="text-center">
-			<ExclamationCircleOutline class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" />
+			<ExclamationCircleOutline class="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200" />
 			<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
 				{$_('publishers.are-you-sure')}
 			</h3>

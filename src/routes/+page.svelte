@@ -18,9 +18,9 @@
 	}
 </script>
 
-<div class="flex items-center flex-col">
+<div class="flex flex-col items-center">
 	{#if $congregation}
-		<Card class="text-center m-5" size="xl" padding="xl">
+		<Card class="m-5 text-center" size="xl" padding="xl">
 			<h5 class="mb-2 text-3xl font-bold text-gray-900 dark:text-white">
 				{$_('home.welcome')}
 				{$congregation[0].name}

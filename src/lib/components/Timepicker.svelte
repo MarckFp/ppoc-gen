@@ -2,11 +2,11 @@
 	export let selectedTime = '00:00'
 </script>
 
-<form class="w-full mx-auto">
+<form class="mx-auto w-full">
 	<div class="relative">
-		<div class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
+		<div class="pointer-events-none absolute inset-y-0 end-0 top-0 flex items-center pe-3.5">
 			<svg
-				class="w-4 h-4 text-gray-500 dark:text-gray-400"
+				class="h-4 w-4 text-gray-500 dark:text-gray-400"
 				aria-hidden="true"
 				xmlns="http://www.w3.org/2000/svg"
 				fill="currentColor"
@@ -23,7 +23,7 @@
 			bind:value={selectedTime}
 			type="time"
 			id="time"
-			class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+			class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm leading-none text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
 			min="09:00"
 			max="18:00"
 			required

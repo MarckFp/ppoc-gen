@@ -80,7 +80,14 @@
 		"from": "From",
 		"to": "To",
 		"no-turns": "No turns yet created",
-		"creating": "Creating..."
+		"creating": "Creating...",
+		"day": "Day",
+		"time": "Time",
+		"assignees": "Assignees",
+		"are-you-sure": "Are you sure you want to delete this Turn?",
+		"from-bigger-to": "From date, cannot be grater than To date",
+		"no-availability": "There is no publishers with availability on: ",
+		"no-publishers": "There is no publishers that can be assigned to date: "
 	},
 	"incidences": {
 		"create-btn": "Create new Incidence",

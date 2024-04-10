@@ -80,7 +80,14 @@
 		"from": "Desde",
 		"to": "Hasta",
 		"no-turns": "No hay turnos aún creados",
-		"creating": "Creando..."
+		"creating": "Creando...",
+		"day": "Fecha",
+		"time": "Hora",
+		"assignees": "Asignados",
+		"are-you-sure": "¿Está seguro de eliminar este Turno?",
+		"from-bigger-to": "La fecha de inicio no puede ser mayor a la fecha de fin",
+		"no-availability": "No hay publicadores con disponibilidad en: ",
+		"no-publishers": "No hay publicadores que puedan ser asignados a la fecha: "
 	},
 	"incidences": {
 		"create-btn": "Crear nueva Incidencia",

@@ -67,7 +67,7 @@
 </script>
 
 {#if $congregation}
-	<div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-5/6 lg:py-0">
+	<div class="mx-auto flex flex-col items-center justify-center px-6 py-8 md:h-5/6 lg:py-0">
 		<Card size="lg">
 			<h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
 				{$_('settings.cong-settings')}
@@ -90,11 +90,11 @@
 				<input bind:files id="import" name="import" type="file" class="hidden" on:change={importData} />
 				<ButtonGroup class="flex justify-center">
 					<Button on:click={() => (importModal = true)}>
-						<CloudArrowUpSolid class="w-6 h-6 me-3" />
+						<CloudArrowUpSolid class="me-3 h-6 w-6" />
 						{$_('settings.import')}
 					</Button>
 					<Button on:click={exportData}>
-						<DownloadSolid class="w-6 h-6 me-3" />
+						<DownloadSolid class="me-3 h-6 w-6" />
 						{$_('settings.export')}
 					</Button>
 				</ButtonGroup>
@@ -103,7 +103,7 @@
 
 		<Modal bind:open={deleteModal} size="xs" autoclose>
 			<div class="text-center">
-				<ExclamationCircleOutline class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" />
+				<ExclamationCircleOutline class="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200" />
 				<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
 					{$_('settings.are-you-sure')}
 				</h3>
@@ -114,7 +114,7 @@
 
 		<Modal bind:open={importModal} size="xs" autoclose>
 			<div class="text-center">
-				<ExclamationCircleOutline class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" />
+				<ExclamationCircleOutline class="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200" />
 				<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
 					{$_('settings.are-you-sure-import')}
 				</h3>

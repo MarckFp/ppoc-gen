@@ -33,7 +33,7 @@
 	let congregation = liveQuery(() => db.congregation.toArray())
 </script>
 
-<main class="bg-white dark:bg-gray-800 h-screen">
+<main>
 	{#if $congregation}
 		{#if !$congregation[0]}
 			<New />
@@ -42,7 +42,7 @@
 			{#if $toastSuccess}
 				<Toast color="green" id="toast-success" position="bottom-right" transition={slide}>
 					<svelte:fragment slot="icon">
-						<CheckCircleSolid class="w-5 h-5" />
+						<CheckCircleSolid class="h-5 w-5" />
 						<span class="sr-only">Check icon</span>
 					</svelte:fragment>
 					{$toastMessageSuccess}
@@ -51,7 +51,7 @@
 			{#if $toastAlert}
 				<Toast color="red" id="toast-error" position="bottom-right" transition={slide}>
 					<svelte:fragment slot="icon">
-						<CloseCircleSolid class="w-5 h-5" />
+						<CloseCircleSolid class="h-5 w-5" />
 						<span class="sr-only">Error icon</span>
 					</svelte:fragment>
 					{$toastMessageAlert}
@@ -60,7 +60,7 @@
 			{#if $toastWarning}
 				<Toast color="orange" id="toast-warning" position="bottom-right" transition={slide}>
 					<svelte:fragment slot="icon">
-						<ExclamationCircleSolid class="w-5 h-5" />
+						<ExclamationCircleSolid class="h-5 w-5" />
 						<span class="sr-only">Warning icon</span>
 					</svelte:fragment>
 					{$toastMessageWarning}
