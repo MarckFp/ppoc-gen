@@ -1,7 +1,18 @@
+<script lang="ts">
+	import {_} from 'svelte-i18n'
+
+	let date = new Date()
+	let year = date.getFullYear()
+	let month = date.toLocaleString('en', {month: 'long'}).toLowerCase()
+	let events = [
+		{}
+	]
+</script>
+
 <div class="container mx-auto mt-10">
 	<div class="wrapper w-full rounded bg-white shadow">
 		<div class="header flex justify-between border-b p-2">
-			<span class="text-lg font-bold"> 2020 July </span>
+			<span class="text-lg font-bold"> {$_('general.' + month)} {year} </span>
 			<div class="buttons">
 				<button class="p-1">
 					<svg
@@ -43,32 +54,32 @@
 			<thead>
 				<tr>
 					<th class="lg:w-30 md:w-30 h-10 w-10 border-r p-2 text-xs sm:w-20 xl:w-40 xl:text-sm">
-						<span class="hidden sm:block md:block lg:block xl:block">Sunday</span>
-						<span class="block sm:hidden md:hidden lg:hidden xl:hidden">Sun</span>
-					</th>
-					<th class="lg:w-30 md:w-30 h-10 w-10 border-r p-2 text-xs sm:w-20 xl:w-40 xl:text-sm">
-						<span class="hidden sm:block md:block lg:block xl:block">Monday</span>
+						<span class="hidden sm:block md:block lg:block xl:block">{$_('general.monday')}</span>
 						<span class="block sm:hidden md:hidden lg:hidden xl:hidden">Mon</span>
 					</th>
 					<th class="lg:w-30 md:w-30 h-10 w-10 border-r p-2 text-xs sm:w-20 xl:w-40 xl:text-sm">
-						<span class="hidden sm:block md:block lg:block xl:block">Tuesday</span>
+						<span class="hidden sm:block md:block lg:block xl:block">{$_('general.tuesday')}</span>
 						<span class="block sm:hidden md:hidden lg:hidden xl:hidden">Tue</span>
 					</th>
 					<th class="lg:w-30 md:w-30 h-10 w-10 border-r p-2 text-xs sm:w-20 xl:w-40 xl:text-sm">
-						<span class="hidden sm:block md:block lg:block xl:block">Wednesday</span>
+						<span class="hidden sm:block md:block lg:block xl:block">{$_('general.wednesday')}</span>
 						<span class="block sm:hidden md:hidden lg:hidden xl:hidden">Wed</span>
 					</th>
 					<th class="lg:w-30 md:w-30 h-10 w-10 border-r p-2 text-xs sm:w-20 xl:w-40 xl:text-sm">
-						<span class="hidden sm:block md:block lg:block xl:block">Thursday</span>
+						<span class="hidden sm:block md:block lg:block xl:block">{$_('general.thursday')}</span>
 						<span class="block sm:hidden md:hidden lg:hidden xl:hidden">Thu</span>
 					</th>
 					<th class="lg:w-30 md:w-30 h-10 w-10 border-r p-2 text-xs sm:w-20 xl:w-40 xl:text-sm">
-						<span class="hidden sm:block md:block lg:block xl:block">Friday</span>
+						<span class="hidden sm:block md:block lg:block xl:block">{$_('general.friday')}</span>
 						<span class="block sm:hidden md:hidden lg:hidden xl:hidden">Fri</span>
 					</th>
 					<th class="lg:w-30 md:w-30 h-10 w-10 border-r p-2 text-xs sm:w-20 xl:w-40 xl:text-sm">
-						<span class="hidden sm:block md:block lg:block xl:block">Saturday</span>
+						<span class="hidden sm:block md:block lg:block xl:block">{$_('general.saturday')}</span>
 						<span class="block sm:hidden md:hidden lg:hidden xl:hidden">Sat</span>
+					</th>
+					<th class="lg:w-30 md:w-30 h-10 w-10 border-r p-2 text-xs sm:w-20 xl:w-40 xl:text-sm">
+						<span class="hidden sm:block md:block lg:block xl:block">{$_('general.sunday')}</span>
+						<span class="block sm:hidden md:hidden lg:hidden xl:hidden">Sun</span>
 					</th>
 				</tr>
 			</thead>

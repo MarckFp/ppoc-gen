@@ -31,6 +31,8 @@
 		}
 	})
 	let congregation = liveQuery(() => db.congregation.toArray())
+
+	//TODO: Create function to add new Toasts instead of modifying and showing only one. This will allow them to stack instead of just override
 </script>
 
 <main>
