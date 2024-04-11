@@ -1,13 +1,13 @@
 <script lang="ts">
 	import {_} from 'svelte-i18n'
 
-	let date = new Date()
-	let year = date.getFullYear()
-	let month = date.toLocaleString('en', {month: 'long'}).toLowerCase()
-	let firstDay = new Date(date.getFullYear(), date.getMonth(), 2)
-	let firstDayWeekDay = firstDay.getDay() - 1
-	let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 1)
-	let lastDayWeekDay = lastDay.getDay() - 1
+	let date = new Date(),
+		year = date.getFullYear(),
+		month = date.toLocaleString('en', {month: 'long'}).toLowerCase(),
+		firstDay = new Date(date.getFullYear(), date.getMonth(), 2),
+		firstDayWeekDay = firstDay.getDay() - 1,
+		lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 1),
+		lastDayWeekDay = lastDay.getDay() - 1
 </script>
 
 <div class="container mx-auto mt-10">
@@ -15,7 +15,7 @@
 		<div class="header flex justify-between border-b p-2">
 			<span class="text-lg font-bold"> {$_('general.' + month)} {year} </span>
 			<div class="buttons">
-				<button class="p-1">
+				<button class="p-1" aria-label="Previous Month">
 					<svg
 						width="1em"
 						fill="gray"
@@ -32,7 +32,7 @@
 						<path fill-rule="evenodd" d="M11.5 8a.5.5 0 0 0-.5-.5H6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 .5-.5z" />
 					</svg>
 				</button>
-				<button class="p-1">
+				<button class="p-1" aria-label="Next Month">
 					<svg
 						width="1em"
 						fill="gray"
@@ -94,11 +94,11 @@
 								<span class="text-gray-500">1</span>
 							</div>
 							<div class="bottom h-30 w-full flex-grow cursor-pointer py-1">
-								<div class="event mb-1 rounded bg-purple-400 p-1 text-sm text-white">
+								<div class="event mb-1 rounded bg-purple-600 p-1 text-sm text-white">
 									<span class="event-name"> Meeting </span>
 									<span class="time"> 12:00~14:00 </span>
 								</div>
-								<div class="event mb-1 rounded bg-purple-400 p-1 text-sm text-white">
+								<div class="event mb-1 rounded bg-purple-600 p-1 text-sm text-white">
 									<span class="event-name"> Meeting </span>
 									<span class="time"> 18:00~20:00 </span>
 								</div>
@@ -153,7 +153,7 @@
 								<span class="text-gray-500">7</span>
 							</div>
 							<div class="bottom h-30 w-full flex-grow cursor-pointer py-1">
-								<div class="event mb-1 rounded bg-blue-400 p-1 text-sm text-white">
+								<div class="event mb-1 rounded bg-purple-600 p-1 text-sm text-white">
 									<span class="event-name"> Shopping </span>
 									<span class="time"> 12:00~14:00 </span>
 								</div>

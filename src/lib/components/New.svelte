@@ -94,7 +94,15 @@
 						</div>
 						<Button class="w-full" on:click={createCongregation}>{$_('settings.create-cong')}</Button>
 						<p class="text-center">- {$_('settings.or')} -</p>
-						<input bind:files id="import" name="import" type="file" class="hidden" on:change={importData} />
+						<input
+							bind:files
+							id="import"
+							name="import"
+							type="file"
+							accept=".pgen"
+							class="hidden"
+							on:change={importData}
+						/>
 						<Button class="w-full" on:click={importDataBtn}>
 							<CloudArrowUpSolid class="me-3 h-6 w-6" />
 							{$_('settings.import')}

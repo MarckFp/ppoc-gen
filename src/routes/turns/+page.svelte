@@ -230,6 +230,7 @@
 			<div class="mb-2 mt-2 flex flex-row justify-around">
 				<Button
 					class="w-2/12"
+					aria-label="Previous Month"
 					on:click={() => {
 						date = new Date(date.setMonth(date.getMonth() - 1))
 						turns = liveQuery(() =>
@@ -245,6 +246,7 @@
 				>
 				<Button
 					class="ml-2 mr-2 w-2/12"
+					color="blue"
 					on:click={() => {
 						date = new Date()
 						turns = liveQuery(() =>
@@ -263,9 +265,12 @@
 						>{$_('general.' + date.toLocaleString('en', {month: 'long'}).toLowerCase())} {date.getFullYear()}</P
 					></Badge
 				>
-				<Button class="ml-2 mr-2 w-1/12" on:click={exportToPDF}><FilePdfSolid></FilePdfSolid></Button>
+				<Button class="ml-2 mr-2 w-1/12" on:click={exportToPDF} aria-label="Export to PDF"
+					><FilePdfSolid></FilePdfSolid></Button
+				>
 				<Button
 					class="w-2/12"
+					aria-label="Next Month"
 					on:click={() => {
 						date = new Date(date.setMonth(date.getMonth() + 1))
 						turns = liveQuery(() =>

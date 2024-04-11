@@ -16,9 +16,9 @@
 		toastAlert
 	} from '$lib/store'
 	import {registerSW} from 'virtual:pwa-register'
-	import { pwaInfo } from 'virtual:pwa-info'
+	import {pwaInfo} from 'virtual:pwa-info'
 
-	$: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : '' 
+	$: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : ''
 
 	//TODO: Add Callbacks when app is offline or need refresh following https://vite-pwa-org.netlify.app/guide/prompt-for-update.html
 	const intervalMS = 60 * 60 * 1000
@@ -38,8 +38,8 @@
 	//TODO: Create function to add new Toasts instead of modifying and showing only one. This will allow them to stack instead of just override
 </script>
 
-<svelte:head> 
- 	{@html webManifestLink} 
+<svelte:head>
+	{@html webManifestLink}
 </svelte:head>
 
 <main>
