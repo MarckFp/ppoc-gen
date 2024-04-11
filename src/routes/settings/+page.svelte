@@ -25,8 +25,14 @@
 		await db.incidence.clear()
 		await db.schedule.clear()
 		await db.turn.clear()
+		await db.assignment.clear()
+		await db.affinity.clear()
 		await invalidateAll()
-		goto(process.env.BASE_PATH ? process.env.BASE_PATH : '/')
+		if (process.env.BASE_PATH != undefined) {
+			goto(process.env.BASE_PATH)
+			return
+		}
+		goto('/')
 	}
 
 	function updateCongregation() {
@@ -39,10 +45,10 @@
 	}
 
 	async function exportData() {
-		const blob = await exportDB(db)
+		const blob: Blob = await exportDB(db)
 		var url = window.URL || window.webkitURL
-		let link = url.createObjectURL(blob)
-		let a = document.createElement('a')
+		let link: string = url.createObjectURL(blob),
+			a: HTMLAnchorElement = document.createElement('a')
 		a.setAttribute('download', `ppoc-gen-${Date.now()}.pgen`)
 		a.setAttribute('href', link)
 		a.click()
