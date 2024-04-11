@@ -26,7 +26,7 @@
 		await db.schedule.clear()
 		await db.turn.clear()
 		await invalidateAll()
-		goto('/')
+		goto(process.env.BASE_PATH ? process.env.BASE_PATH : '/')
 	}
 
 	function updateCongregation() {
@@ -65,61 +65,71 @@
 	}
 </script>
 
-{#if $congregation}
-	<div class="mx-auto flex flex-col items-center justify-center px-6 py-8 md:h-5/6 lg:py-0">
-		<Card size="lg">
-			<h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-				{$_('settings.cong-settings')}
-			</h3>
-			<form class="flex flex-col space-y-6" action="/">
-				<Label class="space-y-2">
-					<span>{$_('settings.cong-name')}:</span>
-					<Input type="text" name="name" bind:value={$congregation[0].name} required />
-				</Label>
-				<Label class="space-y-2">
-					<span>{$_('settings.n-carts')}:</span>
-					<Input type="number" name="n_carts" min="1" max="99" bind:value={$congregation[0].n_carts} required />
-				</Label>
-				<Label class="space-y-2">
-					<span>{$_('settings.language')}:</span>
-					<Select items={langs} bind:value={$locale} />
-				</Label>
-				<Button color="blue" on:click={updateCongregation}>{$_('settings.update-cong')}</Button>
-				<Button color="red" on:click={() => (deleteModal = true)}>{$_('settings.delete-cong')}</Button>
-				<input bind:files id="import" name="import" type="file" accept=".pgen" class="hidden" on:change={importData} />
-				<ButtonGroup class="flex justify-center">
-					<Button on:click={() => (importModal = true)}>
-						<CloudArrowUpSolid class="me-3 h-6 w-6" />
-						{$_('settings.import')}
-					</Button>
-					<Button on:click={exportData}>
-						<DownloadSolid class="me-3 h-6 w-6" />
-						{$_('settings.export')}
-					</Button>
-				</ButtonGroup>
-			</form>
-		</Card>
-
-		<Modal bind:open={deleteModal} size="xs" autoclose>
-			<div class="text-center">
-				<ExclamationCircleOutline class="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200" />
-				<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-					{$_('settings.are-you-sure')}
+<div class="h-[calc(100vh-90px)]">
+	{#if $congregation}
+		<div class="mx-auto flex flex-col items-center justify-center px-6 py-8 md:h-5/6 lg:py-0">
+			<Card size="lg">
+				<h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+					{$_('settings.cong-settings')}
 				</h3>
-				<Button color="red" class="me-2" on:click={deleteCongregation}>{$_('general.yes-sure')}</Button>
-				<Button color="alternative">{$_('general.no-cancel')}</Button>
-			</div>
-		</Modal>
+				<form class="flex flex-col space-y-6" action="/">
+					<Label class="space-y-2">
+						<span>{$_('settings.cong-name')}:</span>
+						<Input type="text" name="name" bind:value={$congregation[0].name} required />
+					</Label>
+					<Label class="space-y-2">
+						<span>{$_('settings.n-carts')}:</span>
+						<Input type="number" name="n_carts" min="1" max="99" bind:value={$congregation[0].n_carts} required />
+					</Label>
+					<Label class="space-y-2">
+						<span>{$_('settings.language')}:</span>
+						<Select items={langs} bind:value={$locale} />
+					</Label>
+					<Button color="blue" on:click={updateCongregation}>{$_('settings.update-cong')}</Button>
+					<Button color="red" on:click={() => (deleteModal = true)}>{$_('settings.delete-cong')}</Button>
+					<input
+						bind:files
+						id="import"
+						name="import"
+						type="file"
+						accept=".pgen"
+						class="hidden"
+						on:change={importData}
+					/>
+					<ButtonGroup class="flex justify-center">
+						<Button on:click={() => (importModal = true)}>
+							<CloudArrowUpSolid class="me-3 h-6 w-6" />
+							{$_('settings.import')}
+						</Button>
+						<Button on:click={exportData}>
+							<DownloadSolid class="me-3 h-6 w-6" />
+							{$_('settings.export')}
+						</Button>
+					</ButtonGroup>
+				</form>
+			</Card>
 
-		<Modal bind:open={importModal} size="xs" autoclose>
-			<div class="text-center">
-				<ExclamationCircleOutline class="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200" />
-				<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-					{$_('settings.are-you-sure-import')}
-				</h3>
-				<Button color="red" class="me-2" on:click={importDataBtn}>{$_('general.yes-sure')}</Button>
-				<Button color="alternative">{$_('general.no-cancel')}</Button>
-			</div>
-		</Modal>
-	</div>
-{/if}
+			<Modal bind:open={deleteModal} size="xs" autoclose>
+				<div class="text-center">
+					<ExclamationCircleOutline class="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200" />
+					<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+						{$_('settings.are-you-sure')}
+					</h3>
+					<Button color="red" class="me-2" on:click={deleteCongregation}>{$_('general.yes-sure')}</Button>
+					<Button color="alternative">{$_('general.no-cancel')}</Button>
+				</div>
+			</Modal>
+
+			<Modal bind:open={importModal} size="xs" autoclose>
+				<div class="text-center">
+					<ExclamationCircleOutline class="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200" />
+					<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+						{$_('settings.are-you-sure-import')}
+					</h3>
+					<Button color="red" class="me-2" on:click={importDataBtn}>{$_('general.yes-sure')}</Button>
+					<Button color="alternative">{$_('general.no-cancel')}</Button>
+				</div>
+			</Modal>
+		</div>
+	{/if}
+</div>
