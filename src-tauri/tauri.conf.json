@@ -7,8 +7,7 @@
     "distDir": "../build"
   },
   "package": {
-    "productName": "ppoc-gen",
-    "version": "0.3.0"
+    "productName": "ppoc-gen"
   },
   "tauri": {
     "allowlist": {
