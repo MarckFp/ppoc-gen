@@ -19,7 +19,7 @@ export default defineConfig({
 			registerType: 'autoUpdate',
 			injectRegister: 'auto',
 			workbox: {
-				globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+				globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,webv,avif}'],
 				cleanupOutdatedCaches: true,
 				sourcemap: true
 			},
@@ -29,6 +29,8 @@ export default defineConfig({
 				short_name: 'PPOC Gen',
 				description: 'Web application in charge of generating dynamic public preaching turns',
 				display: 'standalone',
+				scope: process.argv.includes('dev') ? '' : process.env.BASE_PATH,
+				start_url: process.argv.includes('dev') ? '' : process.env.BASE_PATH,
 				theme_color: '#eb4034',
 				icons: [
 					{
