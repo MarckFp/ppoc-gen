@@ -11,6 +11,11 @@ export default defineConfig({
 		enhancedImages(),
 		sveltekit(),
 		SvelteKitPWA({
+			devOptions: {
+				enabled: false,
+				type: 'module',
+			},
+			srcDir: './src',
 			registerType: 'autoUpdate',
 			injectRegister: 'auto',
 			workbox: {
@@ -23,6 +28,7 @@ export default defineConfig({
 				name: 'Public Preaching Generator',
 				short_name: 'PPOC Gen',
 				description: 'Web application in charge of generating dynamic public preaching turns',
+				display: 'standalone',
 				theme_color: '#eb4034',
 				icons: [
 					{
