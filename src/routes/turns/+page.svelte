@@ -32,9 +32,10 @@
 	import type {Availability} from '$lib/models/availability'
 
 	var date: Date = new Date()
-	let fromDate: string, toDate: string
-	let loading: boolean = false
-	let weekday: string,
+	let fromDate: string,
+		toDate: string,
+		loading: boolean = false,
+		weekday: string,
 		availabilities: Availability[],
 		users: User[],
 		incidences: Incidence[],
