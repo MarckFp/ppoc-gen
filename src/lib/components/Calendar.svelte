@@ -4,9 +4,10 @@
 	let date = new Date()
 	let year = date.getFullYear()
 	let month = date.toLocaleString('en', {month: 'long'}).toLowerCase()
-	let events = [
-		{}
-	]
+	let firstDay = new Date(date.getFullYear(), date.getMonth(), 2)
+	let firstDayWeekDay = firstDay.getDay() - 1
+	let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 1)
+	let lastDayWeekDay = lastDay.getDay() - 1
 </script>
 
 <div class="container mx-auto mt-10">

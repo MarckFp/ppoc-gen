@@ -76,7 +76,8 @@
 		"created": "Horario creado correctamente"
 	},
 	"turns": {
-		"create-btn": "Crear Turnos",
+		"create-btn": "Crear Turnos manualmente",
+		"generate-btn": "Generar Turnos",
 		"from": "Desde",
 		"to": "Hasta",
 		"no-turns": "No hay turnos aún creados",
@@ -89,7 +90,8 @@
 		"no-availability": "No hay publicadores con disponibilidad en: ",
 		"no-publishers": "No hay publicadores que puedan ser asignados a la fecha: ",
 		"deleted-pub": "Publicador eliminado",
-		"search-by": "Buscar por Fecha"
+		"search-by": "Buscar por Fecha",
+		"date-invalid": "Las fechas no son válidas"
 	},
 	"incidences": {
 		"create-btn": "Crear nueva Incidencia",

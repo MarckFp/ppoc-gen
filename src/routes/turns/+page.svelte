@@ -27,8 +27,26 @@
 	import {db} from '$lib/db'
 	import {liveQuery} from 'dexie'
 	import {_} from 'svelte-i18n'
+	import type {User} from '$lib/models/user'
+	import type {Incidence} from '$lib/models/incidence'
+	import type {Availability} from '$lib/models/availability'
 
-	var date = new Date()
+	var date: Date = new Date()
+	let fromDate: string, toDate: string
+	let loading: boolean = false
+	let weekday: string,
+		availabilities: Availability[],
+		users: User[],
+		incidences: Incidence[],
+		userList: number[] = [],
+		brothers: number = 0,
+		sisters: number = 0,
+		searchTerm: string = '',
+		deleteModal: boolean = false,
+		createModal: boolean = false,
+		edit: boolean = false,
+		selectedId: number
+
 	let turns = liveQuery(() =>
 		db.turn
 			.where('date')
@@ -41,25 +59,25 @@
 	let assignments = liveQuery(() => db.assignment.toArray())
 	let showUsers = liveQuery(() => db.user.toArray())
 	let schedules = liveQuery(() => db.schedule.toArray())
-	let fromDate: string, toDate: string
-	let loading: boolean = false
-	let weekday: string,
-		availabilities,
-		users,
-		incidences,
-		userList: number[] = [],
-		brothers: number = 0,
-		sisters: number = 0,
-		searchTerm: string = '',
-		deleteModal: boolean = false,
-		selectedId: number
 
 	$: filteredItems = $turns?.filter(turn => turn.date.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1)
 
 	async function createTurns() {
 		loading = true
-		let from = new Date(fromDate)
-		let to = new Date(toDate)
+		if (fromDate == undefined || toDate == undefined) {
+			fromDate = ''
+			toDate = ''
+			loading = false
+
+			$toastMessageAlert = $_('turns.date-invalid')
+			$toastAlert = true
+			setTimeout(() => {
+				$toastAlert = false
+			}, 8000)
+			return
+		}
+		let from: Date = new Date(fromDate),
+			to: Date = new Date(toDate)
 
 		if (from > to) {
 			fromDate = ''
@@ -179,21 +197,30 @@
 <div class="mx-auto flex flex-col items-center justify-center px-6 py-8">
 	<Card size="xl" class="mb-2">
 		<div class="mb-4 mt-1 flex flex-row justify-around">
-			<Label class="mr-2 w-3/12">
+			<Label class="mr-2 w-2/12">
 				{$_('turns.from')}:
 				<Input type="date" bind:value={fromDate} />
 			</Label>
-			<Label class="ml-2 mr-2 w-3/12">
+			<Label class="ml-1 mr-1 w-2/12">
 				{$_('turns.to')}:
 				<Input type="date" bind:value={toDate} />
 			</Label>
-			<Button color="blue" class="ml-2 w-6/12" on:click={createTurns}>
+			<Button color="green" class="ml-1 mr-1 w-2/12" on:click={createTurns}>
 				{#if loading}
 					<Spinner class="me-3" size="4" color="white" />
 					{$_('turns.creating')}
 				{:else}
-					{$_('turns.create-btn')}
+					{$_('turns.generate-btn')}
 				{/if}
+			</Button>
+			<Button
+				color="blue"
+				class="ml-2 w-2/12"
+				on:click={() => {
+					createModal = true
+				}}
+			>
+				{$_('turns.create-btn')}
 			</Button>
 		</div>
 	</Card>
@@ -292,7 +319,15 @@
 											{/each}
 										</TableBodyCell>
 										<TableBodyCell>
-											<Button color="blue" class="mr-2" id="edit-{turn.id}">{$_('general.edit-btn')}</Button>
+											<Button
+												color="blue"
+												class="mr-2"
+												id="edit-{turn.id}"
+												on:click={() => {
+													createModal = true
+													selectedId = turn.id
+												}}>{$_('general.edit-btn')}</Button
+											>
 											<Button
 												color="red"
 												class="ml-2"
@@ -321,6 +356,10 @@
 				<Button color="red" class="me-2" on:click={deleteTurn}>{$_('general.yes-sure')}</Button>
 				<Button color="alternative">{$_('general.no-cancel')}</Button>
 			</div>
+		</Modal>
+
+		<Modal bind:open={createModal} size="xs" autoclose outsideclose>
+			<div class="text-center">WIP</div>
 		</Modal>
 	{/if}
 </div>

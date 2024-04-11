@@ -19,16 +19,16 @@
 	import {liveQuery} from 'dexie'
 	import {_} from 'svelte-i18n'
 
-	let createModal = false
-	let deleteModal = false
-	let edit = false
-	let selectedId: number
-	let searchTerm = ''
-	let user_id = 0
-	let userSelect: Array<{value: number; name: string}> = []
-	let userList: string[] = []
-	let start_date = new Date().toISOString().split('T')[0]
-	let end_date = new Date().toISOString().split('T')[0]
+	let createModal: boolean = false,
+		deleteModal: boolean = false,
+		edit: boolean = false,
+		selectedId: number,
+		searchTerm: string = '',
+		user_id: number = 0,
+		userSelect: Array<{value: number; name: string}> = [],
+		userList: string[] = [],
+		start_date: string = new Date().toISOString().split('T')[0],
+		end_date: string = new Date().toISOString().split('T')[0]
 
 	let incidences = liveQuery(() => db.incidence.toArray())
 	db.user.each(user => {
@@ -41,8 +41,8 @@
 	)
 
 	async function createIncidence() {
-		let from = new Date(start_date)
-		let to = new Date(end_date)
+		let from: Date = new Date(start_date),
+			to: Date = new Date(end_date)
 
 		if (from > to) {
 			start_date = ''

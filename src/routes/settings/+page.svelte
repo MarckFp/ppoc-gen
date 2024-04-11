@@ -8,11 +8,12 @@
 	import {exportDB, importInto} from 'dexie-export-import'
 	import {locale, locales, _} from 'svelte-i18n'
 
-	let deleteModal: boolean = false
-	let importModal: boolean = false
-	let files: FileList
+	let deleteModal: boolean = false,
+		importModal: boolean = false,
+		files: FileList,
+		langs: {value: string; name: string}[] = []
+
 	let congregation = liveQuery(() => db.congregation.toArray())
-	let langs: {value: string; name: string}[] = []
 	$locales.forEach(lang => {
 		langs.push({value: lang, name: $_('general.' + lang)})
 	})

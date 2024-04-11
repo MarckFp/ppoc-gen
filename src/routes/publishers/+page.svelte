@@ -21,20 +21,20 @@
 	import {toastMessageSuccess, toastSuccess, toastMessageAlert, toastAlert} from '$lib/store'
 	import {_} from 'svelte-i18n'
 
-	let createModal = false
-	let deleteModal = false
-	let edit = false
-	let selectedId: number
-	let searchTerm = ''
-	let firstname = ''
-	let lastname = ''
-	let gender = 'male'
-	let weight: number = 1
-	let genders = [
-		{value: 'male', name: $_('general.male')},
-		{value: 'female', name: $_('general.female')}
-	]
-	let availabilities: boolean[] = []
+	let createModal: boolean = false,
+		deleteModal: boolean = false,
+		edit: boolean = false,
+		selectedId: number,
+		searchTerm: string = '',
+		firstname: string = '',
+		lastname: string = '',
+		gender: string = 'male',
+		weight: number = 1,
+		availabilities: boolean[] = [],
+		genders: {value: string; name: string}[] = [
+			{value: 'male', name: $_('general.male')},
+			{value: 'female', name: $_('general.female')}
+		]
 	let users = liveQuery(() => db.user.toArray())
 	let schedules = liveQuery(() => db.schedule.toArray())
 

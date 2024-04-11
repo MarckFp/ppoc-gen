@@ -76,7 +76,8 @@
 		"created": "Schedule created successfully"
 	},
 	"turns": {
-		"create-btn": "Create Turns",
+		"create-btn": "Create Turns manually",
+		"generate-btn": "Generate Turns",
 		"from": "From",
 		"to": "To",
 		"no-turns": "No turns yet created",
@@ -89,7 +90,8 @@
 		"no-availability": "There is no publishers with availability on: ",
 		"no-publishers": "There is no publishers that can be assigned to date: ",
 		"deleted-pub": "Deleted Publisher",
-		"search-by": "Search by Date"
+		"search-by": "Search by Date",
+		"date-invalid": "Dates are invalid"
 	},
 	"incidences": {
 		"create-btn": "Create new Incidence",

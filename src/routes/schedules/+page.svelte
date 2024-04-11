@@ -20,27 +20,27 @@
 	import {liveQuery} from 'dexie'
 	import {_} from 'svelte-i18n'
 
-	let createModal = false
-	let deleteModal = false
-	let edit = false
-	let searchTerm = ''
-	let selected_weekday = 'monday'
-	let start_time = '00:00'
-	let end_time = '00:00'
-	let n_carts = 1
-	let location = ''
-	let n_brothers = 1
-	let n_sisters = 1
-	let selectedId: number
-	let weekdays = [
-		{value: 'monday', name: $_('general.monday')},
-		{value: 'tuesday', name: $_('general.tuesday')},
-		{value: 'wednesday', name: $_('general.wednesday')},
-		{value: 'thursday', name: $_('general.thursday')},
-		{value: 'friday', name: $_('general.friday')},
-		{value: 'saturday', name: $_('general.saturday')},
-		{value: 'sunday', name: $_('general.sunday')}
-	]
+	let createModal: boolean = false,
+		deleteModal: boolean = false,
+		edit: boolean = false,
+		searchTerm: string = '',
+		selected_weekday: string = 'monday',
+		start_time: string = '00:00',
+		end_time: string = '00:00',
+		n_carts: number = 1,
+		location: string = '',
+		n_brothers: number = 1,
+		n_sisters: number = 1,
+		selectedId: number,
+		weekdays: {value: string; name: string}[] = [
+			{value: 'monday', name: $_('general.monday')},
+			{value: 'tuesday', name: $_('general.tuesday')},
+			{value: 'wednesday', name: $_('general.wednesday')},
+			{value: 'thursday', name: $_('general.thursday')},
+			{value: 'friday', name: $_('general.friday')},
+			{value: 'saturday', name: $_('general.saturday')},
+			{value: 'sunday', name: $_('general.sunday')}
+		]
 
 	let schedules = liveQuery(() => db.schedule.toArray())
 	$: filteredItems = $schedules?.filter(
@@ -52,7 +52,7 @@
 			return editSchedule()
 		}
 		try {
-			const id = await db.schedule.add({
+			await db.schedule.add({
 				weekday: selected_weekday,
 				start_time: start_time,
 				end_time: end_time,
