@@ -331,8 +331,17 @@
 	}
 
 	//TODO: Delete turns of more than 1year when we generate or create manually new ones
-	function deleteYearlyTurns() {
-
+	async function deleteYearlyTurns() {
+		const turns = await db.turn.toArray()
+		const tmpDate = new Date()
+		tmpDate.setFullYear( tmpDate.getFullYear() - 1 );
+		for (let turn of turns) {
+			const tmpturnDate = new Date(turn.date)
+			if (tmpturnDate <= tmpDate) {
+				db.assignment.where({turn_id: turn.id}).delete()
+				db.turn.delete(turn.id)
+			}
+		}
 	}
 </script>
 
