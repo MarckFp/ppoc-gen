@@ -53,7 +53,7 @@
 		turnStartTime: string,
 		turnEndTime: string,
 		turnLocation: string,
-		turnAssignees: number[] = [],
+		turnAssignees: number[],
 		turnAssigneesList: {value: number, name: string}[] = []
 
 	let turns = liveQuery(() =>
@@ -73,10 +73,13 @@
 		turnAssigneesList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'green'})
 	})
 	
+	//TODO: Fix this, currently we query all assignments and then look for which turn is using what assignment but this have poor performance
+	const allAssignments = liveQuery(
+		() => db.assignment.toArray()
+	);
+
 	$: filteredItems = $turns?.filter(turn => turn.date.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1)
 
-	//TODO: Delete turns of more than 1year when we generate or create manually new ones
-	//TODO: Fix issue where multiselect doesn't show the respective assignees
 	async function generateTurns() {
 		loading = true
 		if (fromDate == undefined || toDate == undefined) {
@@ -215,6 +218,7 @@
 		}, 8000)
 	}
 
+	//TODO: Update translations of here
 	async function createTurns() {
 		if (edit) {
 			return editTurns()
@@ -259,6 +263,7 @@
 		}
 	}
 
+	//TODO: Update translations of here
 	async function editTurns() {
 
 		try {
@@ -313,14 +318,21 @@
 		}
 	}
 
+	//TODO: Create basic export to PDF until the calendar is ready
 	function exportToPDF() {}
 
 	async function getAssignees(turn_id: number) {
 		turnAssignees = []
-		const assignments = await db.assignment.where({turn_id: turn_id}).toArray()
-		for (let assignment of assignments) {
-			turnAssignees.push(assignment.user_id)
+		for (let assignment of $assignments) {
+			if (assignment.turn_id == turn_id) {
+				turnAssignees.push(assignment.user_id)
+			}
 		}
+	}
+
+	//TODO: Delete turns of more than 1year when we generate or create manually new ones
+	function deleteYearlyTurns() {
+
 	}
 </script>
 
@@ -529,6 +541,7 @@
 			</Label>
 			<Label>
 				{$_('turns.assignees')}:
+				{turnAssignees.length}
 				<MultiSelect items={turnAssigneesList} bind:value={turnAssignees} size="sm" let:item let:clear>
 					<Badge color={item.color} dismissable params={{ duration: 100 }} on:close={clear}>
 						{item.name}
