@@ -7,6 +7,7 @@
 	import {toastMessageSuccess, toastSuccess} from '$lib/store'
 	import {exportDB, importInto} from 'dexie-export-import'
 	import {locale, locales, _} from 'svelte-i18n'
+	import {base} from '$app/paths'
 
 	let deleteModal: boolean = false,
 		importModal: boolean = false,
@@ -28,11 +29,7 @@
 		await db.assignment.clear()
 		await db.affinity.clear()
 		await invalidateAll()
-		if (process.env.BASE_PATH != undefined) {
-			goto(process.env.BASE_PATH)
-			return
-		}
-		goto('/')
+		goto(base)
 	}
 
 	function updateCongregation() {
@@ -82,10 +79,6 @@
 					<Label class="space-y-2">
 						<span>{$_('settings.cong-name')}:</span>
 						<Input type="text" name="name" bind:value={$congregation[0].name} required />
-					</Label>
-					<Label class="space-y-2">
-						<span>{$_('settings.n-carts')}:</span>
-						<Input type="number" name="n_carts" min="1" max="99" bind:value={$congregation[0].n_carts} required />
 					</Label>
 					<Label class="space-y-2">
 						<span>{$_('settings.language')}:</span>

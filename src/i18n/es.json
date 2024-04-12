@@ -91,7 +91,8 @@
 		"no-publishers": "No hay publicadores que puedan ser asignados a la fecha: ",
 		"deleted-pub": "Publicador eliminado",
 		"search-by": "Buscar por Fecha",
-		"date-invalid": "Las fechas no son válidas"
+		"date-invalid": "Las fechas no son válidas",
+		"today": "Hoy"
 	},
 	"incidences": {
 		"create-btn": "Crear nueva Incidencia",

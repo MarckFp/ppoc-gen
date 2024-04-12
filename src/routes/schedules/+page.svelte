@@ -27,7 +27,6 @@
 		selected_weekday: string = 'monday',
 		start_time: string = '00:00',
 		end_time: string = '00:00',
-		n_carts: number = 1,
 		location: string = '',
 		n_brothers: number = 1,
 		n_sisters: number = 1,
@@ -56,7 +55,6 @@
 				weekday: selected_weekday,
 				start_time: start_time,
 				end_time: end_time,
-				n_carts: parseInt(n_carts),
 				location: location,
 				n_brothers: parseInt(n_brothers),
 				n_sisters: parseInt(n_sisters)
@@ -77,7 +75,6 @@
 			selected_weekday = 'monday'
 			start_time = '00:00'
 			end_time = '00:00'
-			n_carts = 1
 			location = ''
 			n_brothers = 1
 			n_sisters = 1
@@ -101,7 +98,6 @@
 			weekday: selected_weekday,
 			start_time: start_time,
 			end_time: end_time,
-			n_carts: parseInt(n_carts),
 			location: location,
 			n_brothers: parseInt(n_brothers),
 			n_sisters: parseInt(n_sisters)
@@ -114,7 +110,6 @@
 		selected_weekday = 'monday'
 		start_time = '00:00'
 		end_time = '00:00'
-		n_carts = 1
 		location = ''
 		n_brothers = 1
 		n_sisters = 1
@@ -132,7 +127,6 @@
 				selected_weekday = 'monday'
 				start_time = '00:00'
 				end_time = '00:00'
-				n_carts = 1
 				location = ''
 				n_brothers = 1
 				n_sisters = 1
@@ -156,7 +150,6 @@
 						<TableHeadCell>{$_('schedule.start-time')}</TableHeadCell>
 						<TableHeadCell>{$_('schedule.end-time')}</TableHeadCell>
 						<TableHeadCell>{$_('schedule.location')}</TableHeadCell>
-						<TableHeadCell>{$_('schedule.n-carts')}</TableHeadCell>
 						<TableHeadCell>{$_('schedule.n-bro')}</TableHeadCell>
 						<TableHeadCell>{$_('schedule.n-sis')}</TableHeadCell>
 						<TableHeadCell>
@@ -170,7 +163,6 @@
 								<TableBodyCell>{schedule.start_time}</TableBodyCell>
 								<TableBodyCell>{schedule.end_time}</TableBodyCell>
 								<TableBodyCell>{schedule.location}</TableBodyCell>
-								<TableBodyCell>{schedule.n_carts}</TableBodyCell>
 								<TableBodyCell>{schedule.n_brothers}</TableBodyCell>
 								<TableBodyCell>{schedule.n_sisters}</TableBodyCell>
 								<TableBodyCell>
@@ -185,7 +177,6 @@
 											selected_weekday = schedule.weekday
 											n_brothers = schedule.n_brothers
 											n_sisters = schedule.n_sisters
-											n_carts = schedule.n_carts
 											location = schedule.location
 											start_time = schedule.start_time
 											end_time = schedule.end_time
@@ -225,10 +216,6 @@
 		<Label>
 			{$_('schedule.location')}:
 			<Input type="text" id="location" bind:value={location} required />
-		</Label>
-		<Label>
-			{$_('schedule.n-carts')}:
-			<Input type="number" id="n_carts" min="1" bind:value={n_carts} required />
 		</Label>
 		<div class="mb-6 grid gap-6 md:grid-cols-2">
 			<div>

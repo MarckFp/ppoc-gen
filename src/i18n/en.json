@@ -91,7 +91,8 @@
 		"no-publishers": "There is no publishers that can be assigned to date: ",
 		"deleted-pub": "Deleted Publisher",
 		"search-by": "Search by Date",
-		"date-invalid": "Dates are invalid"
+		"date-invalid": "Dates are invalid",
+		"today": "Today"
 	},
 	"incidences": {
 		"create-btn": "Create new Incidence",

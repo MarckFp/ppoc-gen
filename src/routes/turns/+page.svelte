@@ -95,7 +95,7 @@
 
 		//Loop over weekdays
 		weekdayLoop: for (var d = from; d <= to; d.setDate(d.getDate() + 1)) {
-			weekday = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'][d.getDay()]
+			weekday = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d.getDay()]
 			//Loop over schedules
 			scheduleLoop: for (let schedule of $schedules) {
 				if (schedule.weekday === weekday && schedule.id != undefined) {
@@ -258,7 +258,7 @@
 								)
 								.toArray()
 						)
-					}}>Today</Button
+					}}>{$_('turns.today')}</Button
 				>
 				<Badge border color="red" class="w-5/12"
 					><P size="lg"
@@ -303,7 +303,9 @@
 							{#each $schedules as schedule}
 								{#if schedule.id === turn.schedule_id}
 									<TableBodyRow>
-										<TableBodyCell>{turn.date}</TableBodyCell>
+										<TableBodyCell>{
+											$_('general.'+['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][new Date(turn.date).getDay()]) + ' ' + new Date(turn.date).getDate()
+										}</TableBodyCell>
 										<TableBodyCell>{schedule.start_time + ' - ' + schedule.end_time}</TableBodyCell>
 										<TableBodyCell>{schedule.location}</TableBodyCell>
 										<TableBodyCell>

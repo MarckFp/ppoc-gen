@@ -7,14 +7,12 @@
 	import {_} from 'svelte-i18n'
 
 	let congregation_name: string,
-		files: FileList,
-		n_carts: number = 1
+		files: FileList
 
 	async function createCongregation() {
 		try {
 			const id = await db.congregation.add({
-				name: congregation_name,
-				n_carts: n_carts
+				name: congregation_name
 			})
 
 			$toastMessageSuccess = $_('settings.created-successfully')
@@ -75,21 +73,6 @@
 								placeholder="Warwick"
 								required
 								bind:value={congregation_name}
-							/>
-						</div>
-						<div>
-							<label for="n_carts" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-								>{$_('settings.n-carts')}</label
-							>
-							<input
-								type="number"
-								name="n_carts"
-								id="n_carts"
-								class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-primary-600 focus:ring-primary-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 sm:text-sm"
-								required
-								min="1"
-								max="99"
-								bind:value={n_carts}
 							/>
 						</div>
 						<Button class="w-full" on:click={createCongregation}>{$_('settings.create-cong')}</Button>
