@@ -311,7 +311,6 @@
 						group={advanced_radio}
 						on:change={() => {
 							advanced = true
-							weight = 1.7
 						}}
 						class="p-3">{$_('publishers.advanced')}</Radio
 					>

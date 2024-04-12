@@ -26,7 +26,7 @@ export class MySubClassedDexie extends Dexie {
 			availability: '++id, user_id, schedule_id',
 			incidence: '++id, user_id, start_date, end_date',
 			schedule: '++id, weekday, start_time, end_time, location, n_brothers, n_sisters',
-			turn: '++id, date, schedule_id',
+			turn: '++id, date, start_time, end_time, location, n_brothers, n_sisters',
 			assignment: '++id, user_id, turn_id',
 			affinity: '++id, source_id, destination_id'
 		})

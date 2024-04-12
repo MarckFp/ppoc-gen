@@ -1,5 +1,9 @@
 export interface Turn {
 	id?: number
 	date: string
-	schedule_id: number
+	start_time: string
+	end_time: string
+	location: string
+	n_brothers: number
+	n_sisters: number
 }

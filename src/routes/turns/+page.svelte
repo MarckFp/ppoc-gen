@@ -99,14 +99,25 @@
 			//Loop over schedules
 			scheduleLoop: for (let schedule of $schedules) {
 				if (schedule.weekday === weekday && schedule.id != undefined) {
-					const exists = await db.turn.where({date: d.toISOString().split('T')[0], schedule_id: schedule.id}).first()
+					const exists = await db.turn
+						.where({
+							date: d.toISOString().split('T')[0],
+							start_time: schedule.start_time,
+							end_time: schedule.end_time,
+							location: schedule.location
+						})
+						.first()
 					if (exists) {
 						continue
 					}
 
 					const turn_id: number = await db.turn.add({
 						date: d.toISOString().split('T')[0],
-						schedule_id: schedule.id
+						start_time: schedule.start_time,
+						end_time: schedule.end_time,
+						location: schedule.location,
+						n_brothers: schedule.n_brothers,
+						n_sisters: schedule.n_sisters
 					})
 
 					availabilities = await db.availability.where({schedule_id: schedule.id}).toArray()
@@ -300,62 +311,58 @@
 					</TableHead>
 					<TableBody>
 						{#each filteredItems as turn}
-							{#each $schedules as schedule}
-								{#if schedule.id === turn.schedule_id}
-									<TableBodyRow>
-										<TableBodyCell
-											>{$_(
-												'general.' +
-													['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][
-														new Date(turn.date).getDay()
-													]
-											) +
-												' ' +
-												new Date(turn.date).getDate()}</TableBodyCell
-										>
-										<TableBodyCell>{schedule.start_time + ' - ' + schedule.end_time}</TableBodyCell>
-										<TableBodyCell>{schedule.location}</TableBodyCell>
-										<TableBodyCell>
-											{#each $assignments as assignment}
-												{#if assignment.turn_id == turn.id}
-													{#if assignment.user_id === -1}
-														<Badge color="yellow" class="m-1">{$_('turns.deleted-pub')}</Badge>
+							<TableBodyRow>
+								<TableBodyCell
+									>{$_(
+										'general.' +
+											['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][
+												new Date(turn.date).getDay()
+											]
+									) +
+										' ' +
+										new Date(turn.date).getDate()}</TableBodyCell
+								>
+								<TableBodyCell>{turn.start_time + ' - ' + turn.end_time}</TableBodyCell>
+								<TableBodyCell>{turn.location}</TableBodyCell>
+								<TableBodyCell>
+									{#each $assignments as assignment}
+										{#if assignment.turn_id == turn.id}
+											{#if assignment.user_id === -1}
+												<Badge color="yellow" class="m-1">{$_('turns.deleted-pub')}</Badge>
+											{/if}
+											{#each $showUsers as user}
+												{#if user.id == assignment.user_id}
+													{#if user.gender == 'male'}
+														<Badge color="blue" class="m-1">{user.firstname + ' ' + user.lastname}</Badge>
+													{:else}
+														<Badge color="pink" class="m-1">{user.firstname + ' ' + user.lastname}</Badge>
 													{/if}
-													{#each $showUsers as user}
-														{#if user.id == assignment.user_id}
-															{#if user.gender == 'male'}
-																<Badge color="blue" class="m-1">{user.firstname + ' ' + user.lastname}</Badge>
-															{:else}
-																<Badge color="pink" class="m-1">{user.firstname + ' ' + user.lastname}</Badge>
-															{/if}
-														{/if}
-													{/each}
 												{/if}
 											{/each}
-										</TableBodyCell>
-										<TableBodyCell>
-											<Button
-												color="blue"
-												class="mr-2"
-												id="edit-{turn.id}"
-												on:click={() => {
-													createModal = true
-													selectedId = turn.id
-												}}>{$_('general.edit-btn')}</Button
-											>
-											<Button
-												color="red"
-												class="ml-2"
-												id="delete-{turn.id}"
-												on:click={() => {
-													deleteModal = true
-													selectedId = turn.id
-												}}>{$_('general.delete-btn')}</Button
-											>
-										</TableBodyCell>
-									</TableBodyRow>
-								{/if}
-							{/each}
+										{/if}
+									{/each}
+								</TableBodyCell>
+								<TableBodyCell>
+									<Button
+										color="blue"
+										class="mr-2"
+										id="edit-{turn.id}"
+										on:click={() => {
+											createModal = true
+											selectedId = turn.id
+										}}>{$_('general.edit-btn')}</Button
+									>
+									<Button
+										color="red"
+										class="ml-2"
+										id="delete-{turn.id}"
+										on:click={() => {
+											deleteModal = true
+											selectedId = turn.id
+										}}>{$_('general.delete-btn')}</Button
+									>
+								</TableBodyCell>
+							</TableBodyRow>
 						{/each}
 					</TableBody>
 				</TableSearch>

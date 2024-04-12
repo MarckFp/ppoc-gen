@@ -35,7 +35,7 @@
 				</div></NavLi
 			>
 			<NavLi href="{base}/turns"
-				><div class="flex flex-row">{$_('navbar.turns')} <EditOutline color="red" /></div></NavLi
+				><div class="flex flex-row">{$_('navbar.turns')} <EditOutline size="lg" color="red" /></div></NavLi
 			>
 			<NavLi href="{base}/incidences"
 				><div class="flex flex-row">
