@@ -4,6 +4,7 @@
 		Button,
 		Label,
 		Input,
+		MultiSelect,
 		Spinner,
 		Badge,
 		TableBody,
@@ -30,12 +31,16 @@
 	import type {User} from '$lib/models/user'
 	import type {Incidence} from '$lib/models/incidence'
 	import type {Availability} from '$lib/models/availability'
+	import { onMount } from 'svelte'
 
 	var date: Date = new Date()
 	let fromDate: string,
 		toDate: string,
-		loading: boolean = false,
 		weekday: string,
+		loading: boolean = false,
+		deleteModal: boolean = false,
+		createModal: boolean = false,
+		edit: boolean = false,
 		availabilities: Availability[],
 		users: User[],
 		incidences: Incidence[],
@@ -43,10 +48,13 @@
 		brothers: number = 0,
 		sisters: number = 0,
 		searchTerm: string = '',
-		deleteModal: boolean = false,
-		createModal: boolean = false,
-		edit: boolean = false,
-		selectedId: number
+		selectedId: number,
+		turnDate: string,
+		turnStartTime: string,
+		turnEndTime: string,
+		turnLocation: string,
+		turnAssignees: number[] = [],
+		turnAssigneesList: {value: number, name: string}[] = []
 
 	let turns = liveQuery(() =>
 		db.turn
@@ -61,9 +69,14 @@
 	let showUsers = liveQuery(() => db.user.toArray())
 	let schedules = liveQuery(() => db.schedule.toArray())
 
+	db.user.each(user => {
+		turnAssigneesList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'green'})
+	})
+	
 	$: filteredItems = $turns?.filter(turn => turn.date.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1)
 
-	async function createTurns() {
+	//TODO: Delete turns of more than 1year when we generate or create manually new ones
+	async function generateTurns() {
 		loading = true
 		if (fromDate == undefined || toDate == undefined) {
 			fromDate = ''
@@ -115,9 +128,7 @@
 						date: d.toISOString().split('T')[0],
 						start_time: schedule.start_time,
 						end_time: schedule.end_time,
-						location: schedule.location,
-						n_brothers: schedule.n_brothers,
-						n_sisters: schedule.n_sisters
+						location: schedule.location
 					})
 
 					availabilities = await db.availability.where({schedule_id: schedule.id}).toArray()
@@ -203,7 +214,112 @@
 		}, 8000)
 	}
 
+	async function createTurns() {
+		if (edit) {
+			return editTurns()
+		}
+		try {
+			const id = await db.turn.add({
+				date: turnDate,
+				start_time: turnStartTime,
+				end_time: turnEndTime,
+				location: turnLocation
+			})
+
+			turnAssignees.forEach(async assignee => {
+				db.assignment.add({
+					user_id: assignee,
+					turn_id: id
+				})
+
+				const user = await db.user.where({id: assignee}).first()
+				db.user.update(assignee, {
+					counter: parseFloat(user?.counter) + parseFloat(user?.weight)
+				})
+			})
+
+			$toastMessageSuccess = $_('schedule.created')
+			$toastSuccess = true
+			setTimeout(() => {
+				$toastSuccess = false
+			}, 8000)
+		} catch (error) {
+			$toastMessageAlert = $_('schedule.failed') + error
+			$toastAlert = true
+			setTimeout(() => {
+				$toastAlert = false
+			}, 8000)
+		} finally {
+			turnAssignees = []
+			turnLocation = ''
+			turnDate = ''
+			turnStartTime = ''
+			turnEndTime = ''
+		}
+	}
+
+	async function editTurns() {
+
+		try {
+			db.turn.update(selectedId, {
+				date: turnDate,
+				start_time: turnStartTime,
+				end_time: turnEndTime,
+				location: turnLocation
+			})
+
+			const assignments = await db.assignment.where({turn_id: selectedId}).toArray()
+			for (let assignment of assignments) {
+				const users = await db.user.where({id: assignment.user_id}).toArray()
+				for (let user of users) {
+					await db.user.update(user.id, {
+						counter: parseFloat(user?.counter) - parseFloat(user?.weight)
+					})
+				}
+			}
+			await db.assignment.where({turn_id: selectedId}).delete()
+
+			turnAssignees.forEach(async assignee => {
+				db.assignment.add({
+					user_id: assignee,
+					turn_id: selectedId
+				})
+
+				const user = await db.user.where({id: assignee}).first()
+				db.user.update(assignee, {
+					counter: parseFloat(user?.counter) + parseFloat(user?.weight)
+				})
+			})
+
+			$toastMessageSuccess = $_('schedule.modified')
+			$toastSuccess = true
+			setTimeout(() => {
+				$toastSuccess = false
+			}, 8000)
+		} catch (error) {
+			$toastMessageAlert = $_('schedule.failed') + error
+			$toastAlert = true
+			setTimeout(() => {
+				$toastAlert = false
+			}, 8000)
+		} finally {
+			turnAssignees = []
+			turnLocation = ''
+			turnDate = ''
+			turnStartTime = ''
+			turnEndTime = ''
+			edit = false
+		}
+	}
+
 	function exportToPDF() {}
+
+	function getAssignees(turn_id: number) {
+		turnAssignees = []
+		db.assignment.where({turn_id: turn_id}).each(assignment => {
+			turnAssignees.push(assignment.user_id)
+		})
+	}
 </script>
 
 <div class="mx-auto flex flex-col items-center justify-center px-6 py-8">
@@ -217,7 +333,7 @@
 				{$_('turns.to')}:
 				<Input type="date" bind:value={toDate} />
 			</Label>
-			<Button color="green" class="ml-1 mr-1 w-2/12" on:click={createTurns}>
+			<Button color="green" class="ml-1 mr-1 w-2/12" on:click={generateTurns}>
 				{#if loading}
 					<Spinner class="me-3" size="4" color="white" />
 					{$_('turns.creating')}
@@ -230,6 +346,12 @@
 				class="ml-2 w-2/12"
 				on:click={() => {
 					createModal = true
+					edit = false
+					turnAssignees = []
+					turnLocation = ''
+					turnDate = ''
+					turnStartTime = ''
+					turnEndTime = ''
 				}}
 			>
 				{$_('turns.create-btn')}
@@ -349,7 +471,15 @@
 										id="edit-{turn.id}"
 										on:click={() => {
 											createModal = true
+											edit = true
+											turnLocation = turn.location
+											turnDate = turn.date
+											turnStartTime = turn.start_time
+											turnEndTime = turn.end_time
 											selectedId = turn.id
+											getAssignees(turn.id)
+											console.log(turnAssigneesList)
+											console.log(turnAssignees)
 										}}>{$_('general.edit-btn')}</Button
 									>
 									<Button
@@ -381,7 +511,40 @@
 		</Modal>
 
 		<Modal bind:open={createModal} size="xs" autoclose outsideclose>
-			<div class="text-center">WIP</div>
+			<Label>
+				{$_('turns.day')}:
+				<Input type="date" bind:value={turnDate} required/>
+			</Label>
+			<Label>
+				{$_('schedule.start-time')}:
+				<Input type="time" bind:value={turnStartTime} required/>
+			</Label>
+			<Label>
+				{$_('schedule.end-time')}:
+				<Input type="time" bind:value={turnEndTime} required/>
+			</Label>
+			<Label>
+				{$_('schedule.location')}:
+				<Input type="text" bind:value={turnLocation} required/>
+			</Label>
+			<Label>
+				{$_('turns.assignees')}:
+				<MultiSelect items={turnAssigneesList} bind:value={turnAssignees} size="sm" let:item let:clear>
+					<Badge color={item.color} dismissable params={{ duration: 100 }} on:close={clear}>
+						{item.name}
+					</Badge>
+				</MultiSelect>
+			</Label>
+			<div class="text-center">
+				<Button color="red" class="me-2" on:click={createTurns}>
+					{#if edit}
+						{$_('general.edit-btn')}
+					{:else}
+						{$_('general.create-btn')}
+					{/if}
+				</Button>
+				<Button color="alternative">{$_('general.cancel-btn')}</Button>
+			</div>
 		</Modal>
 	{/if}
 </div>

@@ -25,7 +25,7 @@
 		selectedId: number,
 		searchTerm: string = '',
 		user_id: number = 0,
-		userSelect: Array<{value: number; name: string}> = [],
+		userSelect: {value: number; name: string}[] = [],
 		userList: string[] = [],
 		start_date: string = new Date().toISOString().split('T')[0],
 		end_date: string = new Date().toISOString().split('T')[0]
