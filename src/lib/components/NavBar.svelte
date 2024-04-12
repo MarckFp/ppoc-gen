@@ -2,11 +2,11 @@
 	import {Navbar, NavBrand, NavLi, NavUl, NavHamburger, DarkMode} from 'flowbite-svelte'
 	import {base} from '$app/paths'
 	import {
-		UserSolid,
-		CalendarMonthSolid,
-		BellRingSolid,
-		AdjustmentsVerticalSolid,
-		EditSolid
+		UsersGroupOutline,
+		CalendarMonthOutline,
+		BellRingOutline,
+		CogOutline,
+		EditOutline
 	} from 'flowbite-svelte-icons'
 	import {_} from 'svelte-i18n'
 </script>
@@ -25,26 +25,28 @@
 			<NavLi href="{base}/publishers">
 				<div class="flex flex-row">
 					{$_('navbar.publishers')}
-					<UserSolid color="red" />
+					<UsersGroupOutline size="lg" color="red" />
 				</div>
 			</NavLi>
 			<NavLi href="{base}/schedules"
 				><div class="flex flex-row">
 					{$_('navbar.schedules')}
-					<CalendarMonthSolid color="red" />
+					<CalendarMonthOutline size="lg" color="red" />
 				</div></NavLi
 			>
-			<NavLi href="{base}/turns"><div class="flex flex-row">{$_('navbar.turns')} <EditSolid color="red" /></div></NavLi>
+			<NavLi href="{base}/turns"
+				><div class="flex flex-row">{$_('navbar.turns')} <EditOutline color="red" /></div></NavLi
+			>
 			<NavLi href="{base}/incidences"
 				><div class="flex flex-row">
 					{$_('navbar.incidences')}
-					<BellRingSolid color="red" />
+					<BellRingOutline size="lg" color="red" />
 				</div></NavLi
 			>
 			<NavLi href="{base}/settings"
 				><div class="flex flex-row">
 					{$_('navbar.settings')}
-					<AdjustmentsVerticalSolid color="red" />
+					<CogOutline size="lg" color="red" />
 				</div></NavLi
 			>
 		</NavUl>

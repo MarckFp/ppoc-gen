@@ -303,9 +303,16 @@
 							{#each $schedules as schedule}
 								{#if schedule.id === turn.schedule_id}
 									<TableBodyRow>
-										<TableBodyCell>{
-											$_('general.'+['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][new Date(turn.date).getDay()]) + ' ' + new Date(turn.date).getDate()
-										}</TableBodyCell>
+										<TableBodyCell
+											>{$_(
+												'general.' +
+													['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][
+														new Date(turn.date).getDay()
+													]
+											) +
+												' ' +
+												new Date(turn.date).getDate()}</TableBodyCell
+										>
 										<TableBodyCell>{schedule.start_time + ' - ' + schedule.end_time}</TableBodyCell>
 										<TableBodyCell>{schedule.location}</TableBodyCell>
 										<TableBodyCell>

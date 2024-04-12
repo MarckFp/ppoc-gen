@@ -13,6 +13,7 @@
 		TableHead,
 		TableHeadCell,
 		Checkbox,
+		Radio,
 		Badge
 	} from 'flowbite-svelte'
 	import {ExclamationCircleOutline} from 'flowbite-svelte-icons'
@@ -23,24 +24,39 @@
 
 	let createModal: boolean = false,
 		deleteModal: boolean = false,
+		advanced: boolean = false,
 		edit: boolean = false,
 		selectedId: number,
 		searchTerm: string = '',
 		firstname: string = '',
 		lastname: string = '',
 		gender: string = 'male',
+		advanced_radio: string = 'no',
 		weight: number = 1,
 		availabilities: boolean[] = [],
 		genders: {value: string; name: string}[] = [
 			{value: 'male', name: $_('general.male')},
 			{value: 'female', name: $_('general.female')}
+		],
+		weights = [
+			{
+				value: 1,
+				name: $_('publishers.high')
+			},
+			{
+				value: 1.5,
+				name: $_('publishers.medium')
+			},
+			{
+				value: 2,
+				name: $_('publishers.low')
+			}
 		]
 	let users = liveQuery(() => db.user.toArray())
 	let schedules = liveQuery(() => db.schedule.toArray())
 
 	$: filteredItems = $users?.filter(user => user.firstname.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1)
 
-	//TODO: Rework weight with range or radio and change name to importance so the UX is more legible
 	async function createPublisher() {
 		if (edit) {
 			return editUser()
@@ -85,6 +101,8 @@
 			lastname = ''
 			gender = 'male'
 			weight = 1
+			advanced = false
+			advanced_radio = 'no'
 			availabilities = []
 		}
 	}
@@ -120,6 +138,8 @@
 		lastname = ''
 		gender = 'male'
 		weight = 1
+		advanced = false
+		advanced_radio = 'no'
 		availabilities = []
 		edit = false
 	}
@@ -186,7 +206,7 @@
 						<TableHeadCell>{$_('publishers.firstname')}</TableHeadCell>
 						<TableHeadCell>{$_('publishers.lastname')}</TableHeadCell>
 						<TableHeadCell>{$_('publishers.gender')}</TableHeadCell>
-						<TableHeadCell>{$_('publishers.weight')}</TableHeadCell>
+						<TableHeadCell>{$_('publishers.priority')}</TableHeadCell>
 						<TableHeadCell>
 							<span class="sr-only">Actions</span>
 						</TableHeadCell>
@@ -196,8 +216,24 @@
 							<TableBodyRow>
 								<TableBodyCell>{user.firstname}</TableBodyCell>
 								<TableBodyCell>{user.lastname}</TableBodyCell>
-								<TableBodyCell>{$_('general.' + user.gender)}</TableBodyCell>
-								<TableBodyCell>{user.weight}</TableBodyCell>
+								<TableBodyCell>
+									{#if user.gender == 'male'}
+										<Badge large border rounded color="blue">{$_('general.' + user.gender)} ♂️</Badge>
+									{:else}
+										<Badge large border rounded color="pink">{$_('general.' + user.gender)} ♀️</Badge>
+									{/if}
+								</TableBodyCell>
+								<TableBodyCell>
+									{#if user.weight == 1}
+										<Badge large border color="yellow">{$_('publishers.high')}</Badge>
+									{:else if user.weight == 1.5}
+										<Badge large border color="indigo">{$_('publishers.medium')}</Badge>
+									{:else if user.weight == 2}
+										<Badge large border color="red">{$_('publishers.low')}</Badge>
+									{:else}
+										<Badge large border color="pink">{$_('publishers.advanced')}: {user.weight}</Badge>
+									{/if}
+								</TableBodyCell>
 								<TableBodyCell>
 									<Button
 										color="blue"
@@ -205,11 +241,16 @@
 										id="edit-{user.id}"
 										on:click={() => {
 											createModal = true
+											advanced = false
 											selectedId = user.id
 											firstname = user.firstname
 											lastname = user.lastname
 											gender = user.gender
-											weight = user.weight
+											weight = parseFloat(user.weight)
+											if (![1, 1.5, 2].includes(weight)) {
+												advanced = true
+												advanced_radio = 'yes'
+											}
 											retrieveAvailabilities(user.id)
 											edit = true
 										}}>{$_('general.edit-btn')}</Button
@@ -246,8 +287,39 @@
 			<Select class="mt-2" items={genders} bind:value={gender} />
 		</Label>
 		<Label>
-			{$_('publishers.weight')}:
-			<Input type="number" id="n_carts" min="1" max="5" step=".1" bind:value={weight} required />
+			{$_('publishers.priority')}:
+			<ul
+				class="mb-2 w-full items-center divide-x divide-gray-200 rounded-lg border border-gray-200 dark:divide-gray-600 dark:border-gray-600 dark:bg-gray-800 sm:flex rtl:divide-x-reverse"
+			>
+				{#each weights as { value, name }}
+					<li class="w-full">
+						<Radio
+							name="weight"
+							bind:group={weight}
+							{value}
+							on:change={() => {
+								advanced = false
+							}}
+							class="p-3">{name}</Radio
+						>
+					</li>
+				{/each}
+				<li class="w-full">
+					<Radio
+						name="weight"
+						value="yes"
+						group={advanced_radio}
+						on:change={() => {
+							advanced = true
+							weight = 1.7
+						}}
+						class="p-3">{$_('publishers.advanced')}</Radio
+					>
+				</li>
+			</ul>
+			{#if advanced}
+				<Input type="number" id="weight" min="1" max="4" step=".1" bind:value={weight} class="mt-2" required />
+			{/if}
 		</Label>
 		<Label>
 			{$_('publishers.availability')}:
@@ -257,13 +329,15 @@
 				{:else}
 					<ul class="grid w-full grid-cols-1 items-center rounded-lg">
 						{#each $schedules as schedule}
-							<li class="w-full border">
-								<Checkbox class="p-3" bind:checked={availabilities[schedule.id]}
-									><Badge color="red" class="m-1">{$_('general.' + schedule.weekday)}</Badge><Badge color="indigo"
-										>{schedule.start_time + '-' + schedule.end_time}</Badge
-									><Badge class="m-1" color="pink">{schedule.location}</Badge></Checkbox
-								>
-							</li>
+							{#if schedule.id}
+								<li class="w-full border">
+									<Checkbox class="p-3" bind:checked={availabilities[schedule.id]}
+										><Badge color="red" class="m-1">{$_('general.' + schedule.weekday)}</Badge><Badge color="indigo"
+											>{schedule.start_time + '-' + schedule.end_time}</Badge
+										><Badge class="m-1" color="pink">{schedule.location}</Badge></Checkbox
+									>
+								</li>
+							{/if}
 						{/each}
 					</ul>
 				{/if}

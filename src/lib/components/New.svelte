@@ -6,8 +6,7 @@
 	import {importInto} from 'dexie-export-import'
 	import {_} from 'svelte-i18n'
 
-	let congregation_name: string,
-		files: FileList
+	let congregation_name: string, files: FileList
 
 	async function createCongregation() {
 		try {
