@@ -76,6 +76,7 @@
 	$: filteredItems = $turns?.filter(turn => turn.date.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1)
 
 	//TODO: Delete turns of more than 1year when we generate or create manually new ones
+	//TODO: Fix issue where multiselect doesn't show the respective assignees
 	async function generateTurns() {
 		loading = true
 		if (fromDate == undefined || toDate == undefined) {
@@ -314,11 +315,12 @@
 
 	function exportToPDF() {}
 
-	function getAssignees(turn_id: number) {
+	async function getAssignees(turn_id: number) {
 		turnAssignees = []
-		db.assignment.where({turn_id: turn_id}).each(assignment => {
+		const assignments = await db.assignment.where({turn_id: turn_id}).toArray()
+		for (let assignment of assignments) {
 			turnAssignees.push(assignment.user_id)
-		})
+		}
 	}
 </script>
 
@@ -469,7 +471,7 @@
 										color="blue"
 										class="mr-2"
 										id="edit-{turn.id}"
-										on:click={() => {
+										on:click={async () => {
 											createModal = true
 											edit = true
 											turnLocation = turn.location
@@ -477,9 +479,7 @@
 											turnStartTime = turn.start_time
 											turnEndTime = turn.end_time
 											selectedId = turn.id
-											getAssignees(turn.id)
-											console.log(turnAssigneesList)
-											console.log(turnAssignees)
+											await getAssignees(turn.id)
 										}}>{$_('general.edit-btn')}</Button
 									>
 									<Button
