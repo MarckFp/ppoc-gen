@@ -203,7 +203,7 @@
 	<Modal bind:open={createModal} size="xs" autoclose outsideclose>
 		<Label>
 			{$_('schedule.weekday')}:
-			<Select class="mt-2" items={weekdays} bind:value={selected_weekday} />
+			<Select class="mt-2" id="weekday" items={weekdays} bind:value={selected_weekday} />
 		</Label>
 		<Label>
 			{$_('schedule.start-time')}:

@@ -276,15 +276,15 @@
 	<Modal bind:open={createModal} size="xs" autoclose outsideclose>
 		<Label>
 			{$_('publishers.firstname')}:
-			<Input type="text" id="location" bind:value={firstname} required />
+			<Input type="text" id="firstname" bind:value={firstname} required />
 		</Label>
 		<Label>
 			{$_('publishers.lastname')}:
-			<Input type="text" id="location" bind:value={lastname} required />
+			<Input type="text" id="lastname" bind:value={lastname} required />
 		</Label>
 		<Label>
 			{$_('publishers.gender')}:
-			<Select class="mt-2" items={genders} bind:value={gender} />
+			<Select class="mt-2" id="gender" items={genders} bind:value={gender} />
 		</Label>
 		<Label>
 			{$_('publishers.priority')}:
@@ -330,7 +330,7 @@
 						{#each $schedules as schedule}
 							{#if schedule.id}
 								<li class="w-full border">
-									<Checkbox class="p-3" bind:checked={availabilities[schedule.id]}
+									<Checkbox class="p-3" id="availability-{schedule.id}" bind:checked={availabilities[schedule.id]}
 										><Badge color="red" class="m-1">{$_('general.' + schedule.weekday)}</Badge><Badge color="indigo"
 											>{schedule.start_time + '-' + schedule.end_time}</Badge
 										><Badge class="m-1" color="pink">{schedule.location}</Badge></Checkbox

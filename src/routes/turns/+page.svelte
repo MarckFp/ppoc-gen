@@ -39,6 +39,7 @@
 		loading: boolean = false,
 		deleteModal: boolean = false,
 		createModal: boolean = false,
+		creationDisabled: boolean = false,
 		edit: boolean = false,
 		availabilities: Availability[],
 		users: User[],
@@ -82,6 +83,7 @@
 
 	async function generateTurns() {
 		loading = true
+		creationDisabled = true
 		if (fromDate == undefined || toDate == undefined) {
 			fromDate = ''
 			toDate = ''
@@ -197,6 +199,7 @@
 			}
 		}
 		loading = false
+		creationDisabled = false
 	}
 
 	async function deleteTurn() {
@@ -357,7 +360,7 @@
 				{$_('turns.to')}:
 				<Input type="date" bind:value={toDate} />
 			</Label>
-			<Button color="green" class="ml-1 mr-1 w-2/12" on:click={generateTurns}>
+			<Button color="green" class="ml-1 mr-1 w-2/12" on:click={generateTurns} disabled={creationDisabled}>
 				{#if loading}
 					<Spinner class="me-3" size="4" color="white" />
 					{$_('turns.creating')}
@@ -547,7 +550,7 @@
 			</Label>
 			<Label>
 				{$_('schedule.location')}:
-				<Input type="text" bind:value={turnLocation} required/>
+				<Input type="text" id="location" bind:value={turnLocation} required/>
 			</Label>
 			<Label>
 				{$_('turns.assignees')}:
