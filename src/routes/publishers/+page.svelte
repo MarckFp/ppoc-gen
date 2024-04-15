@@ -72,7 +72,7 @@
 				firstname: firstname,
 				lastname: lastname,
 				gender: gender,
-				weight: parseFloat(weight),
+				weight: weight,
 				counter: maxCounter
 			})
 
@@ -112,7 +112,7 @@
 			firstname: firstname,
 			lastname: lastname,
 			gender: gender,
-			weight: parseFloat(weight)
+			weight: weight
 		})
 
 		const availability_list = await db.availability.where({user_id: selectedId}).toArray()
@@ -246,7 +246,7 @@
 											firstname = user.firstname
 											lastname = user.lastname
 											gender = user.gender
-											weight = parseFloat(user.weight)
+											weight = user.weight
 											if (![1, 1.5, 2].includes(weight)) {
 												advanced = true
 												advanced_radio = 'yes'

@@ -167,8 +167,8 @@
 								continue userLoop
 							}
 						}
-						if (user.gender === 'male' && brothers < parseInt(schedule.n_brothers) && user.id != undefined) {
-							const counter = parseFloat(user.counter) + parseFloat(user.weight)
+						if (user.gender === 'male' && brothers < schedule.n_brothers && user.id != undefined) {
+							const counter = user.counter + user.weight
 							db.assignment.add({
 								user_id: user.id,
 								turn_id: turn_id
@@ -178,14 +178,14 @@
 							})
 							brothers++
 						}
-						if (user.gender === 'female' && sisters < parseInt(schedule.n_sisters) && user.id != undefined) {
-							const counter = parseFloat(user.counter) + parseFloat(user.weight)
+						if (user.gender === 'female' && sisters < schedule.n_sisters && user.id != undefined) {
+							const counter = user.counter + user.weight
 							db.assignment.add({
 								user_id: user.id,
 								turn_id: turn_id
 							})
 							db.user.update(user.id, {
-								counter: parseFloat(counter)
+								counter: counter
 							})
 							sisters++
 						}
@@ -205,8 +205,8 @@
 		for (let assignment of assignments) {
 			const users = await db.user.where({id: assignment.user_id}).toArray()
 			for (let user of users) {
-				const new_counter = parseFloat(user.counter) - parseFloat(user.weight)
-				await db.user.update(user.id, {counter: parseFloat(new_counter)})
+				const new_counter = user.counter - user.weight
+				await db.user.update(user.id, {counter: new_counter})
 			}
 			await db.assignment.delete(assignment.id)
 		}
@@ -239,7 +239,7 @@
 
 				const user = await db.user.where({id: assignee}).first()
 				db.user.update(assignee, {
-					counter: parseFloat(user?.counter) + parseFloat(user?.weight)
+					counter: user?.counter + user?.weight
 				})
 			})
 
@@ -279,7 +279,7 @@
 				const users = await db.user.where({id: assignment.user_id}).toArray()
 				for (let user of users) {
 					await db.user.update(user.id, {
-						counter: parseFloat(user?.counter) - parseFloat(user?.weight)
+						counter: user?.counter - user?.weight
 					})
 				}
 			}
@@ -293,7 +293,7 @@
 
 				const user = await db.user.where({id: assignee}).first()
 				db.user.update(assignee, {
-					counter: parseFloat(user?.counter) + parseFloat(user?.weight)
+					counter: user?.counter + user?.weight
 				})
 			})
 

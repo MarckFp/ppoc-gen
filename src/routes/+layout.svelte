@@ -21,7 +21,7 @@
 	$: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : ''
 
 	//TODO: Add Callbacks when app is offline or need refresh following https://vite-pwa-org.netlify.app/guide/prompt-for-update.html
-	const intervalMS = 60 * 60 * 1000
+	const intervalMS: number = 60 * 60 * 1000
 	registerSW({
 		immediate: true,
 		onOfflineReady() {},

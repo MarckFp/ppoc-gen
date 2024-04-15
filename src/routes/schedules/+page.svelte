@@ -56,8 +56,8 @@
 				start_time: start_time,
 				end_time: end_time,
 				location: location,
-				n_brothers: parseInt(n_brothers),
-				n_sisters: parseInt(n_sisters)
+				n_brothers: n_brothers,
+				n_sisters: n_sisters
 			})
 
 			$toastMessageSuccess = $_('schedule.created')
@@ -99,8 +99,8 @@
 			start_time: start_time,
 			end_time: end_time,
 			location: location,
-			n_brothers: parseInt(n_brothers),
-			n_sisters: parseInt(n_sisters)
+			n_brothers: n_brothers,
+			n_sisters: n_sisters
 		})
 		$toastMessageSuccess = $_('schedule.modified')
 		$toastSuccess = true
