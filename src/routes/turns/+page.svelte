@@ -31,7 +31,6 @@
 	import type {User} from '$lib/models/user'
 	import type {Incidence} from '$lib/models/incidence'
 	import type {Availability} from '$lib/models/availability'
-	import { onMount } from 'svelte'
 
 	var date: Date = new Date()
 	let fromDate: string,
@@ -54,7 +53,7 @@
 		turnEndTime: string,
 		turnLocation: string,
 		turnAssignees: number[],
-		turnAssigneesList: {value: number, name: string}[] = []
+		turnAssigneesList: {value: number, name: string, color: string}[] = []
 
 	let turns = liveQuery(() =>
 		db.turn
@@ -70,13 +69,14 @@
 	let schedules = liveQuery(() => db.schedule.toArray())
 
 	db.user.each(user => {
-		turnAssigneesList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'green'})
+		if (user.id != undefined) {
+			if (user.gender == 'male') {
+				turnAssigneesList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'blue'})
+			} else {
+				turnAssigneesList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'pink'})
+			}
+		}
 	})
-	
-	//TODO: Fix this, currently we query all assignments and then look for which turn is using what assignment but this have poor performance
-	const allAssignments = liveQuery(
-		() => db.assignment.toArray()
-	);
 
 	$: filteredItems = $turns?.filter(turn => turn.date.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1)
 
@@ -321,6 +321,7 @@
 	//TODO: Create basic export to PDF until the calendar is ready
 	function exportToPDF() {}
 
+	//TODO: Fix this, currently we query all assignments and then look for which turn is using what assignment but this have poor performance
 	async function getAssignees(turn_id: number) {
 		turnAssignees = []
 		for (let assignment of $assignments) {
@@ -330,11 +331,11 @@
 		}
 	}
 
-	//TODO: Delete turns of more than 1year when we generate or create manually new ones
+	//TODO: Delete turns of more than 5 years when we generate or create manually new ones
 	async function deleteYearlyTurns() {
 		const turns = await db.turn.toArray()
 		const tmpDate = new Date()
-		tmpDate.setFullYear( tmpDate.getFullYear() - 1 );
+		tmpDate.setFullYear( tmpDate.getFullYear() - 5 );
 		for (let turn of turns) {
 			const tmpturnDate = new Date(turn.date)
 			if (tmpturnDate <= tmpDate) {
