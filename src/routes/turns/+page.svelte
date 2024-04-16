@@ -76,6 +76,8 @@
 
 	$: filteredItems = $turns?.filter(turn => turn.date.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1)
 
+	//TODO: Currently affinities are quite basic, we need to improve it.
+	// also, if a schedule has only 1 male publisher if 2 male people have affinity they are never going to be together
 	async function generateTurns() {
 		loading = true
 		creationDisabled = true
@@ -261,7 +263,6 @@
 		})
 	}
 
-	//TODO: Update translations of here
 	async function createTurns() {
 		if (edit) {
 			return editTurns()
