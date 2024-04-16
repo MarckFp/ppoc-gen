@@ -11,7 +11,7 @@
 	import {_} from 'svelte-i18n'
 </script>
 
-<Navbar let:NavContainer>
+<Navbar let:NavContainer class="print:hidden">
 	<NavContainer class="rounded-lg border bg-white px-5 py-2 dark:bg-gray-600">
 		<NavBrand href="{base}/">
 			<img src="favicon.ico" class="me-3 h-6 w-full rounded-lg sm:h-9" alt="PPOC Gen Logo" />

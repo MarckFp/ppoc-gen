@@ -25,7 +25,6 @@
 	import type {Incidence} from '$lib/models/incidence'
 	import type {Availability} from '$lib/models/availability'
 	import type {Affinity} from '$lib/models/affinity'
-	import { jsPDF } from "jspdf";
 
 	var date: Date = new Date()
 	let fromDate: string,
@@ -358,13 +357,8 @@
 	}
 
 	//TODO: Create basic export to PDF until the calendar is ready
-	function exportToPDF() {
-		const doc = new jsPDF({
-			orientation: "landscape"
-		});
-
-		doc.text("Hello world!", 10, 10);
-		doc.save("turns.pdf");
+	async function exportToPDF() {
+		window.print()
 	}
 
 	//TODO: Fix this, currently we query all assignments and then look for which turn is using what assignment but this have poor performance
@@ -393,7 +387,7 @@
 </script>
 
 <div class="mx-auto flex flex-col items-center justify-center px-6 py-8">
-	<Card size="xl" class="mb-2">
+	<Card size="xl" class="mb-2 print:hidden">
 		<div class="mb-4 mt-1 flex flex-row justify-around">
 			<Label class="mr-2 w-2/12">
 				{$_('turns.from')}:
@@ -430,7 +424,7 @@
 	</Card>
 	{#if $turns && $schedules && $assignments && $showUsers}
 		<Card size="xl" class="mt-2">
-			<div class="mb-2 mt-2 flex flex-row justify-around">
+			<div class="mb-2 mt-2 flex flex-row justify-around print:hidden">
 				<Button
 					class="w-2/12"
 					aria-label="Previous Month"
@@ -534,7 +528,7 @@
 										{/if}
 									{/each}
 								</TableBodyCell>
-								<TableBodyCell>
+								<TableBodyCell tdClass="print:hidden">
 									<Button
 										color="blue"
 										class="mr-2"
