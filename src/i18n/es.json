@@ -40,7 +40,8 @@
 		"english": "Inglés",
 		"en": "Inglés",
 		"spanish": "Español",
-		"es": "Español"
+		"es": "Español",
+		"invalid-data": "Los datos introducidos son incorrectos o incompletos"
 	},
 	"publishers": {
 		"create-btn": "Crear nuevo Publicador",

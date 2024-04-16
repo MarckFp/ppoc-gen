@@ -47,6 +47,20 @@
 	)
 
 	async function createSchedule() {
+		if (location == '' || n_brothers < 1 || n_sisters < 1) {
+			selected_weekday = 'monday'
+			start_time = '00:00'
+			end_time = '00:00'
+			location = ''
+			n_brothers = 1
+			n_sisters = 1
+
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: $_('general.invalid-data')}
+			})
+			return
+		}
 		if (edit) {
 			return editSchedule()
 		}
@@ -216,11 +230,11 @@
 		<div class="mb-6 grid gap-6 md:grid-cols-2">
 			<div>
 				<Label for="n_brothers" class="mb-2">{$_('schedule.n-bro')}:</Label>
-				<Input type="number" id="n_brothers" bind:value={n_brothers} required />
+				<Input type="number" id="n_brothers" min="1" bind:value={n_brothers} required />
 			</div>
 			<div>
 				<Label for="n_sisters" class="mb-2">{$_('schedule.n-sis')}:</Label>
-				<Input type="number" id="n_sisters" bind:value={n_sisters} required />
+				<Input type="number" id="n_sisters" min="1" bind:value={n_sisters} required />
 			</div>
 		</div>
 		<div class="text-center">

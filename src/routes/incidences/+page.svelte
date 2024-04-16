@@ -45,8 +45,9 @@
 			to: Date = new Date(end_date)
 
 		if (from > to) {
-			start_date = ''
-			end_date = ''
+			user_id = 0
+			start_date = new Date().toISOString().split('T')[0]
+			end_date = new Date().toISOString().split('T')[0]
 
 			new AlertToast({
 				target: document.querySelector('#toast-container'),
@@ -54,16 +55,21 @@
 			})
 			return
 		}
+		if (user_id == undefined || user_id == 0) {
+			user_id = 0
+			start_date = new Date().toISOString().split('T')[0]
+			end_date = new Date().toISOString().split('T')[0]
+
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: $_('general.invalid-data')}
+			})
+			return
+		}
 		if (edit) {
 			return editIncidence()
 		}
 		try {
-			const maxUser = await db.user.orderBy('counter').last()
-			let maxCounter = 0
-			if (maxUser?.counter !== undefined) {
-				maxCounter = maxUser?.counter
-			}
-
 			await db.incidence.add({
 				user_id: user_id,
 				start_date: start_date,

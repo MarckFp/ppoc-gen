@@ -74,10 +74,14 @@
 		}
 	})
 
+	//TODO: Fix filters not working correctly (Apparently is using full date but we display weekday and day)
 	$: filteredItems = $turns?.filter(turn => turn.date.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1)
 
 	//TODO: Currently affinities are quite basic, we need to improve it.
 	// also, if a schedule has only 1 male publisher if 2 male people have affinity they are never going to be together
+
+	//TODO: Add feature to fill turns generated without publishers, this will require us to continue if a turn exists but don't add it and fill the array
+	// of brothers and sisters with publishers already attached to it so we don't assign twice
 	async function generateTurns() {
 		loading = true
 		creationDisabled = true
@@ -85,6 +89,7 @@
 			fromDate = ''
 			toDate = ''
 			loading = false
+			creationDisabled = false
 
 			new AlertToast({
 				target: document.querySelector('#toast-container'),
@@ -99,6 +104,7 @@
 			fromDate = ''
 			toDate = ''
 			loading = false
+			creationDisabled = false
 
 			new AlertToast({
 				target: document.querySelector('#toast-container'),
@@ -136,7 +142,11 @@
 					if (availabilities.length == 0) {
 						new AlertToast({
 							target: document.querySelector('#toast-container'),
-							props: {alertStatus: 'warning', alertMessage: $_('turns.no-availability') + weekday}
+							props: {
+								alertStatus: 'warning',
+								fadeDelay: 15000,
+								alertMessage: $_('turns.no-availability') + $_('general.' + weekday)
+							}
 						})
 					}
 					//Loop over availabilities
@@ -147,7 +157,11 @@
 					if (users.length == 0) {
 						new AlertToast({
 							target: document.querySelector('#toast-container'),
-							props: {alertStatus: 'warning', alertMessage: $_('turns.no-publishers') + d.toISOString().split('T')[0]}
+							props: {
+								alertStatus: 'warning',
+								fadeDelay: 15000,
+								alertMessage: $_('turns.no-publishers') + d.toISOString().split('T')[0]
+							}
 						})
 					}
 					//Loop over users
@@ -264,9 +278,17 @@
 	}
 
 	async function createTurns() {
+		if (turnDate == undefined || turnDate == '') {
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: $_('turns.date-invalid')}
+			})
+			return
+		}
 		if (edit) {
 			return editTurns()
 		}
+
 		try {
 			const id = await db.turn.add({
 				date: turnDate,
@@ -485,7 +507,7 @@
 			{#if $turns.length == 0 || $schedules.length == 0}
 				<p class="mt-8 text-center">{$_('turns.no-turns')}</p>
 			{:else}
-				<TableSearch placeholder={$_('turns.search-by')} striped={true} hoverable={true} bind:inputValue={searchTerm} >
+				<TableSearch placeholder={$_('turns.search-by')} striped={true} hoverable={true} bind:inputValue={searchTerm}>
 					<TableHead>
 						<TableHeadCell>{$_('turns.day')}</TableHeadCell>
 						<TableHeadCell>{$_('turns.time')}</TableHeadCell>

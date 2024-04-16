@@ -35,6 +35,13 @@
 	}
 
 	function updateCongregation() {
+		if ($congregation[0].name == '') {
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: $_('general.invalid-data')}
+			})
+			return
+		}
 		db.congregation.update($congregation[0].id, $congregation[0])
 		new AlertToast({
 			target: document.querySelector('#toast-container'),

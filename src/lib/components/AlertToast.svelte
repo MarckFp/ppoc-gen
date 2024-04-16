@@ -5,14 +5,23 @@
 
 	export let alertStatus: string
 	export let alertMessage: string
+	export let fadeDelay: number = 5000
+	let color: string = 'green'
 	let alertVisible: boolean = true
 	setTimeout(() => {
 		alertVisible = false
-	}, 5000)
+	}, fadeDelay)
+	if (alertStatus.toLowerCase() == 'success' || alertStatus.toLowerCase() == 'ok') {
+		color = 'green'
+	} else if (alertStatus.toLowerCase() == 'warning' || alertStatus.toLowerCase() == 'warn') {
+		color = 'yellow'
+	} else if (alertStatus.toLowerCase() == 'error' || alertStatus.toLowerCase() == 'err') {
+		color = 'red'
+	}
 </script>
 
 {#if alertVisible}
-	<Toast color="green" class="m-2" transition={slide}>
+	<Toast {color} class="m-3" transition={slide}>
 		<svelte:fragment slot="icon">
 			{#if alertStatus.toLowerCase() == 'success' || alertStatus.toLowerCase() == 'ok'}
 				<CheckCircleSolid class="h-5 w-5" />

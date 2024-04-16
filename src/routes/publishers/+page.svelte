@@ -74,6 +74,22 @@
 	$: filteredItems = $users?.filter(user => user.firstname.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1)
 
 	async function createPublisher() {
+		if (firstname == '' || lastname == '' || weight < 1 || weight > 4) {
+			firstname = ''
+			lastname = ''
+			gender = 'male'
+			weight = 1
+			advanced = false
+			advanced_radio = 'no'
+			availabilities = []
+			pubAffinities = []
+
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: $_('general.invalid-data')}
+			})
+			return
+		}
 		if (edit) {
 			return editUser()
 		}
