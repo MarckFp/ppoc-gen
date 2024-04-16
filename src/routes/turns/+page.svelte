@@ -485,7 +485,7 @@
 			{#if $turns.length == 0 || $schedules.length == 0}
 				<p class="mt-8 text-center">{$_('turns.no-turns')}</p>
 			{:else}
-				<TableSearch placeholder={$_('turns.search-by')} striped={true} hoverable={true} bind:inputValue={searchTerm}>
+				<TableSearch placeholder={$_('turns.search-by')} striped={true} hoverable={true} bind:inputValue={searchTerm} >
 					<TableHead>
 						<TableHeadCell>{$_('turns.day')}</TableHeadCell>
 						<TableHeadCell>{$_('turns.time')}</TableHeadCell>
@@ -528,7 +528,7 @@
 										{/if}
 									{/each}
 								</TableBodyCell>
-								<TableBodyCell tdClass="print:hidden">
+								<TableBodyCell class="print:hidden">
 									<Button
 										color="blue"
 										class="mr-2"
