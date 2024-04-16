@@ -392,7 +392,7 @@
 			{/if}
 		</Label>
 		<Label>
-			Affinity:
+			{$_('publishers.affinity')}:
 			<MultiSelect items={affinityList} bind:value={pubAffinities} size="sm" let:item let:clear>
 				<Badge color={item.color} dismissable params={{duration: 100}} on:close={clear}>
 					{item.name}

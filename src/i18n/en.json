@@ -55,6 +55,7 @@
 		"high": "High",
 		"advanced": "Advanced",
 		"availability": "Availability",
+		"affinity": "Affinities",
 		"are-you-sure": "Are you sure you want to delete this publisher?",
 		"no-schedules": "No schedules created yet",
 		"no-publishers": "No publishers created yet",
