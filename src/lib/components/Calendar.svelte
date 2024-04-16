@@ -1,6 +1,8 @@
 <script lang="ts">
 	import {_} from 'svelte-i18n'
 
+	//TODO: Create a Dynamic Calendar using current month
+	//TODO: For a future it would be nice to display the weather using a free API so it could be take in advance for creating turns
 	let date = new Date(),
 		year = date.getFullYear(),
 		month = date.toLocaleString('en', {month: 'long'}).toLowerCase(),

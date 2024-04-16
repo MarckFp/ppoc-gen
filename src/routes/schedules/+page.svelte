@@ -16,7 +16,7 @@
 	import {ExclamationCircleOutline} from 'flowbite-svelte-icons'
 	import Timepicker from '$lib/components/Timepicker.svelte'
 	import {db} from '$lib/db'
-	import {toastMessageSuccess, toastSuccess, toastMessageAlert, toastAlert} from '$lib/store'
+	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {liveQuery} from 'dexie'
 	import {_} from 'svelte-i18n'
 
@@ -60,17 +60,15 @@
 				n_sisters: n_sisters
 			})
 
-			$toastMessageSuccess = $_('schedule.created')
-			$toastSuccess = true
-			setTimeout(() => {
-				$toastSuccess = false
-			}, 8000)
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'success', alertMessage: $_('schedule.created')}
+			})
 		} catch (error) {
-			$toastMessageAlert = $_('schedule.failed') + error
-			$toastAlert = true
-			setTimeout(() => {
-				$toastAlert = false
-			}, 8000)
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: $_('schedule.failed') + error}
+			})
 		} finally {
 			selected_weekday = 'monday'
 			start_time = '00:00'
@@ -86,11 +84,10 @@
 		await db.availability.where({schedule_id: selectedId}).each(user_availability => {
 			db.availability.delete(user_availability.id)
 		})
-		$toastMessageSuccess = $_('schedule.deleted')
-		$toastSuccess = true
-		setTimeout(() => {
-			$toastSuccess = false
-		}, 8000)
+		new AlertToast({
+			target: document.querySelector('#toast-container'),
+			props: {alertStatus: 'success', alertMessage: $_('schedule.deleted')}
+		})
 	}
 
 	function editSchedule() {
@@ -102,11 +99,10 @@
 			n_brothers: n_brothers,
 			n_sisters: n_sisters
 		})
-		$toastMessageSuccess = $_('schedule.modified')
-		$toastSuccess = true
-		setTimeout(() => {
-			$toastSuccess = false
-		}, 8000)
+		new AlertToast({
+			target: document.querySelector('#toast-container'),
+			props: {alertStatus: 'success', alertMessage: $_('schedule.modified')}
+		})
 		selected_weekday = 'monday'
 		start_time = '00:00'
 		end_time = '00:00'

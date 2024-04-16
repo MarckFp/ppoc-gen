@@ -4,7 +4,7 @@
 	import {db} from '$lib/db'
 	import {liveQuery} from 'dexie'
 	import {goto, invalidateAll} from '$app/navigation'
-	import {toastMessageSuccess, toastSuccess} from '$lib/store'
+	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {exportDB, importInto} from 'dexie-export-import'
 	import {locale, locales, _} from 'svelte-i18n'
 	import {base} from '$app/paths'
@@ -15,6 +15,8 @@
 		langs: {value: string; name: string}[] = []
 
 	let congregation = liveQuery(() => db.congregation.toArray())
+
+	//TODO: Use this to check the lang on startup but we need to store this on DB so the UX doesn't change again for the user when cache is deleted
 	$locales.forEach(lang => {
 		langs.push({value: lang, name: $_('general.' + lang)})
 	})
@@ -34,11 +36,10 @@
 
 	function updateCongregation() {
 		db.congregation.update($congregation[0].id, $congregation[0])
-		$toastMessageSuccess = $_('settings.updated-successfully')
-		$toastSuccess = true
-		setTimeout(() => {
-			$toastSuccess = false
-		}, 8000)
+		new AlertToast({
+			target: document.querySelector('#toast-container'),
+			props: {alertStatus: 'success', alertMessage: $_('settings.updated-successfully')}
+		})
 	}
 
 	async function exportData() {
@@ -58,13 +59,11 @@
 
 	async function importData() {
 		await importInto(db, files[0], {clearTablesBeforeImport: true, overwriteValues: true}).then(() => {
-			$toastMessageSuccess = $_('settings.imported-successfully')
-			$toastSuccess = true
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'success', alertMessage: $_('settings.imported-successfully')}
+			})
 		})
-
-		setTimeout(() => {
-			$toastSuccess = false
-		}, 8000)
 	}
 </script>
 

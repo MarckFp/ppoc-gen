@@ -15,7 +15,7 @@
 	} from 'flowbite-svelte'
 	import {ExclamationCircleOutline} from 'flowbite-svelte-icons'
 	import {db} from '$lib/db'
-	import {toastMessageSuccess, toastSuccess, toastMessageAlert, toastAlert} from '$lib/store'
+	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {liveQuery} from 'dexie'
 	import {_} from 'svelte-i18n'
 
@@ -48,11 +48,10 @@
 			start_date = ''
 			end_date = ''
 
-			$toastMessageAlert = $_('turns.from-bigger-to')
-			$toastAlert = true
-			setTimeout(() => {
-				$toastAlert = false
-			}, 8000)
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: $_('turns.from-bigger-to')}
+			})
 			return
 		}
 		if (edit) {
@@ -71,17 +70,15 @@
 				end_date: end_date
 			})
 
-			$toastMessageSuccess = $_('incidences.created')
-			$toastSuccess = true
-			setTimeout(() => {
-				$toastSuccess = false
-			}, 8000)
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'success', alertMessage: $_('incidences.created')}
+			})
 		} catch (error) {
-			$toastMessageAlert = $_('incidences.failed') + error
-			$toastAlert = true
-			setTimeout(() => {
-				$toastAlert = false
-			}, 8000)
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: $_('incidences.failed') + error}
+			})
 		} finally {
 			user_id = 0
 			start_date = new Date().toISOString().split('T')[0]
@@ -95,11 +92,10 @@
 			start_date: start_date,
 			end_date: end_date
 		})
-		$toastMessageSuccess = $_('incidences.modified')
-		$toastSuccess = true
-		setTimeout(() => {
-			$toastSuccess = false
-		}, 8000)
+		new AlertToast({
+			target: document.querySelector('#toast-container'),
+			props: {alertStatus: 'success', alertMessage: $_('incidences.modified')}
+		})
 		user_id = 0
 		start_date = new Date().toISOString().split('T')[0]
 		end_date = new Date().toISOString().split('T')[0]
@@ -108,11 +104,10 @@
 
 	async function deleteIncidence() {
 		await db.incidence.delete(selectedId)
-		$toastMessageSuccess = $_('incidences.deleted')
-		$toastSuccess = true
-		setTimeout(() => {
-			$toastSuccess = false
-		}, 8000)
+		new AlertToast({
+			target: document.querySelector('#toast-container'),
+			props: {alertStatus: 'success', alertMessage: $_('incidences.deleted')}
+		})
 	}
 </script>
 

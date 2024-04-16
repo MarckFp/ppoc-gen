@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {db} from '$lib/db'
-	import {toastMessageSuccess, toastSuccess, toastMessageAlert, toastAlert} from '$lib/store'
+	import AlertToast from './AlertToast.svelte'
 	import {Button} from 'flowbite-svelte'
 	import {CloudArrowUpSolid} from 'flowbite-svelte-icons'
 	import {importInto} from 'dexie-export-import'
@@ -14,17 +14,15 @@
 				name: congregation_name
 			})
 
-			$toastMessageSuccess = $_('settings.created-successfully')
-			$toastSuccess = true
-			setTimeout(() => {
-				$toastSuccess = false
-			}, 8000)
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'success', alertMessage: $_('settings.created-successfully')}
+			})
 		} catch (error) {
-			$toastMessageAlert = $_('settings.create-failed') + error
-			$toastAlert = true
-			setTimeout(() => {
-				$toastAlert = false
-			}, 8000)
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: $_('settings.create-failed') + error}
+			})
 		}
 	}
 
@@ -35,13 +33,11 @@
 
 	async function importData() {
 		await importInto(db, files[0], {clearTablesBeforeImport: true, overwriteValues: true}).then(() => {
-			$toastMessageSuccess = $_('settings.imported-successfully')
-			$toastSuccess = true
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'success', alertMessage: $_('settings.imported-successfully')}
+			})
 		})
-
-		setTimeout(() => {
-			$toastSuccess = false
-		}, 8000)
 	}
 </script>
 

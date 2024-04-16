@@ -60,7 +60,7 @@
 		"no-publishers": "No hay publicadores creados todavía",
 		"pub-deleted": "Publicador eliminado correctamente",
 		"pub-modified": "Publicador modificado correctamente",
-		"pub-create-failed": "Error al crear publicador, fallo:",
+		"pub-create-failed": "Error al crear publicador, error: ",
 		"pub-create": "Publicador creado correctamente"
 	},
 	"schedule": {
@@ -77,7 +77,7 @@
 		"are-you-sure": "¿Está seguro de eliminar este horario?",
 		"modified": "Horario modificado correctamente",
 		"deleted": "Horario eliminado correctamente",
-		"failed": "Fallo al crear horario, error:",
+		"failed": "Fallo al crear horario, error: ",
 		"created": "Horario creado correctamente"
 	},
 	"turns": {
@@ -97,7 +97,12 @@
 		"deleted-pub": "Publicador eliminado",
 		"search-by": "Buscar por Fecha",
 		"date-invalid": "Las fechas no son válidas",
-		"today": "Hoy"
+		"today": "Hoy",
+		"created": "Turno creado correctamente",
+		"deleted": "Turno eliminado correctamente",
+		"failed": "Fallo al crear los turnos, error: ",
+		"modified": "Turno modificado correctamente",
+		"mod-error": "Fallo al modificar el turno, error: "
 	},
 	"incidences": {
 		"create-btn": "Crear nueva Incidencia",
@@ -109,7 +114,7 @@
 		"are-you-sure": "¿Está seguro de eliminar está incidencia?",
 		"modified": "Incidencia modificada correctamente",
 		"deleted": "Incidencia eliminada correctamente",
-		"failed": "Fallo al crear la incidencia, error:",
+		"failed": "Fallo al crear la incidencia, error: ",
 		"created": "Incidencia creada correctamente"
 	},
 	"settings": {
@@ -131,6 +136,6 @@
 		"imported-successfully": "Datos de la congregación importados correctamente",
 		"updated-successfully": "Congregación modificada correctamente",
 		"created-successfully": "Congregación creada correctamente",
-		"create-failed": "Error al crear la congregación, fallo:"
+		"create-failed": "Error al crear la congregación, error: "
 	}
 }

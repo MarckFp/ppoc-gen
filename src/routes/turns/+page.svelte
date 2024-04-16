@@ -17,20 +17,14 @@
 		P
 	} from 'flowbite-svelte'
 	import {ExclamationCircleOutline, ArrowLeftOutline, ArrowRightOutline, FilePdfSolid} from 'flowbite-svelte-icons'
-	import {
-		toastMessageSuccess,
-		toastSuccess,
-		toastMessageAlert,
-		toastAlert,
-		toastMessageWarning,
-		toastWarning
-	} from '$lib/store'
+	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {db} from '$lib/db'
 	import {liveQuery} from 'dexie'
 	import {_} from 'svelte-i18n'
 	import type {User} from '$lib/models/user'
 	import type {Incidence} from '$lib/models/incidence'
 	import type {Availability} from '$lib/models/availability'
+	import type {Affinity} from '$lib/models/affinity'
 
 	var date: Date = new Date()
 	let fromDate: string,
@@ -44,6 +38,7 @@
 		availabilities: Availability[],
 		users: User[],
 		incidences: Incidence[],
+		affinities: Affinity[],
 		userList: number[] = [],
 		brothers: number = 0,
 		sisters: number = 0,
@@ -54,7 +49,7 @@
 		turnEndTime: string,
 		turnLocation: string,
 		turnAssignees: number[],
-		turnAssigneesList: {value: number, name: string, color: string}[] = []
+		turnAssigneesList: {value: number; name: string; color: string}[] = []
 
 	let turns = liveQuery(() =>
 		db.turn
@@ -89,11 +84,10 @@
 			toDate = ''
 			loading = false
 
-			$toastMessageAlert = $_('turns.date-invalid')
-			$toastAlert = true
-			setTimeout(() => {
-				$toastAlert = false
-			}, 8000)
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: $_('turns.date-invalid')}
+			})
 			return
 		}
 		let from: Date = new Date(fromDate),
@@ -104,11 +98,10 @@
 			toDate = ''
 			loading = false
 
-			$toastMessageAlert = $_('turns.from-bigger-to')
-			$toastAlert = true
-			setTimeout(() => {
-				$toastAlert = false
-			}, 8000)
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: $_('turns.from-bigger-to')}
+			})
 			return
 		}
 
@@ -139,11 +132,10 @@
 
 					availabilities = await db.availability.where({schedule_id: schedule.id}).toArray()
 					if (availabilities.length == 0) {
-						$toastMessageWarning = $_('turns.no-availability') + weekday
-						$toastWarning = true
-						setTimeout(() => {
-							$toastWarning = false
-						}, 8000)
+						new AlertToast({
+							target: document.querySelector('#toast-container'),
+							props: {alertStatus: 'warning', alertMessage: $_('turns.no-availability') + weekday}
+						})
 					}
 					//Loop over availabilities
 					availabilityLoop: for (let availability of availabilities) {
@@ -151,11 +143,10 @@
 					}
 					users = await db.user.where('id').anyOf(userList).sortBy('counter')
 					if (users.length == 0) {
-						$toastMessageWarning = $_('turns.no-publishers') + d.toISOString().split('T')[0]
-						$toastWarning = true
-						setTimeout(() => {
-							$toastWarning = false
-						}, 8000)
+						new AlertToast({
+							target: document.querySelector('#toast-container'),
+							props: {alertStatus: 'warning', alertMessage: $_('turns.no-publishers') + d.toISOString().split('T')[0]}
+						})
 					}
 					//Loop over users
 					userLoop: for (let user of users) {
@@ -169,6 +160,13 @@
 								continue userLoop
 							}
 						}
+						//Check if publisher already exists on the turn
+						const userAssignment = await db.assignment.where({user_id: user.id, turn_id: turn_id}).first()
+						if (userAssignment != undefined) {
+							continue userLoop
+						}
+
+						//Add Brother to the turn
 						if (user.gender === 'male' && brothers < schedule.n_brothers && user.id != undefined) {
 							const counter = user.counter + user.weight
 							db.assignment.add({
@@ -180,6 +178,7 @@
 							})
 							brothers++
 						}
+						//Add Sister to the turn
 						if (user.gender === 'female' && sisters < schedule.n_sisters && user.id != undefined) {
 							const counter = user.counter + user.weight
 							db.assignment.add({
@@ -191,6 +190,44 @@
 							})
 							sisters++
 						}
+
+						affinities = await db.affinity.where({source_id: user.id}).toArray()
+						//Loop over affinities
+						affinityLoop: for (let affinity of affinities) {
+							const affinityUser = await db.user.where({id: affinity.destination_id}).first()
+							if (Math.round(user.counter) == Math.round(affinityUser?.counter)) {
+								if (
+									affinityUser?.gender === 'male' &&
+									brothers < schedule.n_brothers &&
+									affinityUser?.id != undefined
+								) {
+									const counter = user.counter + user.weight
+									db.assignment.add({
+										user_id: affinityUser?.id,
+										turn_id: turn_id
+									})
+									db.user.update(affinityUser?.id, {
+										counter: counter
+									})
+									brothers++
+								}
+								if (
+									affinityUser?.gender === 'female' &&
+									sisters < schedule.n_sisters &&
+									affinityUser?.id != undefined
+								) {
+									const counter = user.counter + user.weight
+									db.assignment.add({
+										user_id: affinityUser?.id,
+										turn_id: turn_id
+									})
+									db.user.update(affinityUser?.id, {
+										counter: counter
+									})
+									sisters++
+								}
+							}
+						}
 					}
 					userList = []
 					brothers = 0
@@ -198,6 +235,10 @@
 				}
 			}
 		}
+		new AlertToast({
+			target: document.querySelector('#toast-container'),
+			props: {alertStatus: 'success', alertMessage: $_('turns.created')}
+		})
 		loading = false
 		creationDisabled = false
 	}
@@ -214,11 +255,10 @@
 			await db.assignment.delete(assignment.id)
 		}
 
-		$toastMessageSuccess = 'Turn deleted successfully'
-		$toastSuccess = true
-		setTimeout(() => {
-			$toastSuccess = false
-		}, 8000)
+		new AlertToast({
+			target: document.querySelector('#toast-container'),
+			props: {alertStatus: 'success', alertMessage: $_('turns.deleted')}
+		})
 	}
 
 	//TODO: Update translations of here
@@ -246,17 +286,15 @@
 				})
 			})
 
-			$toastMessageSuccess = $_('schedule.created')
-			$toastSuccess = true
-			setTimeout(() => {
-				$toastSuccess = false
-			}, 8000)
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'success', alertMessage: $_('turns.created')}
+			})
 		} catch (error) {
-			$toastMessageAlert = $_('schedule.failed') + error
-			$toastAlert = true
-			setTimeout(() => {
-				$toastAlert = false
-			}, 8000)
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: $_('turns.failed') + error}
+			})
 		} finally {
 			turnAssignees = []
 			turnLocation = ''
@@ -266,9 +304,7 @@
 		}
 	}
 
-	//TODO: Update translations of here
 	async function editTurns() {
-
 		try {
 			db.turn.update(selectedId, {
 				date: turnDate,
@@ -300,17 +336,15 @@
 				})
 			})
 
-			$toastMessageSuccess = $_('schedule.modified')
-			$toastSuccess = true
-			setTimeout(() => {
-				$toastSuccess = false
-			}, 8000)
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'success', alertMessage: $_('turns.modified')}
+			})
 		} catch (error) {
-			$toastMessageAlert = $_('schedule.failed') + error
-			$toastAlert = true
-			setTimeout(() => {
-				$toastAlert = false
-			}, 8000)
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: $_('turns.mod-error') + error}
+			})
 		} finally {
 			turnAssignees = []
 			turnLocation = ''
@@ -338,7 +372,7 @@
 	async function deleteYearlyTurns() {
 		const turns = await db.turn.toArray()
 		const tmpDate = new Date()
-		tmpDate.setFullYear( tmpDate.getFullYear() - 5 );
+		tmpDate.setFullYear(tmpDate.getFullYear() - 5)
 		for (let turn of turns) {
 			const tmpturnDate = new Date(turn.date)
 			if (tmpturnDate <= tmpDate) {
@@ -538,25 +572,25 @@
 		<Modal bind:open={createModal} size="xs" autoclose outsideclose>
 			<Label>
 				{$_('turns.day')}:
-				<Input type="date" bind:value={turnDate} required/>
+				<Input type="date" bind:value={turnDate} required />
 			</Label>
 			<Label>
 				{$_('schedule.start-time')}:
-				<Input type="time" bind:value={turnStartTime} required/>
+				<Input type="time" bind:value={turnStartTime} required />
 			</Label>
 			<Label>
 				{$_('schedule.end-time')}:
-				<Input type="time" bind:value={turnEndTime} required/>
+				<Input type="time" bind:value={turnEndTime} required />
 			</Label>
 			<Label>
 				{$_('schedule.location')}:
-				<Input type="text" id="location" bind:value={turnLocation} required/>
+				<Input type="text" id="location" bind:value={turnLocation} required />
 			</Label>
 			<Label>
 				{$_('turns.assignees')}:
 				{turnAssignees.length}
 				<MultiSelect items={turnAssigneesList} bind:value={turnAssignees} size="sm" let:item let:clear>
-					<Badge color={item.color} dismissable params={{ duration: 100 }} on:close={clear}>
+					<Badge color={item.color} dismissable params={{duration: 100}} on:close={clear}>
 						{item.name}
 					</Badge>
 				</MultiSelect>

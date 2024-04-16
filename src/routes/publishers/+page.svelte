@@ -11,15 +11,16 @@
 		TableBodyRow,
 		TableBodyCell,
 		TableHead,
+		MultiSelect,
 		TableHeadCell,
 		Checkbox,
 		Radio,
 		Badge
 	} from 'flowbite-svelte'
 	import {ExclamationCircleOutline} from 'flowbite-svelte-icons'
+	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {db} from '$lib/db'
 	import {liveQuery} from 'dexie'
-	import {toastMessageSuccess, toastSuccess, toastMessageAlert, toastAlert} from '$lib/store'
 	import {_} from 'svelte-i18n'
 
 	let createModal: boolean = false,
@@ -33,7 +34,9 @@
 		gender: string = 'male',
 		advanced_radio: string = 'no',
 		weight: number = 1,
+		pubAffinities: number[],
 		availabilities: boolean[] = [],
+		affinityList: {value: number; name: string; color: string}[] = [],
 		genders: {value: string; name: string}[] = [
 			{value: 'male', name: $_('general.male')},
 			{value: 'female', name: $_('general.female')}
@@ -54,6 +57,19 @@
 		]
 	let users = liveQuery(() => db.user.toArray())
 	let schedules = liveQuery(() => db.schedule.toArray())
+	let affinities = liveQuery(() => db.affinity.toArray())
+
+	const toastContainer = document.getElementById('toast-container')
+
+	db.user.each(user => {
+		if (user.id != undefined) {
+			if (user.gender == 'male') {
+				affinityList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'blue'})
+			} else {
+				affinityList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'pink'})
+			}
+		}
+	})
 
 	$: filteredItems = $users?.filter(user => user.firstname.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1)
 
@@ -85,17 +101,29 @@
 				}
 			})
 
-			$toastMessageSuccess = $_('publishers.pub-create')
-			$toastSuccess = true
-			setTimeout(() => {
-				$toastSuccess = false
-			}, 8000)
+			if (pubAffinities.length > 0) {
+				pubAffinities.forEach(async affinity_id => {
+					await db.affinity.add({
+						source_id: id,
+						destination_id: affinity_id
+					})
+
+					await db.affinity.add({
+						source_id: affinity_id,
+						destination_id: id
+					})
+				})
+			}
+
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'success', alertMessage: $_('publishers.pub-create')}
+			})
 		} catch (error) {
-			$toastMessageAlert = $_('publishers.pub-create-failed') + error
-			$toastAlert = true
-			setTimeout(() => {
-				$toastAlert = false
-			}, 8000)
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: $_('publishers.pub-create-failed') + error}
+			})
 		} finally {
 			firstname = ''
 			lastname = ''
@@ -104,6 +132,7 @@
 			advanced = false
 			advanced_radio = 'no'
 			availabilities = []
+			pubAffinities = []
 		}
 	}
 
@@ -129,11 +158,34 @@
 			}
 		})
 
-		$toastMessageSuccess = $_('publishers.pub-modified')
-		$toastSuccess = true
-		setTimeout(() => {
-			$toastSuccess = false
-		}, 8000)
+		const publisherAffinities = await db.affinity.where({source_id: selectedId}).toArray()
+		publisherAffinities.forEach(async affinity => {
+			await db.affinity.delete(affinity.id)
+		})
+
+		const affinitiesPublishers = await db.affinity.where({destination_id: selectedId}).toArray()
+		affinitiesPublishers.forEach(async affinity => {
+			await db.affinity.delete(affinity.id)
+		})
+
+		if (pubAffinities.length > 0) {
+			pubAffinities.forEach(async affinity_id => {
+				await db.affinity.add({
+					source_id: selectedId,
+					destination_id: affinity_id
+				})
+
+				await db.affinity.add({
+					source_id: affinity_id,
+					destination_id: selectedId
+				})
+			})
+		}
+
+		new AlertToast({
+			target: document.querySelector('#toast-container'),
+			props: {alertStatus: 'success', alertMessage: $_('publishers.pub-modified')}
+		})
 		firstname = ''
 		lastname = ''
 		gender = 'male'
@@ -141,6 +193,7 @@
 		advanced = false
 		advanced_radio = 'no'
 		availabilities = []
+		pubAffinities = []
 		edit = false
 	}
 
@@ -155,11 +208,20 @@
 			await db.assignment.update(assignment.id, {user_id: -1})
 		})
 
-		$toastMessageSuccess = $_('publishers.pub-deleted')
-		$toastSuccess = true
-		setTimeout(() => {
-			$toastSuccess = false
-		}, 8000)
+		const publisherAffinities = await db.affinity.where({source_id: selectedId}).toArray()
+		publisherAffinities.forEach(async affinity => {
+			await db.affinity.delete(affinity.id)
+		})
+
+		const affinitiesPublishers = await db.affinity.where({destination_id: selectedId}).toArray()
+		affinitiesPublishers.forEach(async affinity => {
+			await db.affinity.delete(affinity.id)
+		})
+
+		new AlertToast({
+			target: document.querySelector('#toast-container'),
+			props: {alertStatus: 'success', alertMessage: $_('publishers.pub-deleted')}
+		})
 	}
 
 	async function retrieveAvailabilities(user_id: number) {
@@ -172,6 +234,16 @@
 		availability_list.forEach(availability => {
 			availabilities[availability.schedule_id] = true
 		})
+	}
+
+	//TODO: Apparently this have a bug. Flowbite Svelte Multiselect doesn't allow bing:items so the items don't change even if we delete a user
+	function getAffinities(user_id: number) {
+		pubAffinities = []
+		for (let affinity of $affinities) {
+			if (affinity.source_id == user_id) {
+				pubAffinities.push(affinity.destination_id)
+			}
+		}
 	}
 </script>
 
@@ -204,7 +276,6 @@
 				>
 					<TableHead>
 						<TableHeadCell>{$_('publishers.firstname')}</TableHeadCell>
-						<TableHeadCell>{$_('publishers.lastname')}</TableHeadCell>
 						<TableHeadCell>{$_('publishers.gender')}</TableHeadCell>
 						<TableHeadCell>{$_('publishers.priority')}</TableHeadCell>
 						<TableHeadCell>
@@ -214,8 +285,7 @@
 					<TableBody>
 						{#each filteredItems as user}
 							<TableBodyRow>
-								<TableBodyCell>{user.firstname}</TableBodyCell>
-								<TableBodyCell>{user.lastname}</TableBodyCell>
+								<TableBodyCell>{user.firstname + ' ' + user.lastname}</TableBodyCell>
 								<TableBodyCell>
 									{#if user.gender == 'male'}
 										<Badge large border rounded color="blue">{$_('general.' + user.gender)} ♂️</Badge>
@@ -251,6 +321,7 @@
 												advanced = true
 												advanced_radio = 'yes'
 											}
+											getAffinities(user.id)
 											retrieveAvailabilities(user.id)
 											edit = true
 										}}>{$_('general.edit-btn')}</Button
@@ -319,6 +390,14 @@
 			{#if advanced}
 				<Input type="number" id="weight" min="1" max="4" step=".1" bind:value={weight} class="mt-2" required />
 			{/if}
+		</Label>
+		<Label>
+			Affinity:
+			<MultiSelect items={affinityList} bind:value={pubAffinities} size="sm" let:item let:clear>
+				<Badge color={item.color} dismissable params={{duration: 100}} on:close={clear}>
+					{item.name}
+				</Badge>
+			</MultiSelect>
 		</Label>
 		<Label>
 			{$_('publishers.availability')}:
