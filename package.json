@@ -1,6 +1,6 @@
 {
   "name": "ppoc-gen",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "private": true,
   "scripts": {
     "dev": "vite dev",
@@ -51,6 +51,7 @@
     "dexie-export-import": "^4.1.1",
     "flowbite": "^2.3.0",
     "flowbite-svelte": "^0.44.24",
+    "jspdf": "^2.5.1",
     "svelte-i18n": "^4.0.0",
     "tailwind-merge": "^2.2.2"
   }

@@ -25,6 +25,7 @@
 	import type {Incidence} from '$lib/models/incidence'
 	import type {Availability} from '$lib/models/availability'
 	import type {Affinity} from '$lib/models/affinity'
+	import { jsPDF } from "jspdf";
 
 	var date: Date = new Date()
 	let fromDate: string,
@@ -357,7 +358,14 @@
 	}
 
 	//TODO: Create basic export to PDF until the calendar is ready
-	function exportToPDF() {}
+	function exportToPDF() {
+		const doc = new jsPDF({
+			orientation: "landscape"
+		});
+
+		doc.text("Hello world!", 10, 10);
+		doc.save("turns.pdf");
+	}
 
 	//TODO: Fix this, currently we query all assignments and then look for which turn is using what assignment but this have poor performance
 	async function getAssignees(turn_id: number) {
