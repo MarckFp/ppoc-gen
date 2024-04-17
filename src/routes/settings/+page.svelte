@@ -21,6 +21,10 @@
 		langs.push({value: lang, name: $_('general.' + lang)})
 	})
 
+	function changeLang () {
+		$locale = $congregation[0].lang
+	}
+
 	async function deleteCongregation() {
 		await db.congregation.clear()
 		await db.user.clear()
@@ -32,6 +36,10 @@
 		await db.affinity.clear()
 		await invalidateAll()
 		goto(base)
+		new AlertToast({
+			target: document.querySelector('#toast-container'),
+			props: {alertStatus: 'success', alertMessage: 'Congregation deleted successfully'}
+		})
 	}
 
 	function updateCongregation() {
@@ -88,7 +96,7 @@
 					</Label>
 					<Label class="space-y-2">
 						<span>{$_('settings.language')}:</span>
-						<Select items={langs} bind:value={$locale} />
+						<Select items={langs} on:change={changeLang} bind:value={$congregation[0].lang} />
 					</Label>
 					<Button color="blue" on:click={updateCongregation}>{$_('settings.update-cong')}</Button>
 					<Button color="red" on:click={() => (deleteModal = true)}>{$_('settings.delete-cong')}</Button>

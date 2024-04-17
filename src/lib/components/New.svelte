@@ -1,17 +1,29 @@
 <script lang="ts">
 	import {db} from '$lib/db'
 	import AlertToast from './AlertToast.svelte'
-	import {Button} from 'flowbite-svelte'
+	import {Button, Input, Select, Label} from 'flowbite-svelte'
 	import {CloudArrowUpSolid} from 'flowbite-svelte-icons'
 	import {importInto} from 'dexie-export-import'
-	import {_} from 'svelte-i18n'
+	import {locale, locales, _} from 'svelte-i18n'
 
-	let congregation_name: string, files: FileList
+	let congregation_name: string, files: FileList, langs: {value: string, name: string}[] = [], currentLang: string
+
+		
+	$locales.forEach(lang => {
+		langs.push({value: lang, name: $_('general.' + lang)})
+	})
+	currentLang = $locale?.split('-') [0]
+
+	function changeLang () {
+		$locale = currentLang
+	}
 
 	async function createCongregation() {
 		try {
-			const id = await db.congregation.add({
-				name: congregation_name
+			await db.congregation.add({
+				name: congregation_name,
+				lang: currentLang,
+				theme: 'light'
 			})
 
 			new AlertToast({
@@ -55,20 +67,23 @@
 					<h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl">
 						{$_('settings.create-new-cong')}
 					</h1>
-					<form class="space-y-4 md:space-y-6" action="#">
+					<div class="space-y-4 md:space-y-6">
 						<div>
-							<label for="name" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-								>{$_('settings.cong-name')}</label
-							>
-							<input
-								type="text"
-								name="name"
-								id="name"
-								class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-primary-600 focus:ring-primary-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 sm:text-sm"
-								placeholder="Warwick"
-								required
-								bind:value={congregation_name}
-							/>
+							<Label for="name">
+								{$_('settings.cong-name')}:
+								<Input
+									name="name"
+									id="name"
+									class="block mt-2 mb-2 w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-primary-600 focus:ring-primary-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 sm:text-sm"
+									placeholder="Warwick"
+									required
+									bind:value={congregation_name}
+								/>
+							</Label>
+							<Label>
+								{$_('settings.language')}:
+								<Select items={langs} bind:value={currentLang} on:change={changeLang} class="mt-2"/>
+							</Label>
 						</div>
 						<Button class="w-full" on:click={createCongregation}>{$_('settings.create-cong')}</Button>
 						<p class="text-center">- {$_('settings.or')} -</p>
@@ -91,7 +106,7 @@
 								>{$_('settings.documentation')}</a
 							>
 						</p>
-					</form>
+					</div>
 				</div>
 			</div>
 		</div>
