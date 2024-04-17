@@ -7,14 +7,6 @@
 	import Calendar from '$lib/components/Calendar.svelte'
 
 	let congregation = liveQuery(() => db.congregation.toArray())
-
-	//let plugins = [TimeGrid];
-	let options = {
-		view: 'timeGridWeek',
-		events: [
-			// your list of events
-		]
-	}
 </script>
 
 <div class="m-5 flex flex-col items-center">

@@ -5,11 +5,11 @@
 	//TODO: For a future it would be nice to display the weather using a free API so it could be take in advance for creating turns
 	let date = new Date(),
 		year = date.getFullYear(),
-		month = date.toLocaleString('en', {month: 'long'}).toLowerCase(),
-		firstDay = new Date(date.getFullYear(), date.getMonth(), 2),
+		month = date.toLocaleString('en', {month: 'long'}).toLowerCase()
+	/*let firstDay = new Date(date.getFullYear(), date.getMonth(), 2),
 		firstDayWeekDay = firstDay.getDay() - 1,
 		lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 1),
-		lastDayWeekDay = lastDay.getDay() - 1
+		lastDayWeekDay = lastDay.getDay() - 1*/
 </script>
 
 <div class="container mx-auto mb-10 mt-10">

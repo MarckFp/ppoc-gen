@@ -114,10 +114,10 @@
 		}
 
 		//Loop over weekdays
-		weekdayLoop: for (var d = from; d <= to; d.setDate(d.getDate() + 1)) {
+		for (var d = from; d <= to; d.setDate(d.getDate() + 1)) {
 			weekday = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d.getDay()]
 			//Loop over schedules
-			scheduleLoop: for (let schedule of $schedules) {
+			for (let schedule of $schedules) {
 				if (schedule.weekday === weekday && schedule.id != undefined) {
 					const exists = await db.turn
 						.where({
@@ -150,7 +150,7 @@
 						})
 					}
 					//Loop over availabilities
-					availabilityLoop: for (let availability of availabilities) {
+					for (let availability of availabilities) {
 						userList.push(availability.user_id)
 					}
 					users = await db.user.where('id').anyOf(userList).sortBy('counter')
@@ -168,7 +168,7 @@
 					userLoop: for (let user of users) {
 						incidences = await db.incidence.where({user_id: user.id}).toArray()
 						//Loop over incidences
-						incidenceLoop: for (let incidence of incidences) {
+						for (let incidence of incidences) {
 							if (
 								incidence.start_date >= d.toISOString().split('T')[0] &&
 								d.toISOString().split('T')[0] <= incidence.end_date
@@ -209,7 +209,7 @@
 
 						affinities = await db.affinity.where({source_id: user.id}).toArray()
 						//Loop over affinities
-						affinityLoop: for (let affinity of affinities) {
+						for (let affinity of affinities) {
 							const affinityUser = await db.user.where({id: affinity.destination_id}).first()
 							if (Math.round(user.counter) == Math.round(affinityUser?.counter)) {
 								if (
@@ -394,7 +394,7 @@
 	}
 
 	//TODO: Delete turns of more than 5 years when we generate or create manually new ones
-	async function deleteYearlyTurns() {
+	/*async function deleteYearlyTurns() {
 		const turns = await db.turn.toArray()
 		const tmpDate = new Date()
 		tmpDate.setFullYear(tmpDate.getFullYear() - 5)
@@ -405,7 +405,7 @@
 				db.turn.delete(turn.id)
 			}
 		}
-	}
+	}*/
 </script>
 
 <div class="mx-auto flex flex-col items-center justify-center px-6 py-8">

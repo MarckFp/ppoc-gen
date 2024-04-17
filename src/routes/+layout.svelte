@@ -6,7 +6,7 @@
 	import New from '$lib/components/New.svelte'
 	import {registerSW} from 'virtual:pwa-register'
 	import {pwaInfo} from 'virtual:pwa-info'
-	import {locale, _} from 'svelte-i18n'
+	import {locale} from 'svelte-i18n'
 
 	$: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : ''
 
