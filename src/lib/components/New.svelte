@@ -6,15 +6,17 @@
 	import {importInto} from 'dexie-export-import'
 	import {locale, locales, _} from 'svelte-i18n'
 
-	let congregation_name: string, files: FileList, langs: {value: string, name: string}[] = [], currentLang: string
+	let congregation_name: string,
+		files: FileList,
+		langs: {value: string; name: string}[] = [],
+		currentLang: string
 
-		
 	$locales.forEach(lang => {
 		langs.push({value: lang, name: $_('general.' + lang)})
 	})
-	currentLang = $locale?.split('-') [0]
+	currentLang = $locale?.split('-')[0]
 
-	function changeLang () {
+	function changeLang() {
 		$locale = currentLang
 	}
 
@@ -22,8 +24,7 @@
 		try {
 			await db.congregation.add({
 				name: congregation_name,
-				lang: currentLang,
-				theme: 'light'
+				lang: currentLang
 			})
 
 			new AlertToast({
@@ -74,7 +75,7 @@
 								<Input
 									name="name"
 									id="name"
-									class="block mt-2 mb-2 w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-primary-600 focus:ring-primary-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 sm:text-sm"
+									class="mb-2 mt-2 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-primary-600 focus:ring-primary-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 sm:text-sm"
 									placeholder="Warwick"
 									required
 									bind:value={congregation_name}
@@ -82,7 +83,7 @@
 							</Label>
 							<Label>
 								{$_('settings.language')}:
-								<Select items={langs} bind:value={currentLang} on:change={changeLang} class="mt-2"/>
+								<Select items={langs} bind:value={currentLang} on:change={changeLang} class="mt-2" />
 							</Label>
 						</div>
 						<Button class="w-full" on:click={createCongregation}>{$_('settings.create-cong')}</Button>

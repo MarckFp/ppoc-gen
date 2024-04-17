@@ -21,7 +21,7 @@ export class MySubClassedDexie extends Dexie {
 	constructor() {
 		super('ppocgen')
 		this.version(1).stores({
-			congregation: '++id, name, theme, lang',
+			congregation: '++id, name, lang',
 			user: '++id,firstname, lastname, gender, weight, counter, [firstname+lastname]',
 			availability: '++id, user_id, schedule_id',
 			incidence: '++id, user_id, start_date, end_date',

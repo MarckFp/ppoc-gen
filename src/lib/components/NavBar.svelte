@@ -18,7 +18,7 @@
 			<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white">PPOC Gen</span>
 		</NavBrand>
 		<div class="flex md:order-2">
-			<DarkMode class="ml-2 black dark:border-gray-800 dark:text-primary-200" />
+			<DarkMode class="black ml-2 dark:border-gray-800 dark:text-primary-200" />
 			<NavHamburger />
 		</div>
 		<NavUl class="order-1">
@@ -35,7 +35,10 @@
 				</div></NavLi
 			>
 			<NavLi href="{base}/turns"
-				><div class="flex flex-row dark:text-white">{$_('navbar.turns')} <EditOutline size="lg" color="red" class="dark:text-primary-400" /></div></NavLi
+				><div class="flex flex-row dark:text-white">
+					{$_('navbar.turns')}
+					<EditOutline size="lg" color="red" class="dark:text-primary-400" />
+				</div></NavLi
 			>
 			<NavLi href="{base}/incidences"
 				><div class="flex flex-row dark:text-white">

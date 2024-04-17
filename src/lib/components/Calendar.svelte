@@ -12,7 +12,7 @@
 		lastDayWeekDay = lastDay.getDay() - 1
 </script>
 
-<div class="container mx-auto mt-10">
+<div class="container mx-auto mb-10 mt-10">
 	<div class="wrapper w-full rounded bg-white shadow">
 		<div class="header flex justify-between border-b p-2">
 			<span class="text-lg font-bold"> {$_('general.' + month)} {year} </span>

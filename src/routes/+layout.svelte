@@ -25,7 +25,7 @@
 	})
 	let congregation = liveQuery(() => db.congregation.toArray())
 	db.congregation.toArray().then(cong => {
-		if (cong[0].lang){
+		if (cong[0].lang) {
 			$locale = cong[0].lang
 		} else {
 			$locale = 'en'

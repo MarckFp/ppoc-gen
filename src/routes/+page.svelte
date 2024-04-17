@@ -1,7 +1,8 @@
 <script lang="ts">
 	import {liveQuery} from 'dexie'
 	import {db} from '$lib/db'
-	import {Card} from 'flowbite-svelte'
+	import {Card, GradientButton} from 'flowbite-svelte'
+	import {GithubSolid, BookSolid} from 'flowbite-svelte-icons'
 	import {_} from 'svelte-i18n'
 	import Calendar from '$lib/components/Calendar.svelte'
 
@@ -16,14 +17,25 @@
 	}
 </script>
 
-<div class="flex flex-col items-center m-5">
+<div class="m-5 flex flex-col items-center">
 	{#if $congregation}
 		<Card class="text-center" size="xl" padding="xl">
-			<h5 class="text-3xl font-bold text-gray-900 dark:text-white">
+			<h1 class="text-3xl font-bold text-gray-900 dark:text-white">
 				{$_('home.welcome')}
 				{$congregation[0].name}
-			</h5>
+			</h1>
 		</Card>
 	{/if}
+	<Card size="xl" padding="xl" class="mt-5">
+		<h2 class="text-2xl font-bold text-gray-900 dark:text-white">{$_('home.thank-you')}</h2>
+		<p class="mt-3 text-gray-900 dark:text-white">
+			{$_('home.apps')}<GradientButton href="https://github.com/MarckFp/ppoc-gen/releases" color="cyanToBlue"
+				>GitHub <GithubSolid /></GradientButton
+			>
+		</p>
+		<p class="mt-5 text-gray-900 dark:text-white">
+			{$_('home.read-the-docs')}<GradientButton color="teal" disabled>{$_('home.docs')} <BookSolid /></GradientButton>
+		</p>
+	</Card>
 	<Calendar />
 </div>

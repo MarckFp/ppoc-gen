@@ -42,13 +42,19 @@
 	)
 
 	//Remove past incidences
-	db.incidence.orderBy('start_date').toArray().then(incidenceList => {
-		for (let incidence of incidenceList) {
-			if (new Date(incidence.start_date) < new Date(start_date) && new Date(incidence.end_date) < new Date(start_date) ) {
-				db.incidence.delete(incidence.id)
+	db.incidence
+		.orderBy('start_date')
+		.toArray()
+		.then(incidenceList => {
+			for (let incidence of incidenceList) {
+				if (
+					new Date(incidence.start_date) < new Date(start_date) &&
+					new Date(incidence.end_date) < new Date(start_date)
+				) {
+					db.incidence.delete(incidence.id)
+				}
 			}
-		}
-	})
+		})
 
 	async function createIncidence() {
 		let from: Date = new Date(start_date),

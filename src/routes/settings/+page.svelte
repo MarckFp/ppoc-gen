@@ -20,7 +20,7 @@
 		langs.push({value: lang, name: $_('general.' + lang)})
 	})
 
-	function changeLang () {
+	function changeLang() {
 		$locale = $congregation[0].lang
 	}
 

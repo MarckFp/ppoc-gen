@@ -415,11 +415,11 @@
 				{$_('turns.from')}:
 				<Input type="date" bind:value={fromDate} />
 			</Label>
-			<Label class="mr-1 ml-1 w-2/12">
+			<Label class="ml-1 mr-1 w-2/12">
 				{$_('turns.to')}:
 				<Input type="date" bind:value={toDate} />
 			</Label>
-			<Button color="green" class="mr-1 ml-1 w-4/12" on:click={generateTurns} disabled={creationDisabled}>
+			<Button color="green" class="ml-1 mr-1 w-4/12" on:click={generateTurns} disabled={creationDisabled}>
 				{#if loading}
 					<Spinner class="me-3" size="4" color="white" />
 					{$_('turns.creating')}
@@ -509,7 +509,13 @@
 					<h1 class="text-center dark:text-white">{$_('turns.no-turns')}</h1>
 				</Card>
 			{:else}
-				<TableSearch placeholder={$_('turns.search-by')} striped={true} hoverable={true} bind:inputValue={searchTerm} innerDivClass="p-4 print:hidden">
+				<TableSearch
+					placeholder={$_('turns.search-by')}
+					striped={true}
+					hoverable={true}
+					bind:inputValue={searchTerm}
+					innerDivClass="p-4 print:hidden"
+				>
 					<TableHead>
 						<TableHeadCell>{$_('turns.day')}</TableHeadCell>
 						<TableHeadCell>{$_('turns.time')}</TableHeadCell>
@@ -543,9 +549,9 @@
 											{#each $showUsers as user}
 												{#if user.id == assignment.user_id}
 													{#if user.gender == 'male'}
-														<Badge color="blue" class="m-1 order-1">{user.firstname + ' ' + user.lastname}</Badge>
+														<Badge color="blue" class="order-1 m-1">{user.firstname + ' ' + user.lastname}</Badge>
 													{:else}
-														<Badge color="pink" class="m-1 order-2">{user.firstname + ' ' + user.lastname}</Badge>
+														<Badge color="pink" class="order-2 m-1">{user.firstname + ' ' + user.lastname}</Badge>
 													{/if}
 												{/if}
 											{/each}
