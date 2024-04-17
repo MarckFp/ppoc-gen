@@ -74,14 +74,8 @@
 		}
 	})
 
-	//TODO: Fix filters not working correctly (Apparently is using full date but we display weekday and day)
 	$: filteredItems = $turns?.filter(turn => turn.date.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1)
 
-	//TODO: Currently affinities are quite basic, we need to improve it.
-	// also, if a schedule has only 1 male publisher if 2 male people have affinity they are never going to be together
-
-	//TODO: Add feature to fill turns generated without publishers, this will require us to continue if a turn exists but don't add it and fill the array
-	// of brothers and sisters with publishers already attached to it so we don't assign twice
 	async function generateTurns() {
 		loading = true
 		creationDisabled = true
