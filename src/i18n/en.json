@@ -117,7 +117,8 @@
 		"modified": "Incidence modified successfully",
 		"deleted": "Incidence deleted successfully",
 		"failed": "Incidence to create schedule, error: ",
-		"created": "Incidence created successfully"
+		"created": "Incidence created successfully",
+		"past-incident": "You cannot create an Incident in the past"
 	},
 	"settings": {
 		"cong-settings": "Congregation Settings",

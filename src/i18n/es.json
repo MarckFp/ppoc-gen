@@ -117,7 +117,8 @@
 		"modified": "Incidencia modificada correctamente",
 		"deleted": "Incidencia eliminada correctamente",
 		"failed": "Fallo al crear la incidencia, error: ",
-		"created": "Incidencia creada correctamente"
+		"created": "Incidencia creada correctamente",
+		"past-incident": "No puedes crear una Incidencia en el pasado"
 	},
 	"settings": {
 		"cong-settings": "Ajustes de Congregación",

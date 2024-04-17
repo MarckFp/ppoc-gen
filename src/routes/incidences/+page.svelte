@@ -41,7 +41,14 @@
 		incidence => incidence.start_date.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
 	)
 
-	//TODO: Maybe we should add a btn to delete all previous incidences
+	//Remove past incidences
+	db.incidence.orderBy('start_date').toArray().then(incidenceList => {
+		for (let incidence of incidenceList) {
+			if (new Date(incidence.start_date) < new Date(start_date) && new Date(incidence.end_date) < new Date(start_date) ) {
+				db.incidence.delete(incidence.id)
+			}
+		}
+	})
 
 	async function createIncidence() {
 		let from: Date = new Date(start_date),
@@ -55,6 +62,17 @@
 			new AlertToast({
 				target: document.querySelector('#toast-container'),
 				props: {alertStatus: 'error', alertMessage: $_('turns.from-bigger-to')}
+			})
+			return
+		}
+		if (from < new Date()) {
+			user_id = 0
+			start_date = new Date().toISOString().split('T')[0]
+			end_date = new Date().toISOString().split('T')[0]
+
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: $_('incidences.past-incident')}
 			})
 			return
 		}
