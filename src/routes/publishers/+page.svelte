@@ -55,7 +55,7 @@
 				name: $_('publishers.low')
 			}
 		]
-	let users = liveQuery(() => db.user.orderBy('firstname').toArray())
+	let users = liveQuery(() => db.user.orderBy('[firstname+lastname]').toArray())
 	let schedules = liveQuery(() => db.schedule.toArray())
 	let affinities = liveQuery(() => db.affinity.toArray())
 
