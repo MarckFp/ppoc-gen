@@ -279,7 +279,7 @@
 		{#if $users}
 			{#if $users.length == 0}
 				<Card size="xl" class="mt-5">
-					<h1 class="text-center">{$_('publishers.no-publishers')}</h1>
+					<h1 class="text-center dark:text-white">{$_('publishers.no-publishers')}</h1>
 				</Card>
 			{:else}
 				<TableSearch

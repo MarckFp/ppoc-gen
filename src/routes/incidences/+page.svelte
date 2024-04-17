@@ -154,7 +154,7 @@
 		{#if $incidences}
 			{#if $incidences.length == 0}
 				<Card size="xl" class="mt-5">
-					<h1 class="text-center">{$_('incidences.no-incidences')}</h1>
+					<h1 class="text-center dark:text-white">{$_('incidences.no-incidences')}</h1>
 				</Card>
 			{:else}
 				<TableSearch

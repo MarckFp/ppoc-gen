@@ -16,7 +16,6 @@
 
 	let congregation = liveQuery(() => db.congregation.toArray())
 
-	//TODO: Use this to check the lang on startup but we need to store this on DB so the UX doesn't change again for the user when cache is deleted
 	$locales.forEach(lang => {
 		langs.push({value: lang, name: $_('general.' + lang)})
 	})

@@ -146,7 +146,7 @@
 		{#if $schedules}
 			{#if $schedules.length == 0}
 				<Card size="xl" class="mt-5">
-					<h1 class="text-center">{$_('schedule.no-schedules')}</h1>
+					<h1 class="text-center dark:text-white">{$_('schedule.no-schedules')}</h1>
 				</Card>
 			{:else}
 				<TableSearch

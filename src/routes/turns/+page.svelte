@@ -505,7 +505,9 @@
 				>
 			</div>
 			{#if $turns.length == 0 || $schedules.length == 0}
-				<p class="mt-8 text-center">{$_('turns.no-turns')}</p>
+				<Card size="xl" class="mt-5">
+					<h1 class="text-center dark:text-white">{$_('turns.no-turns')}</h1>
+				</Card>
 			{:else}
 				<TableSearch placeholder={$_('turns.search-by')} striped={true} hoverable={true} bind:inputValue={searchTerm} innerDivClass="p-4 print:hidden">
 					<TableHead>
