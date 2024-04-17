@@ -3,8 +3,6 @@
 	import {db} from '$lib/db'
 	import {Card} from 'flowbite-svelte'
 	import {_} from 'svelte-i18n'
-	//import Calendar from '@event-calendar/core';
-	//import TimeGrid from '@event-calendar/time-grid';
 	import Calendar from '$lib/components/Calendar.svelte'
 
 	let congregation = liveQuery(() => db.congregation.toArray())

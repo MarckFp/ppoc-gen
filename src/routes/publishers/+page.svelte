@@ -55,13 +55,11 @@
 				name: $_('publishers.low')
 			}
 		]
-	let users = liveQuery(() => db.user.toArray())
+	let users = liveQuery(() => db.user.orderBy('firstname').toArray())
 	let schedules = liveQuery(() => db.schedule.toArray())
 	let affinities = liveQuery(() => db.affinity.toArray())
 
-	const toastContainer = document.getElementById('toast-container')
-
-	db.user.each(user => {
+	db.user.orderBy('firstname').each(user => {
 		if (user.id != undefined) {
 			if (user.gender == 'male') {
 				affinityList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'blue'})

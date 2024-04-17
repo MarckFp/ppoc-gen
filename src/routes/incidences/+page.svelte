@@ -30,8 +30,9 @@
 		start_date: string = new Date().toISOString().split('T')[0],
 		end_date: string = new Date().toISOString().split('T')[0]
 
-	let incidences = liveQuery(() => db.incidence.toArray())
-	db.user.each(user => {
+	let incidences = liveQuery(() => db.incidence.orderBy('start_date').toArray())
+
+	db.user.orderBy('firstname').each(user => {
 		userSelect.push({value: user.id, name: user.firstname + ' ' + user.lastname})
 		userList[user.id] = user.firstname + ' ' + user.lastname
 	})
@@ -39,6 +40,8 @@
 	$: filteredItems = $incidences?.filter(
 		incidence => incidence.start_date.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
 	)
+
+	//TODO: Maybe we should add a btn to delete all previous incidences
 
 	async function createIncidence() {
 		let from: Date = new Date(start_date),

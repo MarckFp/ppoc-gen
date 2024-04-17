@@ -64,7 +64,7 @@
 	let showUsers = liveQuery(() => db.user.toArray())
 	let schedules = liveQuery(() => db.schedule.toArray())
 
-	db.user.each(user => {
+	db.user.orderBy('firstname').each(user => {
 		if (user.id != undefined) {
 			if (user.gender == 'male') {
 				turnAssigneesList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'blue'})
@@ -410,16 +410,16 @@
 
 <div class="mx-auto flex flex-col items-center justify-center px-6 py-8">
 	<Card size="xl" class="mb-2 print:hidden">
-		<div class="mb-4 mt-1 flex flex-row justify-around">
-			<Label class="mr-2 w-2/12">
+		<div class="mb-4 mt-1 flex flex-row justify-between">
+			<Label class="w-2/12">
 				{$_('turns.from')}:
 				<Input type="date" bind:value={fromDate} />
 			</Label>
-			<Label class="ml-1 mr-1 w-2/12">
+			<Label class="mr-1 ml-1 w-2/12">
 				{$_('turns.to')}:
 				<Input type="date" bind:value={toDate} />
 			</Label>
-			<Button color="green" class="ml-1 mr-1 w-2/12" on:click={generateTurns} disabled={creationDisabled}>
+			<Button color="green" class="mr-1 ml-1 w-4/12" on:click={generateTurns} disabled={creationDisabled}>
 				{#if loading}
 					<Spinner class="me-3" size="4" color="white" />
 					{$_('turns.creating')}
@@ -429,7 +429,7 @@
 			</Button>
 			<Button
 				color="blue"
-				class="ml-2 w-2/12"
+				class="w-4/12"
 				on:click={() => {
 					createModal = true
 					edit = false
@@ -507,7 +507,7 @@
 			{#if $turns.length == 0 || $schedules.length == 0}
 				<p class="mt-8 text-center">{$_('turns.no-turns')}</p>
 			{:else}
-				<TableSearch placeholder={$_('turns.search-by')} striped={true} hoverable={true} bind:inputValue={searchTerm}>
+				<TableSearch placeholder={$_('turns.search-by')} striped={true} hoverable={true} bind:inputValue={searchTerm} innerDivClass="p-4 print:hidden">
 					<TableHead>
 						<TableHeadCell>{$_('turns.day')}</TableHeadCell>
 						<TableHeadCell>{$_('turns.time')}</TableHeadCell>
@@ -532,7 +532,7 @@
 								>
 								<TableBodyCell>{turn.start_time + ' - ' + turn.end_time}</TableBodyCell>
 								<TableBodyCell>{turn.location}</TableBodyCell>
-								<TableBodyCell>
+								<TableBodyCell tdClass="flex px-6 py-4 whitespace-nowrap font-medium text-gray-900 dark:text-white">
 									{#each $assignments as assignment}
 										{#if assignment.turn_id == turn.id}
 											{#if assignment.user_id === -1}
@@ -541,19 +541,19 @@
 											{#each $showUsers as user}
 												{#if user.id == assignment.user_id}
 													{#if user.gender == 'male'}
-														<Badge color="blue" class="m-1">{user.firstname + ' ' + user.lastname}</Badge>
+														<Badge color="blue" class="m-1 order-1">{user.firstname + ' ' + user.lastname}</Badge>
 													{:else}
-														<Badge color="pink" class="m-1">{user.firstname + ' ' + user.lastname}</Badge>
+														<Badge color="pink" class="m-1 order-2">{user.firstname + ' ' + user.lastname}</Badge>
 													{/if}
 												{/if}
 											{/each}
 										{/if}
 									{/each}
 								</TableBodyCell>
-								<TableBodyCell class="print:hidden">
+								<TableBodyCell>
 									<Button
 										color="blue"
-										class="mr-2"
+										class="mr-2 print:hidden"
 										id="edit-{turn.id}"
 										on:click={async () => {
 											createModal = true
@@ -568,7 +568,7 @@
 									>
 									<Button
 										color="red"
-										class="ml-2"
+										class="ml-2 print:hidden"
 										id="delete-{turn.id}"
 										on:click={() => {
 											deleteModal = true
