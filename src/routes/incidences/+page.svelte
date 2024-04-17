@@ -71,7 +71,7 @@
 			})
 			return
 		}
-		if (from < new Date()) {
+		if (from.getTime() < new Date(new Date().toISOString().split('T')[0]).getTime()) {
 			user_id = 0
 			start_date = new Date().toISOString().split('T')[0]
 			end_date = new Date().toISOString().split('T')[0]
