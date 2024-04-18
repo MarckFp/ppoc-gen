@@ -141,6 +141,7 @@
 		"are-you-sure": "¿Está seguro de eliminar su congregación? ¡Todos los datos se perderán!",
 		"are-you-sure-import": "¿Está seguro que desea importar todos los datos? ¡Tus datos actuales se perderán!",
 		"imported-successfully": "Datos de la congregación importados correctamente",
+		"exported-successfully": "Datos de la congregación exportados correctamente",
 		"updated-successfully": "Congregación modificada correctamente",
 		"created-successfully": "Congregación creada correctamente",
 		"create-failed": "Error al crear la congregación, error: "

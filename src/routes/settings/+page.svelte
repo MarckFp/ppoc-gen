@@ -64,6 +64,10 @@
 		a.setAttribute('download', `ppoc-gen-${Date.now()}.pgen`)
 		a.setAttribute('href', link)
 		a.click()
+		new AlertToast({
+			target: document.querySelector('#toast-container'),
+			props: {alertStatus: 'error', alertMessage: $_('settings.exported-successfully')}
+		})
 	}
 
 	function importDataBtn() {
