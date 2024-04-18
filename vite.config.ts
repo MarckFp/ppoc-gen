@@ -12,25 +12,29 @@ export default defineConfig({
 		sveltekit(),
 		SvelteKitPWA({
 			devOptions: {
-				enabled: false,
+				enabled: true,
 				type: 'module',
+				navigateFallback: process.argv.includes('dev') ? '/' : process.env.BASE_PATH
 			},
 			srcDir: './src',
-			registerType: 'autoUpdate',
-			injectRegister: 'auto',
-			workbox: {
-				globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,webv,avif}'],
-				cleanupOutdatedCaches: true,
-				sourcemap: true
+			strategies: 'injectManifest',
+			filename: 'prompt-sw.ts',
+			scope: process.argv.includes('dev') ? '/' : process.env.BASE_PATH,
+			base: process.argv.includes('dev') ? '/' : process.env.BASE_PATH,
+			injectManifest: {
+				globPatterns: ['client/**/*.{js,css,ico,png,svg,webp,woff,woff2}']
 			},
-			includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'maskable_icon.png', 'favicon-16x16.png', 'favicon-32x32.png', 'android-chrome-512x512.png', 'android-chrome-192x192.png', 'pwa-maskable-192x192.png', 'pwa-maskable-512x512.png', 'pwa-192x192.png', 'pwa-512x512.png'],
+			workbox: {
+				globPatterns: ['client/**/*.{js,css,ico,png,svg,webp,woff,woff2}']
+			},
+			includeAssets: ['static/favicon.ico', 'static/apple-touch-icon.png', 'static/maskable_icon.png', 'static/favicon-16x16.png', 'static/favicon-32x32.png'],
 			manifest: {
 				name: 'Public Preaching Generator',
 				short_name: 'PPOC Gen',
 				description: 'Web application in charge of generating dynamic public preaching turns',
 				display: 'standalone',
-				scope: process.argv.includes('dev') ? '' : process.env.BASE_PATH,
-				start_url: process.argv.includes('dev') ? '' : process.env.BASE_PATH,
+				scope: process.argv.includes('dev') ? '/' : process.env.BASE_PATH,
+				start_url: process.argv.includes('dev') ? '/' : process.env.BASE_PATH,
 				theme_color: '#eb4034',
 				icons: [
 					{

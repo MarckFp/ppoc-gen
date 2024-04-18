@@ -4,24 +4,27 @@
 	import {db} from '$lib/db'
 	import NavBar from '$lib/components/NavBar.svelte'
 	import New from '$lib/components/New.svelte'
-	import {registerSW} from 'virtual:pwa-register'
 	import {pwaInfo} from 'virtual:pwa-info'
 	import {locale} from 'svelte-i18n'
+	import { onMount } from 'svelte'
 
-	$: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : ''
-
-	const intervalMS: number = 60 * 60 * 1000
-	registerSW({
-		immediate: true,
-		onOfflineReady() {},
-		onNeedRefresh() {},
-		onRegistered(r) {
-			r &&
-				setInterval(() => {
-					r.update()
-				}, intervalMS)
+	onMount(async () => {
+		if (pwaInfo) {
+			const {registerSW} = await import('virtual:pwa-register')
+			registerSW({
+				immediate: true,
+				onRegistered(r) {
+					r && setInterval(() => {
+						r.update()
+					}, 10000 /* 10s for testing purposes */)
+				},
+				onRegisterError(error) {
+					console.log('SW registration error', error)
+				}
+			})
 		}
 	})
+
 	let congregation = liveQuery(() => db.congregation.toArray())
 	db.congregation.toArray().then(cong => {
 		if (cong[0].lang) {
@@ -30,6 +33,8 @@
 			$locale = 'en'
 		}
 	})
+
+	$: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : ''
 </script>
 
 <svelte:head>
@@ -47,3 +52,7 @@
 		{/if}
 	{/if}
 </main>
+
+{#await import('$lib/components/ReloadPrompt.svelte') then { default: ReloadPrompt }}
+	<ReloadPrompt />
+{/await}
