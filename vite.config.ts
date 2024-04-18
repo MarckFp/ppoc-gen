@@ -16,7 +16,7 @@ export default defineConfig({
 				type: 'module',
 				navigateFallback: process.argv.includes('dev') ? '/' : process.env.BASE_PATH
 			},
-			srcDir: './src',
+			srcDir: 'src',
 			strategies: 'injectManifest',
 			filename: 'prompt-sw.ts',
 			scope: process.argv.includes('dev') ? '/' : process.env.BASE_PATH,

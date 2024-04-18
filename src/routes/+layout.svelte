@@ -6,7 +6,7 @@
 	import New from '$lib/components/New.svelte'
 	import {pwaInfo} from 'virtual:pwa-info'
 	import {locale} from 'svelte-i18n'
-	import { onMount } from 'svelte'
+	import {onMount} from 'svelte'
 
 	onMount(async () => {
 		if (pwaInfo) {
@@ -14,9 +14,10 @@
 			registerSW({
 				immediate: true,
 				onRegistered(r) {
-					r && setInterval(() => {
-						r.update()
-					}, 10000 /* 10s for testing purposes */)
+					r &&
+						setInterval(() => {
+							r.update()
+						}, 10000 /* 10s for testing purposes */)
 				},
 				onRegisterError(error) {
 					console.log('SW registration error', error)
@@ -43,7 +44,11 @@
 
 <main>
 	{#if $congregation}
-		<div id="toast-container" class="fixed bottom-0 right-0 z-50"></div>
+		<div id="toast-container" class="fixed bottom-0 right-0 z-50">
+			{#await import('$lib/components/PWAPrompt.svelte') then { default: PWAPrompt }}
+				<PWAPrompt />
+			{/await}
+		</div>
 		{#if !$congregation[0]}
 			<New />
 		{:else}
@@ -52,7 +57,3 @@
 		{/if}
 	{/if}
 </main>
-
-{#await import('$lib/components/ReloadPrompt.svelte') then { default: ReloadPrompt }}
-	<ReloadPrompt />
-{/await}
