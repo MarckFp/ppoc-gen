@@ -20,7 +20,7 @@ export default defineConfig({
 			srcDir: 'src',
 			strategies: 'generateSW',
 			registerType: 'autoUpdate', //autoUpdate or prompt depending on what we want
-			scope: process.argv.includes('dev') ? '/' : process.env.BASE_PATH,
+			scope: process.argv.includes('dev') ? '/' : process.env.BASE_PATH + '/',
 			workbox: {
 				globPatterns: ['client/**/*.{js,css,ico,png,txt,svg,webp,webmanifest}', 'prerendered/**/*.html'],
 				runtimeCaching: [

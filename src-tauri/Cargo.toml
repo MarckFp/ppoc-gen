@@ -1,5 +1,5 @@
 [package]
-name = "ppoc-gen"
+name = "app"
 version = "0.5.7"
 description = "Web application in charge of generating dynamic public preaching turns"
 authors = ["Marcos Fernández"]
