@@ -20,7 +20,6 @@ export default defineConfig({
 			srcDir: 'src',
 			strategies: 'generateSW',
 			registerType: 'autoUpdate', //autoUpdate or prompt depending on what we want
-			scope: process.argv.includes('dev') ? '/' : process.env.BASE_PATH + '/',
 			workbox: {
 				globPatterns: ['client/**/*.{js,css,ico,png,txt,svg,webp,webmanifest}', 'prerendered/**/*.html'],
 				runtimeCaching: [
@@ -57,7 +56,6 @@ export default defineConfig({
 				short_name: 'PPOC Gen',
 				description: 'Web application in charge of generating dynamic public preaching turns',
 				display: 'standalone',
-				scope: process.argv.includes('dev') ? '/' : process.env.BASE_PATH,
 				start_url: process.argv.includes('dev') ? '/' : process.env.BASE_PATH,
 				theme_color: '#eb4034',
 				icons: [
