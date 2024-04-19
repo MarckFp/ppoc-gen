@@ -52,9 +52,6 @@ export default defineConfig({
 				]
 			},
 			includeAssets: ['static/favicon.ico', 'static/favicon.svg', 'static/favicon-16x16.png', 'static/favicon-32x32.png'],
-			pwaAssets: {
-				config: true,
-			},
 			manifest: {
 				name: 'Public Preaching Generator',
 				short_name: 'PPOC Gen',
@@ -62,7 +59,43 @@ export default defineConfig({
 				display: 'standalone',
 				scope: process.argv.includes('dev') ? '/' : process.env.BASE_PATH,
 				start_url: process.argv.includes('dev') ? '/' : process.env.BASE_PATH,
-				theme_color: '#eb4034'
+				theme_color: '#eb4034',
+				icons: [
+					{
+						src: 'android-chrome-192x192.png',
+						sizes: '192x192',
+						type: 'image/png'
+					},
+					{
+						src: 'android-chrome-512x512.png',
+						sizes: '512x512',
+						type: 'image/png'
+					},
+					{
+						src: 'pwa-maskable-192x192.png',
+						sizes: '192x192',
+						type: 'image/png',
+						purpose: 'maskable'
+					},
+					{
+						src: 'pwa-maskable-512x512.png',
+						sizes: '512x512',
+						type: 'image/png',
+						purpose: 'maskable'
+					},
+					{
+						src: 'pwa-192x192.png',
+						sizes: '192x192',
+						type: 'image/png',
+						purpose: 'any'
+					},
+					{
+						src: 'pwa-512x512.png',
+						sizes: '512x512',
+						type: 'image/png',
+						purpose: 'any'
+					}
+				],
 			}
 		})
 	]
