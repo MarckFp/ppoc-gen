@@ -57,7 +57,7 @@ export default defineConfig({
 				short_name: 'PPOC Gen',
 				description: 'Web application in charge of generating dynamic public preaching turns',
 				display: 'standalone',
-				start_url: process.argv.includes('dev') ? '/' : process.env.BASE_PATH,
+				start_url: process.argv.includes('dev') ? '/' : process.env.BASE_PATH + '/',
 				theme_color: '#eb4034',
 				icons: [
 					{
