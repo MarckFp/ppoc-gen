@@ -25,27 +25,27 @@ export default defineConfig({
 				globPatterns: ['client/**/*.{js,css,ico,png,txt,svg,webp,webmanifest}', 'prerendered/**/*.html'],
 				runtimeCaching: [
 					{
-						urlPattern: ({url}) => url.pathname === '/publishers',
+						urlPattern: ({url}) => url.pathname === (process.argv.includes('dev') ? '/' : process.env.BASE_PATH + 'publishers'),
 						handler: 'NetworkFirst',
 						method: 'GET',
 					},
 					{
-						urlPattern: ({url}) => url.pathname === '/schedules',
+						urlPattern: ({url}) => url.pathname === (process.argv.includes('dev') ? '/' : process.env.BASE_PATH + 'schedules'),
 						handler: 'NetworkFirst',
 						method: 'GET',
 					},
 					{
-						urlPattern: ({url}) => url.pathname === '/turns',
+						urlPattern: ({url}) => url.pathname === (process.argv.includes('dev') ? '/' : process.env.BASE_PATH + 'turns'),
 						handler: 'NetworkFirst',
 						method: 'GET',
 					},
 					{
-						urlPattern: ({url}) => url.pathname === '/incidences',
+						urlPattern: ({url}) => url.pathname === (process.argv.includes('dev') ? '/' : process.env.BASE_PATH + 'incidences'),
 						handler: 'NetworkFirst',
 						method: 'GET',
 					},
 					{
-						urlPattern: ({url}) => url.pathname === '/settings',
+						urlPattern: ({url}) => url.pathname === (process.argv.includes('dev') ? '/' : process.env.BASE_PATH + 'settings'),
 						handler: 'NetworkFirst',
 						method: 'GET',
 					}
