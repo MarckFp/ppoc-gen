@@ -7,7 +7,7 @@
 	import {pwaInfo} from 'virtual:pwa-info'
 	import {locale} from 'svelte-i18n'
 	import {onMount} from 'svelte'
-	import { pwaAssetsHead } from 'virtual:pwa-assets/head'
+	import {pwaAssetsHead} from 'virtual:pwa-assets/head'
 
 	onMount(async () => {
 		if (pwaInfo) {
