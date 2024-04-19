@@ -4,6 +4,7 @@ import { enhancedImages } from '@sveltejs/enhanced-img';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+	base: process.argv.includes('dev') ? '/' : process.env.BASE_PATH + '/',
 	build: {
 		minify: 'esbuild'
 	},
@@ -19,7 +20,6 @@ export default defineConfig({
 			},
 			srcDir: 'src',
 			strategies: 'generateSW',
-			scope: process.argv.includes('dev') ? '/' : process.env.BASE_PATH,
 			registerType: 'autoUpdate', //autoUpdate or prompt depending on what we want
 			workbox: {
 				globPatterns: ['client/**/*.{js,css,ico,png,txt,svg,webp,webmanifest}', 'prerendered/**/*.html'],
