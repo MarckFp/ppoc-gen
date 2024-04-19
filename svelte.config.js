@@ -8,9 +8,6 @@ const config = {
 		adapter: adapter(),
 		serviceWorker: {
 			register: false,
-		},
-		files: {
-			serviceWorker: 'src/prompt-sw.ts',
 		}
 	},
 	paths: {

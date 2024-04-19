@@ -21,7 +21,7 @@
 </script>
 
 {#if toast}
-	<Toast class="m-3" transition={slide}>
+	<Toast class="m-3" transition={slide} dismissable={false}>
 		<span class="font-semibold text-gray-900 dark:text-white">
 			{#if $offlineReady}
 				App ready to work offline
@@ -30,12 +30,11 @@
 			{/if}
 		</span>
 		<div class="mt-3">
-			<div class="mb-2 text-sm font-normal">A new software version is available for download.</div>
 			<div class="grid grid-cols-2 gap-2">
 				{#if $needRefresh}
 					<Button size="xs" on:click={() => updateServiceWorker(true)} class="w-full">Update</Button>
 				{/if}
-			<Button size="xs" class="w-full" color="dark">Close</Button>
+				<Button size="xs" class="w-full" color="dark" on:click={close}>Close</Button>
 			</div>
 		</div>
 	</Toast>

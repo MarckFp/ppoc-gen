@@ -14,20 +14,47 @@ export default defineConfig({
 			devOptions: {
 				enabled: true,
 				type: 'module',
-				navigateFallback: process.argv.includes('dev') ? '/' : process.env.BASE_PATH
+				navigateFallback: process.argv.includes('dev') ? '/' : process.env.BASE_PATH,
+				suppressWarnings: true
 			},
 			srcDir: 'src',
-			strategies: 'injectManifest',
-			filename: 'prompt-sw.ts',
+			strategies: 'generateSW',
+			registerType: 'autoUpdate', //autoUpdate or prompt depending on what we want
 			scope: process.argv.includes('dev') ? '/' : process.env.BASE_PATH,
-			base: process.argv.includes('dev') ? '/' : process.env.BASE_PATH,
-			injectManifest: {
-				globPatterns: ['client/**/*.{js,css,ico,png,svg,webp,woff,woff2}']
-			},
 			workbox: {
-				globPatterns: ['client/**/*.{js,css,ico,png,svg,webp,woff,woff2}']
+				globPatterns: ['client/**/*.{js,css,ico,png,txt,svg,webp,webmanifest}', 'prerendered/**/*.html'],
+				runtimeCaching: [
+					{
+						urlPattern: ({url}) => url.pathname === '/publishers',
+						handler: 'NetworkFirst',
+						method: 'GET',
+					},
+					{
+						urlPattern: ({url}) => url.pathname === '/schedules',
+						handler: 'NetworkFirst',
+						method: 'GET',
+					},
+					{
+						urlPattern: ({url}) => url.pathname === '/turns',
+						handler: 'NetworkFirst',
+						method: 'GET',
+					},
+					{
+						urlPattern: ({url}) => url.pathname === '/incidences',
+						handler: 'NetworkFirst',
+						method: 'GET',
+					},
+					{
+						urlPattern: ({url}) => url.pathname === '/settings',
+						handler: 'NetworkFirst',
+						method: 'GET',
+					}
+				]
 			},
-			includeAssets: ['static/favicon.ico', 'static/apple-touch-icon.png', 'static/maskable_icon.png', 'static/favicon-16x16.png', 'static/favicon-32x32.png'],
+			includeAssets: ['static/favicon.ico', 'static/favicon.svg', 'static/favicon-16x16.png', 'static/favicon-32x32.png'],
+			pwaAssets: {
+				config: true,
+			},
 			manifest: {
 				name: 'Public Preaching Generator',
 				short_name: 'PPOC Gen',
@@ -35,43 +62,7 @@ export default defineConfig({
 				display: 'standalone',
 				scope: process.argv.includes('dev') ? '/' : process.env.BASE_PATH,
 				start_url: process.argv.includes('dev') ? '/' : process.env.BASE_PATH,
-				theme_color: '#eb4034',
-				icons: [
-					{
-						src: 'android-chrome-192x192.png',
-						sizes: '192x192',
-						type: 'image/png'
-					},
-					{
-						src: 'android-chrome-512x512.png',
-						sizes: '512x512',
-						type: 'image/png'
-					},
-					{
-						src: 'pwa-maskable-192x192.png',
-						sizes: '192x192',
-						type: 'image/png',
-						purpose: 'maskable'
-					},
-					{
-						src: 'pwa-maskable-512x512.png',
-						sizes: '512x512',
-						type: 'image/png',
-						purpose: 'maskable'
-					},
-					{
-						src: 'pwa-192x192.png',
-						sizes: '192x192',
-						type: 'image/png',
-						purpose: 'any'
-					},
-					{
-						src: 'pwa-512x512.png',
-						sizes: '512x512',
-						type: 'image/png',
-						purpose: 'any'
-					}
-				],
+				theme_color: '#eb4034'
 			}
 		})
 	]
