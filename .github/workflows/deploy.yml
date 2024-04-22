@@ -7,23 +7,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  upgrade-version:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 21
-      - run: |
-          git config --global user.name 'MarckFp'
-          git config --global user.email '${{ secrets.GH_EMAIL }}'
-          npm version ${{  github.ref_name }}
-          sed -i -e 's/^version = .*/version = ${{  github.ref_name }}"/' src-tauri/Cargo.toml
-          git commit -am "Upgrade to ${{  github.ref_name }}"
-          git push origin main
   deploy-web:
     runs-on: ubuntu-latest
-    needs: upgrade-version
     permissions:
       pages: write
       id-token: write
@@ -51,7 +36,6 @@ jobs:
         id: deployment
   deploy-linux:
     runs-on: ubuntu-latest
-    needs: upgrade-version
     permissions:
       contents: write
       discussions: write
@@ -72,7 +56,6 @@ jobs:
             ./src-tauri/target/release/bundle/appimage/ppoc-gen_${{  github.ref_name }}_amd64.AppImage
   deploy-windows:
     runs-on: windows-latest
-    needs: upgrade-version
     permissions:
       contents: write
       discussions: write
@@ -92,7 +75,6 @@ jobs:
             ./src-tauri/target/release/bundle/nsis/ppoc-gen_${{  github.ref_name }}_x64-setup.exe
   deploy-macos:
     runs-on: macos-latest
-    needs: upgrade-version
     permissions:
       contents: write
       discussions: write
