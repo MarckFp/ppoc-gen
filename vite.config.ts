@@ -12,6 +12,7 @@ export default defineConfig({
 		enhancedImages(),
 		sveltekit(),
 		SvelteKitPWA({
+			base: process.argv.includes('dev') ? '/' : process.env.BASE_PATH + '/',
 			devOptions: {
 				enabled: true,
 				type: 'module',
@@ -25,27 +26,27 @@ export default defineConfig({
 				globPatterns: ['client/**/*.{js,css,ico,png,txt,svg,webp,webmanifest}', 'prerendered/**/*.html'],
 				runtimeCaching: [
 					{
-						urlPattern: ({url}) => url.pathname === (process.argv.includes('dev') ? '/' : process.env.BASE_PATH + 'publishers'),
+						urlPattern: ({url}) => url.pathname === (process.argv.includes('dev') ? '/' : process.env.BASE_PATH + '/publishers'),
 						handler: 'NetworkFirst',
 						method: 'GET',
 					},
 					{
-						urlPattern: ({url}) => url.pathname === (process.argv.includes('dev') ? '/' : process.env.BASE_PATH + 'schedules'),
+						urlPattern: ({url}) => url.pathname === (process.argv.includes('dev') ? '/' : process.env.BASE_PATH + '/schedules'),
 						handler: 'NetworkFirst',
 						method: 'GET',
 					},
 					{
-						urlPattern: ({url}) => url.pathname === (process.argv.includes('dev') ? '/' : process.env.BASE_PATH + 'turns'),
+						urlPattern: ({url}) => url.pathname === (process.argv.includes('dev') ? '/' : process.env.BASE_PATH + '/turns'),
 						handler: 'NetworkFirst',
 						method: 'GET',
 					},
 					{
-						urlPattern: ({url}) => url.pathname === (process.argv.includes('dev') ? '/' : process.env.BASE_PATH + 'incidences'),
+						urlPattern: ({url}) => url.pathname === (process.argv.includes('dev') ? '/' : process.env.BASE_PATH + '/incidences'),
 						handler: 'NetworkFirst',
 						method: 'GET',
 					},
 					{
-						urlPattern: ({url}) => url.pathname === (process.argv.includes('dev') ? '/' : process.env.BASE_PATH + 'settings'),
+						urlPattern: ({url}) => url.pathname === (process.argv.includes('dev') ? '/' : process.env.BASE_PATH + '/settings'),
 						handler: 'NetworkFirst',
 						method: 'GET',
 					}
