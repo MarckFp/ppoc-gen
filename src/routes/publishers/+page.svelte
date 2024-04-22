@@ -55,6 +55,15 @@
 				name: $_('publishers.low')
 			}
 		]
+	const sorter = {
+		monday: 1,
+		tuesday: 2,
+		wednesday: 3,
+		thursday: 4,
+		friday: 5,
+		saturday: 6,
+		sunday: 7
+	}
 	let users = liveQuery(() => db.user.orderBy('[firstname+lastname]').toArray())
 	let schedules = liveQuery(() => db.schedule.toArray())
 	let affinities = liveQuery(() => db.affinity.toArray())
@@ -82,6 +91,12 @@
 						.replace(/\p{Diacritic}/gu, '')
 				) !== -1
 	)
+
+	$: $schedules?.sort(function sortByDay(a, b) {
+		let day1 = a.weekday
+		let day2 = b.weekday
+		return sorter[day1] - sorter[day2]
+	})
 
 	async function createPublisher() {
 		if (firstname == '' || lastname == '' || weight < 1 || weight > 4) {
