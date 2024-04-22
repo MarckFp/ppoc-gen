@@ -6,10 +6,6 @@ on:
       - "*.*.*"
   workflow_dispatch:
 
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
 jobs:
   upgrade-version:
     runs-on: ubuntu-latest
