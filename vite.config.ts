@@ -4,7 +4,6 @@ import { enhancedImages } from '@sveltejs/enhanced-img';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-	base: process.argv.includes('dev') ? '/' : process.env.BASE_PATH + '/',
 	build: {
 		minify: 'esbuild'
 	},
@@ -29,36 +28,62 @@ export default defineConfig({
 						urlPattern: ({url}) => url.pathname === (process.argv.includes('dev') ? '/' : process.env.BASE_PATH + '/publishers'),
 						handler: 'NetworkFirst',
 						method: 'GET',
+						options: {
+							cacheableResponse: {
+								statuses: [200]
+							},
+						}
 					},
 					{
 						urlPattern: ({url}) => url.pathname === (process.argv.includes('dev') ? '/' : process.env.BASE_PATH + '/schedules'),
 						handler: 'NetworkFirst',
 						method: 'GET',
+						options: {
+							cacheableResponse: {
+								statuses: [200]
+							},
+						}
 					},
 					{
 						urlPattern: ({url}) => url.pathname === (process.argv.includes('dev') ? '/' : process.env.BASE_PATH + '/turns'),
 						handler: 'NetworkFirst',
 						method: 'GET',
+						options: {
+							cacheableResponse: {
+								statuses: [200]
+							},
+						}
 					},
 					{
 						urlPattern: ({url}) => url.pathname === (process.argv.includes('dev') ? '/' : process.env.BASE_PATH + '/incidences'),
 						handler: 'NetworkFirst',
 						method: 'GET',
+						options: {
+							cacheableResponse: {
+								statuses: [200]
+							},
+						}
 					},
 					{
 						urlPattern: ({url}) => url.pathname === (process.argv.includes('dev') ? '/' : process.env.BASE_PATH + '/settings'),
 						handler: 'NetworkFirst',
 						method: 'GET',
+						options: {
+							cacheableResponse: {
+								statuses: [200]
+							},
+						}
 					}
 				]
 			},
-			includeAssets: ['static/favicon.ico', 'static/favicon.svg', 'static/favicon-16x16.png', 'static/favicon-32x32.png'],
+			includeAssets: ['favicon.ico', 'favicon.svg', 'favicon-16x16.png', 'favicon-32x32.png'],
 			manifest: {
 				name: 'Public Preaching Generator',
 				short_name: 'PPOC Gen',
 				description: 'Web application in charge of generating dynamic public preaching turns',
 				display: 'standalone',
 				start_url: process.argv.includes('dev') ? '/' : process.env.BASE_PATH + '/',
+				scope: process.argv.includes('dev') ? '/' : process.env.BASE_PATH + '/',
 				theme_color: '#eb4034',
 				icons: [
 					{
