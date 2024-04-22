@@ -145,7 +145,7 @@
 					}
 					//Loop over availabilities
 					for (let availability of availabilities) {
-					userList.push(availability.user_id)
+						userList.push(availability.user_id)
 					}
 					users = await db.user.where('id').anyOf(userList).sortBy('counter')
 					if (users.length == 0) {
