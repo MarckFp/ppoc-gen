@@ -108,7 +108,9 @@
 		"deleted": "Turns deleted successfully",
 		"failed": "Failed to create turns, error: ",
 		"modified": "Turn modified successfully",
-		"mod-error": "Failed to modify the turn, error: "
+		"mod-error": "Failed to modify the turn, error: ",
+		"not-enough-sis": "Not enough sisters for date: ",
+		"not-enough-bro": "Not enough brothers for date: "
 	},
 	"incidences": {
 		"create-btn": "Create new Incidence",

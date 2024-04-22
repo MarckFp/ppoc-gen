@@ -154,7 +154,7 @@
 							props: {
 								alertStatus: 'warning',
 								fadeDelay: 15000,
-								alertMessage: $_('turns.no-publishers') + d.toISOString().split('T')[0]
+								alertMessage: $_('turns.no-publishers') + d.toISOString().split('T')[0] + ' ' + schedule.start_time + ' - ' + schedule.end_time
 							}
 						})
 					}
@@ -174,6 +174,15 @@
 						const userAssignment = await db.assignment.where({user_id: user.id, turn_id: turn_id}).first()
 						if (userAssignment != undefined) {
 							continue userLoop
+						}
+
+						//Check if publisher already exsits on turns at the same day
+						const sameDayTurns = await db.turn.where({date: d.toISOString().split('T')[0]}).toArray()
+						for (let sameDayTurn of sameDayTurns) {
+							const sameDayAssignments = await db.assignment.where({turn_id: sameDayTurn.id, user_id: user.id}).toArray()
+							if (sameDayAssignments.length != 0) {
+								continue userLoop
+							}
 						}
 
 						//Add Brother to the turn
@@ -203,9 +212,12 @@
 
 						affinities = await db.affinity.where({source_id: user.id}).toArray()
 						//Loop over affinities
-						for (let affinity of affinities) {
+						affinitiesLoop: for (let affinity of affinities) {
 							const affinityUser = await db.user.where({id: affinity.destination_id}).first()
 							if (Math.round(user.counter) == Math.round(affinityUser?.counter)) {
+								if (!userList.includes(affinityUser.id)) {
+									continue affinitiesLoop
+								}
 								if (
 									affinityUser?.gender === 'male' &&
 									brothers < schedule.n_brothers &&
@@ -238,6 +250,26 @@
 								}
 							}
 						}
+					}
+					if (sisters < schedule.n_sisters) {
+						new AlertToast({
+							target: document.querySelector('#toast-container'),
+							props: {
+								alertStatus: 'warning',
+								fadeDelay: 15000,
+								alertMessage: $_('turns.not-enough-sis') + d.toISOString().split('T')[0] + ' ' + schedule.start_time + ' - ' + schedule.end_time
+							}
+						})
+					}
+					if (brothers < schedule.n_brothers) {
+						new AlertToast({
+							target: document.querySelector('#toast-container'),
+							props: {
+								alertStatus: 'warning',
+								fadeDelay: 15000,
+								alertMessage: $_('turns.not-enough-bro') + d.toISOString().split('T')[0] + ' ' + schedule.start_time + ' - ' + schedule.end_time
+							}
+						})
 					}
 					userList = []
 					brothers = 0

@@ -4,6 +4,7 @@ import { enhancedImages } from '@sveltejs/enhanced-img';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+	base: process.argv.includes('dev') ? '/' : process.env.BASE_PATH + '/',
 	build: {
 		minify: 'esbuild'
 	},
@@ -19,18 +20,22 @@ export default defineConfig({
 				suppressWarnings: true
 			},
 			srcDir: 'src',
-			strategies: 'generateSW',
-			registerType: 'autoUpdate', //autoUpdate or prompt depending on what we want
+			strategies: 'generateSW', //This let vite-pwa plugin to generate the SW and the manifest
+			registerType: 'autoUpdate', //autoUpdate or prompt depending on what we want. This auto updates the app if a new version appears
 			workbox: {
+				cleanupOutdatedCaches: true,
 				globPatterns: ['client/**/*.{js,css,ico,png,txt,svg,webp,webmanifest}', 'prerendered/**/*.html'],
 				runtimeCaching: [
 					{
 						urlPattern: ({url}) => url.pathname === (process.argv.includes('dev') ? '/' : process.env.BASE_PATH + '/publishers'),
 						handler: 'NetworkFirst',
-						method: 'GET',
 						options: {
 							cacheableResponse: {
 								statuses: [200]
+							},
+							matchOptions: {
+								ignoreVary: true,
+								ignoreSearch: true,
 							},
 						}
 					},
@@ -42,6 +47,10 @@ export default defineConfig({
 							cacheableResponse: {
 								statuses: [200]
 							},
+							matchOptions: {
+								ignoreVary: true,
+								ignoreSearch: true,
+							},
 						}
 					},
 					{
@@ -51,6 +60,10 @@ export default defineConfig({
 						options: {
 							cacheableResponse: {
 								statuses: [200]
+							},
+							matchOptions: {
+								ignoreVary: true,
+								ignoreSearch: true,
 							},
 						}
 					},
@@ -62,6 +75,10 @@ export default defineConfig({
 							cacheableResponse: {
 								statuses: [200]
 							},
+							matchOptions: {
+								ignoreVary: true,
+								ignoreSearch: true,
+							},
 						}
 					},
 					{
@@ -71,6 +88,10 @@ export default defineConfig({
 						options: {
 							cacheableResponse: {
 								statuses: [200]
+							},
+							matchOptions: {
+								ignoreVary: true,
+								ignoreSearch: true,
 							},
 						}
 					}

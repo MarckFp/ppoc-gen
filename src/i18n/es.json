@@ -108,7 +108,9 @@
 		"deleted": "Turno eliminado correctamente",
 		"failed": "Fallo al crear los turnos, error: ",
 		"modified": "Turno modificado correctamente",
-		"mod-error": "Fallo al modificar el turno, error: "
+		"mod-error": "Fallo al modificar el turno, error: ",
+		"not-enough-sis": "No hay suficientes hermanas para la fecha: ",
+		"not-enough-bro": "No hay suficientes hermanos para la fecha: "
 	},
 	"incidences": {
 		"create-btn": "Crear nueva Incidencia",
