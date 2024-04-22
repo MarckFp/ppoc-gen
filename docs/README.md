@@ -1,4 +1,4 @@
 # PPOC Gen
 
-- Spanish
-- English
+- [Spanish](es/README.md)
+- [English](en/README.md)

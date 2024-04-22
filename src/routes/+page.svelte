@@ -26,7 +26,11 @@
 			>
 		</p>
 		<p class="mt-5 text-gray-900 dark:text-white">
-			{$_('home.read-the-docs')}<GradientButton color="teal" disabled>{$_('home.docs')} <BookSolid /></GradientButton>
+			{$_('home.read-the-docs')}<GradientButton
+				color="teal"
+				href="https://github.com/MarckFp/ppoc-gen/blob/main/docs/README.md"
+				>{$_('home.docs')} <BookSolid /></GradientButton
+			>
 		</p>
 	</Card>
 	<Calendar />

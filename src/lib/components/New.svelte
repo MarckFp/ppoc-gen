@@ -103,7 +103,9 @@
 						</Button>
 						<p class="text-sm font-light text-gray-500 dark:text-gray-400">
 							{$_('settings.read-official')}
-							<a href="/documentation" class="font-medium text-primary-600 hover:underline dark:text-primary-500"
+							<a
+								href="https://github.com/MarckFp/ppoc-gen/blob/main/docs/README.md"
+								class="font-medium text-primary-600 hover:underline dark:text-primary-500"
 								>{$_('settings.documentation')}</a
 							>
 						</p>

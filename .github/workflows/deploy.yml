@@ -11,6 +11,20 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  upgrade-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 21
+      - run: npm version ${{  github.ref_name }}
+      - run: sed -i -e 's/^version = .*/version = ${{  github.ref_name }}"/' src-tauri/Cargo.toml
+      - run: |
+          git config --global user.name 'MarckFp'
+          git config --global user.email '${{ secrets.GITHUB_EMAIL }}'
+          git commit -am "Upgrade to ${{  github.ref_name }}"
+          git push
   deploy-web:
     runs-on: ubuntu-latest
     permissions:
