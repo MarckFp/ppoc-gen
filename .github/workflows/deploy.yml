@@ -18,11 +18,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 21
-      - run: npm version ${{  github.ref_name }}
-      - run: sed -i -e 's/^version = .*/version = ${{  github.ref_name }}"/' src-tauri/Cargo.toml
       - run: |
           git config --global user.name 'MarckFp'
           git config --global user.email '${{ secrets.GH_EMAIL }}'
+          npm version ${{  github.ref_name }}
+          sed -i -e 's/^version = .*/version = ${{  github.ref_name }}"/' src-tauri/Cargo.toml
           git commit -am "Upgrade to ${{  github.ref_name }}"
           git push
   deploy-web:
