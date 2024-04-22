@@ -74,7 +74,26 @@
 		}
 	})
 
-	$: filteredItems = $turns?.filter(turn => turn.date.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1)
+	$: filteredItems = $turns?.filter(
+		turn =>
+			(
+				$_(
+					'general.' +
+						['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][new Date(turn.date).getDay()]
+				) +
+				' ' +
+				new Date(turn.date).getDate()
+			)
+				.toLowerCase()
+				.normalize('NFD')
+				.replace(/\p{Diacritic}/gu, '')
+				.indexOf(
+					searchTerm
+						.toLowerCase()
+						.normalize('NFD')
+						.replace(/\p{Diacritic}/gu, '')
+				) !== -1
+	)
 
 	async function generateTurns() {
 		loading = true
