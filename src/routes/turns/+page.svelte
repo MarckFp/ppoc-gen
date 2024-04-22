@@ -154,7 +154,13 @@
 							props: {
 								alertStatus: 'warning',
 								fadeDelay: 15000,
-								alertMessage: $_('turns.no-publishers') + d.toISOString().split('T')[0] + ' ' + schedule.start_time + ' - ' + schedule.end_time
+								alertMessage:
+									$_('turns.no-publishers') +
+									d.toISOString().split('T')[0] +
+									' ' +
+									schedule.start_time +
+									' - ' +
+									schedule.end_time
 							}
 						})
 					}
@@ -179,7 +185,9 @@
 						//Check if publisher already exsits on turns at the same day
 						const sameDayTurns = await db.turn.where({date: d.toISOString().split('T')[0]}).toArray()
 						for (let sameDayTurn of sameDayTurns) {
-							const sameDayAssignments = await db.assignment.where({turn_id: sameDayTurn.id, user_id: user.id}).toArray()
+							const sameDayAssignments = await db.assignment
+								.where({turn_id: sameDayTurn.id, user_id: user.id})
+								.toArray()
 							if (sameDayAssignments.length != 0) {
 								continue userLoop
 							}
@@ -257,7 +265,13 @@
 							props: {
 								alertStatus: 'warning',
 								fadeDelay: 15000,
-								alertMessage: $_('turns.not-enough-sis') + d.toISOString().split('T')[0] + ' ' + schedule.start_time + ' - ' + schedule.end_time
+								alertMessage:
+									$_('turns.not-enough-sis') +
+									d.toISOString().split('T')[0] +
+									' ' +
+									schedule.start_time +
+									' - ' +
+									schedule.end_time
 							}
 						})
 					}
@@ -267,7 +281,13 @@
 							props: {
 								alertStatus: 'warning',
 								fadeDelay: 15000,
-								alertMessage: $_('turns.not-enough-bro') + d.toISOString().split('T')[0] + ' ' + schedule.start_time + ' - ' + schedule.end_time
+								alertMessage:
+									$_('turns.not-enough-bro') +
+									d.toISOString().split('T')[0] +
+									' ' +
+									schedule.start_time +
+									' - ' +
+									schedule.end_time
 							}
 						})
 					}
