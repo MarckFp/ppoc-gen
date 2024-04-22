@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: 21
       - uses: oven-sh/setup-bun@v1
-      - run: bun install --production
+      - run: bun install
       - run: bun run build
         env:
           BASE_PATH: '/${{ github.event.repository.name }}'
@@ -46,7 +46,7 @@ jobs:
           node-version: 21
       - uses: oven-sh/setup-bun@v1
       - run: sudo apt-get update && sudo apt-get install libwebkit2gtk-4.0-dev build-essential curl wget file libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
-      - run: bun install --production
+      - run: bun install
       - run: bun tauri build --ci
       - uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
@@ -65,7 +65,7 @@ jobs:
         with:
           node-version: 21
       - uses: oven-sh/setup-bun@v1
-      - run: bun install --production
+      - run: bun install
       - run: bun tauri build --ci
       - uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
@@ -84,7 +84,7 @@ jobs:
         with:
           node-version: 21
       - uses: oven-sh/setup-bun@v1
-      - run: bun install --production
+      - run: bun install
       - run: bun tauri build --ci
       - uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
