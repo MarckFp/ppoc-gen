@@ -41,10 +41,36 @@
 			{value: 'sunday', name: $_('general.sunday')}
 		]
 
+	const sorter = {
+		monday: 1,
+		tuesday: 2,
+		wednesday: 3,
+		thursday: 4,
+		friday: 5,
+		saturday: 6,
+		sunday: 7
+	}
+
 	let schedules = liveQuery(() => db.schedule.toArray())
-	$: filteredItems = $schedules?.filter(
-		schedule => schedule.weekday.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
-	)
+	$: filteredItems = $schedules
+		?.filter(
+			schedule =>
+				$_('general.' + schedule.weekday)
+					.toLocaleLowerCase()
+					.normalize('NFD')
+					.replace(/\p{Diacritic}/gu, '')
+					.indexOf(
+						searchTerm
+							.toLowerCase()
+							.normalize('NFD')
+							.replace(/\p{Diacritic}/gu, '')
+					) !== -1
+		)
+		.sort(function sortByDay(a, b) {
+			let day1 = a.weekday
+			let day2 = b.weekday
+			return sorter[day1] - sorter[day2]
+		})
 
 	async function createSchedule() {
 		if (location == '' || n_brothers < 1 || n_sisters < 1) {

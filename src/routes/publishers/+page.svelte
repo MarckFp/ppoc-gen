@@ -69,7 +69,19 @@
 		}
 	})
 
-	$: filteredItems = $users?.filter(user => user.firstname.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1)
+	$: filteredItems = $users?.filter(
+		user =>
+			user.firstname
+				.toLowerCase()
+				.normalize('NFD')
+				.replace(/\p{Diacritic}/gu, '')
+				.indexOf(
+					searchTerm
+						.toLowerCase()
+						.normalize('NFD')
+						.replace(/\p{Diacritic}/gu, '')
+				) !== -1
+	)
 
 	async function createPublisher() {
 		if (firstname == '' || lastname == '' || weight < 1 || weight > 4) {
