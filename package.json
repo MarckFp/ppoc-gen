@@ -1,7 +1,7 @@
 {
   "name": "ppoc-gen",
   "description": "Web application in charge of generating dynamic public preaching turns",
-  "version": "0.5.8",
+  "version": "0.5.9",
   "author": {
     "name": "Marcos Fernández",
     "url": "https://github.com/MarckFp"
