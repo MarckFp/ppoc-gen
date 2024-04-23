@@ -11,14 +11,18 @@
 	//Doesn't support typescript yet
 	var cal: any
 	let disabledMobile = false
-	let defaultView = 'dayGridMonth'
 	const attachListener = () => {
-		const mediaQuery = window.matchMedia('(width <= 640px)')
+		const mobileMediaQuery = window.matchMedia('(width <= 640px)')
+		const desktopMediaQuery = window.matchMedia('(width >= 640px)')
 		
-		mediaQuery.addEventListener('change', ({ matches }) => {
+		mobileMediaQuery.addEventListener('change', ({ matches }) => {
 			disabledMobile = true
-			defaultView = 'listWeek'
 			cal?.setOption('view', 'listWeek')
+		})
+
+		desktopMediaQuery.addEventListener('change', ({ matches }) => {
+			disabledMobile = false
+			cal?.setOption('view', 'dayGridMonth')
 		})
 	}
 
@@ -55,7 +59,7 @@
 		let date = new Date()
 
 		let options = {
-			view: defaultView,
+			view: 'dayGridMonth',
 			locale: $locale,
 			dayHeaderFormat: {weekday: 'long'},
 			buttonText: {today: $_('turns.today')},
