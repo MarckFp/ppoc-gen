@@ -1,7 +1,7 @@
 {
   "name": "ppoc-gen",
   "description": "Web application in charge of generating dynamic public preaching turns",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "author": {
     "name": "Marcos Fernández",
     "url": "https://github.com/MarckFp"
@@ -60,7 +60,6 @@
     "dexie-export-import": "^4.1.1",
     "flowbite": "^2.3.0",
     "flowbite-svelte": "^0.46.0",
-    "svelte-device-info": "^1.0.4",
     "svelte-i18n": "^4.0.0",
     "tailwind-merge": "^2.2.2"
   }

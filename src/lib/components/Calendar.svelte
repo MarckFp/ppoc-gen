@@ -7,16 +7,20 @@
 	import {locale, _} from 'svelte-i18n'
 	import {onMount} from 'svelte'
 	import {Button, ButtonGroup} from 'flowbite-svelte'
-	import Device from 'svelte-device-info'
 
 	//Doesn't support typescript yet
 	var cal: any
 	let disabledMobile = false
 	let defaultView = 'dayGridMonth'
-	if (Device.isPhone) {
-		disabledMobile = true
-		defaultView = 'listWeek'
+	const attachListener = () => {
+		const mediaQuery = window.matchMedia('(width <= 640px)')
+		
+		mediaQuery.addEventListener('change', ({ matches }) => {
+			disabledMobile = true
+			defaultView = 'listWeek'
+		})
 	}
+
 	onMount(async () => {
 		let events = []
 		let eventUsers = []
@@ -50,7 +54,7 @@
 		let date = new Date()
 
 		let options = {
-			view: 'dayGridMonth',
+			view: defaultView,
 			locale: $locale,
 			dayHeaderFormat: {weekday: 'long'},
 			buttonText: {today: $_('turns.today')},
@@ -69,6 +73,8 @@
 		})
 	})
 </script>
+
+<svelte:window use:attachListener />
 
 <div class="m-3">
 	<ButtonGroup>
