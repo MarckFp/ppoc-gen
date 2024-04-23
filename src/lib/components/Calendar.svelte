@@ -11,20 +11,6 @@
 	//Doesn't support typescript yet
 	var cal: any
 	let disabledMobile = false
-	const attachListener = () => {
-		const mobileMediaQuery = window.matchMedia('(width <= 640px)')
-		const desktopMediaQuery = window.matchMedia('(width >= 640px)')
-		
-		mobileMediaQuery.addEventListener('change', ({ matches }) => {
-			disabledMobile = true
-			cal?.setOption('view', 'listWeek')
-		})
-
-		desktopMediaQuery.addEventListener('change', ({ matches }) => {
-			disabledMobile = false
-			cal?.setOption('view', 'dayGridMonth')
-		})
-	}
 
 	onMount(async () => {
 		let events = []
@@ -76,18 +62,29 @@
 				options: options
 			}
 		})
+
+		window.matchMedia('(width <= 640px)').addEventListener('change', ({ matches }) => {
+			if (matches) {
+				disabledMobile = true
+				cal?.setOption('view', 'listWeek')
+			} else {
+				disabledMobile = false
+				cal?.setOption('view', 'dayGridMonth')
+			}
+      	})
 	})
 </script>
 
-<svelte:window use:attachListener />
 
 <div class="m-3">
 	<ButtonGroup>
 		<Button outline color="dark" on:click={cal?.setOption('view', 'listDay')}>{$_('home.day-view')}</Button>
 		<Button outline color="dark" on:click={cal?.setOption('view', 'listWeek')}>{$_('home.week-view')}</Button>
-		<Button outline color="dark" disabled={disabledMobile} on:click={cal?.setOption('view', 'dayGridMonth')}
-			>{$_('home.month-view')}</Button
-		>
+		{#if !disabledMobile}
+			<Button outline color="dark" on:click={cal?.setOption('view', 'dayGridMonth')}
+				>{$_('home.month-view')}</Button
+			>
+		{/if}
 	</ButtonGroup>
 </div>
 <div
