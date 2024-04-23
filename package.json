@@ -1,7 +1,7 @@
 {
   "name": "ppoc-gen",
   "description": "Web application in charge of generating dynamic public preaching turns",
-  "version": "0.5.9",
+  "version": "0.6.0",
   "author": {
     "name": "Marcos Fernández",
     "url": "https://github.com/MarckFp"
@@ -18,6 +18,10 @@
     "prepare": "husky"
   },
   "devDependencies": {
+    "@event-calendar/core": "^2.6.1",
+    "@event-calendar/day-grid": "^2.6.1",
+    "@event-calendar/list": "^2.6.1",
+    "@event-calendar/time-grid": "^2.6.1",
     "@sveltejs/adapter-auto": "^3.0.0",
     "@sveltejs/adapter-static": "^3.0.1",
     "@sveltejs/enhanced-img": "^0.2.0",
@@ -56,6 +60,7 @@
     "dexie-export-import": "^4.1.1",
     "flowbite": "^2.3.0",
     "flowbite-svelte": "^0.46.0",
+    "svelte-device-info": "^1.0.4",
     "svelte-i18n": "^4.0.0",
     "tailwind-merge": "^2.2.2"
   }

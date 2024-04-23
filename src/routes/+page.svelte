@@ -33,5 +33,7 @@
 			>
 		</p>
 	</Card>
-	<Calendar />
+	<Card size="xl" padding="none" class="dark:ec-dark m-4 flex flex-col items-center">
+		<Calendar />
+	</Card>
 </div>
