@@ -21,27 +21,16 @@
 	import {db} from '$lib/db'
 	import {liveQuery} from 'dexie'
 	import {_} from 'svelte-i18n'
-	import type {User} from '$lib/models/user'
-	import type {Incidence} from '$lib/models/incidence'
-	import type {Availability} from '$lib/models/availability'
-	import type {Affinity} from '$lib/models/affinity'
 
 	var date: Date = new Date()
 	let fromDate: string,
 		toDate: string,
-		weekday: string,
 		loading: boolean = false,
 		deleteModal: boolean = false,
 		createModal: boolean = false,
 		creationDisabled: boolean = false,
 		edit: boolean = false,
-		availabilities: Availability[],
-		users: User[],
-		incidences: Incidence[],
-		affinities: Affinity[],
 		userList: number[] = [],
-		brothers: number = 0,
-		sisters: number = 0,
 		searchTerm: string = '',
 		selectedId: number,
 		turnDate: string,
@@ -96,9 +85,11 @@
 	)
 
 	async function generateTurns() {
+		let brothers: number = 0,
+			sisters: number = 0
 		loading = true
 		creationDisabled = true
-		if (fromDate == undefined || toDate == undefined) {
+		if (fromDate == undefined || toDate == undefined || fromDate == '' || toDate == '') {
 			fromDate = ''
 			toDate = ''
 			loading = false
@@ -128,30 +119,32 @@
 
 		//Loop over weekdays
 		for (var d = from; d <= to; d.setDate(d.getDate() + 1)) {
-			weekday = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d.getDay()]
+			let weekday = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d.getDay()]
 			//Loop over schedules
 			for (let schedule of $schedules) {
 				if (schedule.weekday === weekday && schedule.id != undefined) {
-					const exists = await db.turn
-						.where({
-							date: d.toISOString().split('T')[0],
-							start_time: schedule.start_time,
-							end_time: schedule.end_time,
-							location: schedule.location
-						})
-						.first()
-					if (exists) {
+					//Check if Turn already exists
+					if (
+						await db.turn
+							.where({
+								date: d.toISOString().split('T')[0],
+								start_time: schedule.start_time,
+								end_time: schedule.end_time,
+								location: schedule.location
+							})
+							.first()
+					) {
 						continue
 					}
 
-					const turn_id: number = await db.turn.add({
+					let turn_id: number = await db.turn.add({
 						date: d.toISOString().split('T')[0],
 						start_time: schedule.start_time,
 						end_time: schedule.end_time,
 						location: schedule.location
 					})
 
-					availabilities = await db.availability.where({schedule_id: schedule.id}).toArray()
+					let availabilities = await db.availability.where({schedule_id: schedule.id}).toArray()
 					if (availabilities.length == 0) {
 						new AlertToast({
 							target: document.querySelector('#toast-container'),
@@ -162,11 +155,8 @@
 							}
 						})
 					}
-					//Loop over availabilities
-					for (let availability of availabilities) {
-						userList.push(availability.user_id)
-					}
-					users = await db.user.where('id').anyOf(userList).sortBy('counter')
+					userList = availabilities.map(availability => availability.user_id)
+					let users = await db.user.where('id').anyOf(userList).sortBy('counter')
 					if (users.length == 0) {
 						new AlertToast({
 							target: document.querySelector('#toast-container'),
@@ -185,95 +175,53 @@
 					}
 					//Loop over users
 					userLoop: for (let user of users) {
-						incidences = await db.incidence.where({user_id: user.id}).toArray()
-						//Loop over incidences
-						for (let incidence of incidences) {
+						if (user && user.id) {
 							if (
-								incidence.start_date >= d.toISOString().split('T')[0] &&
-								d.toISOString().split('T')[0] <= incidence.end_date
+								(await checkPublisherTurn(user.id, turn_id, d)) ||
+								(brothers >= schedule.n_brothers && user.gender == 'male') ||
+								(sisters >= schedule.n_sisters && user.gender == 'female')
 							) {
 								continue userLoop
 							}
-						}
-						//Check if publisher already exists on the turn
-						const userAssignment = await db.assignment.where({user_id: user.id, turn_id: turn_id}).first()
-						if (userAssignment != undefined) {
-							continue userLoop
-						}
-
-						//Check if publisher already exsits on turns at the same day
-						const sameDayTurns = await db.turn.where({date: d.toISOString().split('T')[0]}).toArray()
-						for (let sameDayTurn of sameDayTurns) {
-							const sameDayAssignments = await db.assignment
-								.where({turn_id: sameDayTurn.id, user_id: user.id})
-								.toArray()
-							if (sameDayAssignments.length != 0) {
-								continue userLoop
+							await db.assignment.add({
+								user_id: user.id,
+								turn_id: turn_id
+							})
+							await db.user.update(user.id, {
+								counter: user.counter + user.weight
+							})
+							if (user.gender === 'male') {
+								brothers++
+							} else if (user.gender === 'female') {
+								sisters++
 							}
-						}
 
-						//Add Brother to the turn
-						if (user.gender === 'male' && brothers < schedule.n_brothers && user.id != undefined) {
-							const counter = user.counter + user.weight
-							db.assignment.add({
-								user_id: user.id,
-								turn_id: turn_id
-							})
-							db.user.update(user.id, {
-								counter: counter
-							})
-							brothers++
-						}
-						//Add Sister to the turn
-						if (user.gender === 'female' && sisters < schedule.n_sisters && user.id != undefined) {
-							const counter = user.counter + user.weight
-							db.assignment.add({
-								user_id: user.id,
-								turn_id: turn_id
-							})
-							db.user.update(user.id, {
-								counter: counter
-							})
-							sisters++
-						}
-
-						affinities = await db.affinity.where({source_id: user.id}).toArray()
-						//Loop over affinities
-						affinitiesLoop: for (let affinity of affinities) {
-							const affinityUser = await db.user.where({id: affinity.destination_id}).first()
-							if (Math.round(user.counter) == Math.round(affinityUser?.counter)) {
-								if (!userList.includes(affinityUser.id)) {
-									continue affinitiesLoop
-								}
-								if (
-									affinityUser?.gender === 'male' &&
-									brothers < schedule.n_brothers &&
-									affinityUser?.id != undefined
-								) {
-									const counter = user.counter + user.weight
-									db.assignment.add({
-										user_id: affinityUser?.id,
-										turn_id: turn_id
-									})
-									db.user.update(affinityUser?.id, {
-										counter: counter
-									})
-									brothers++
-								}
-								if (
-									affinityUser?.gender === 'female' &&
-									sisters < schedule.n_sisters &&
-									affinityUser?.id != undefined
-								) {
-									const counter = user.counter + user.weight
-									db.assignment.add({
-										user_id: affinityUser?.id,
-										turn_id: turn_id
-									})
-									db.user.update(affinityUser?.id, {
-										counter: counter
-									})
-									sisters++
+							let affinities = await db.affinity.where({source_id: user.id}).toArray()
+							//Loop over affinities
+							affinitiesLoop: for (let affinity of affinities) {
+								let affinityUser = await db.user.where({id: affinity.destination_id}).first()
+								if (affinityUser && affinityUser.id) {
+									if (Math.round(user.counter) == Math.round(affinityUser.counter)) {
+										if (
+											(await checkPublisherTurn(affinityUser.id, turn_id, d)) ||
+											(brothers >= schedule.n_brothers && affinityUser?.gender == 'male') ||
+											(sisters >= schedule.n_sisters && affinityUser?.gender == 'female')
+										) {
+											continue affinitiesLoop
+										}
+										await db.assignment.add({
+											user_id: affinityUser.id,
+											turn_id: turn_id
+										})
+										await db.user.update(affinityUser.id, {
+											counter: affinityUser.counter + affinityUser.weight
+										})
+										if (affinityUser.gender === 'male') {
+											brothers++
+										} else if (affinityUser.gender === 'female') {
+											sisters++
+										}
+									}
 								}
 							}
 						}
@@ -310,18 +258,51 @@
 							}
 						})
 					}
-					userList = []
-					brothers = 0
-					sisters = 0
 				}
+				userList = []
+				brothers = 0
+				sisters = 0
 			}
 		}
 		new AlertToast({
 			target: document.querySelector('#toast-container'),
 			props: {alertStatus: 'success', alertMessage: $_('turns.created')}
 		})
+		fromDate = ''
+		toDate = ''
 		loading = false
 		creationDisabled = false
+	}
+
+	async function checkPublisherTurn(user_id: number, turn_id: number, d: Date) {
+		//Check if user has availability
+		if (!userList.includes(user_id)) {
+			return true
+		}
+		//Check if user has an incidence
+		const incidences = await db.incidence.where({user_id: user_id}).toArray()
+		for (let incidence of incidences) {
+			if (
+				incidence.start_date >= d.toISOString().split('T')[0] &&
+				d.toISOString().split('T')[0] <= incidence.end_date
+			) {
+				return true
+			}
+		}
+		//Check if user already exists on the same turn
+		const userAssignment = await db.assignment.where({user_id: user_id, turn_id: turn_id}).first()
+		if (userAssignment != undefined) {
+			return true
+		}
+
+		//Check if user already exist on turns at the same day
+		const sameDayTurns = await db.turn.where({date: d.toISOString().split('T')[0]}).toArray()
+		for (let sameDayTurn of sameDayTurns) {
+			if ((await db.assignment.where({turn_id: sameDayTurn.id, user_id: user_id}).toArray()).length != 0) {
+				return true
+			}
+		}
+		return false
 	}
 
 	async function deleteTurn() {
@@ -443,12 +424,10 @@
 		}
 	}
 
-	//TODO: Create basic export to PDF until the calendar is ready
 	async function exportToPDF() {
 		window.print()
 	}
 
-	//TODO: Fix this, currently we query all assignments and then look for which turn is using what assignment but this have poor performance
 	async function getAssignees(turn_id: number) {
 		turnAssignees = []
 		for (let assignment of $assignments) {
@@ -458,7 +437,6 @@
 		}
 	}
 
-	//TODO: Delete turns of more than 5 years when we generate or create manually new ones
 	/*async function deleteYearlyTurns() {
 		const turns = await db.turn.toArray()
 		const tmpDate = new Date()
