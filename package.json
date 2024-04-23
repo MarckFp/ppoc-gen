@@ -55,7 +55,7 @@
     "dexie": "^4.0.1",
     "dexie-export-import": "^4.1.1",
     "flowbite": "^2.3.0",
-    "flowbite-svelte": "^0.44.24",
+    "flowbite-svelte": "^0.46.0",
     "svelte-i18n": "^4.0.0",
     "tailwind-merge": "^2.2.2"
   }
