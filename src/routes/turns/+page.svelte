@@ -21,6 +21,7 @@
 	import {db} from '$lib/db'
 	import {liveQuery} from 'dexie'
 	import {_} from 'svelte-i18n'
+	import {onMount} from 'svelte'
 
 	var date: Date = new Date()
 	let fromDate: string,
@@ -83,6 +84,10 @@
 						.replace(/\p{Diacritic}/gu, '')
 				) !== -1
 	)
+
+	onMount(async () => {
+		deleteYearlyTurns()
+	})
 
 	async function generateTurns() {
 		let brothers: number = 0,
@@ -437,10 +442,10 @@
 		}
 	}
 
-	/*async function deleteYearlyTurns() {
-		const turns = await db.turn.toArray()
+	async function deleteYearlyTurns() {
 		const tmpDate = new Date()
-		tmpDate.setFullYear(tmpDate.getFullYear() - 5)
+		tmpDate.setFullYear(tmpDate.getFullYear() - 3)
+		const turns = await db.turn.where('date').belowOrEqual(tmpDate.toISOString().split('T')[0]).toArray()
 		for (let turn of turns) {
 			const tmpturnDate = new Date(turn.date)
 			if (tmpturnDate <= tmpDate) {
@@ -448,7 +453,7 @@
 				db.turn.delete(turn.id)
 			}
 		}
-	}*/
+	}
 </script>
 
 <div class="mx-auto flex flex-col items-center justify-center px-6 py-8">
