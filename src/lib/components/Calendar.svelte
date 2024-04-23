@@ -18,6 +18,7 @@
 		mediaQuery.addEventListener('change', ({ matches }) => {
 			disabledMobile = true
 			defaultView = 'listWeek'
+			cal?.setOption('view', 'listWeek')
 		})
 	}
 
