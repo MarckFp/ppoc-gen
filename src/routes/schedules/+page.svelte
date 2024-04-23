@@ -14,7 +14,6 @@
 		TableHead
 	} from 'flowbite-svelte'
 	import {ExclamationCircleOutline} from 'flowbite-svelte-icons'
-	import Timepicker from '$lib/components/Timepicker.svelte'
 	import {db} from '$lib/db'
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {liveQuery} from 'dexie'
@@ -243,11 +242,11 @@
 		</Label>
 		<Label>
 			{$_('schedule.start-time')}:
-			<Timepicker bind:selectedTime={start_time} />
+			<Input type="time" bind:value={start_time} />
 		</Label>
 		<Label>
 			{$_('schedule.end-time')}:
-			<Timepicker bind:selectedTime={end_time} />
+			<Input type="time" bind:value={end_time} />
 		</Label>
 		<Label>
 			{$_('schedule.location')}:
