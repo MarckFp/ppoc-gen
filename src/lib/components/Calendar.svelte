@@ -32,8 +32,7 @@
 				start: new Date(turn.date + ' ' + turn.start_time + ':00'),
 				end: new Date(turn.date + ' ' + turn.end_time + ':00'),
 				title: {html: `<strong>${turn.location}</strong>${eventUsers.join('')}`},
-				backgroundColor: backgroundColors[index],
-				textColor: 'black'
+				backgroundColor: backgroundColors[index]
 			})
 			index++
 			if (index >= 4) {
@@ -53,7 +52,8 @@
 			date: date,
 			height: '100%',
 			events: events,
-			eventClassNames: 'm-0.5'
+			eventClassNames: 'm-0.5',
+			eventTextColor: 'black'
 		}
 		cal = new Calendar({
 			target: document.querySelector('#calendar-container'),
@@ -63,7 +63,8 @@
 			}
 		})
 
-		window.matchMedia('(width <= 640px)').addEventListener('change', ({ matches }) => {
+		const mediaQuery = window.matchMedia('(width <= 860px)')
+		mediaQuery.addEventListener('change', ({matches}) => {
 			if (matches) {
 				disabledMobile = true
 				cal?.setOption('view', 'listWeek')
@@ -71,19 +72,23 @@
 				disabledMobile = false
 				cal?.setOption('view', 'dayGridMonth')
 			}
-      	})
+		})
+		if (mediaQuery.matches) {
+			disabledMobile = true
+			cal?.setOption('view', 'listWeek')
+		} else {
+			disabledMobile = false
+			cal?.setOption('view', 'dayGridMonth')
+		}
 	})
 </script>
-
 
 <div class="m-3">
 	<ButtonGroup>
 		<Button outline color="dark" on:click={cal?.setOption('view', 'listDay')}>{$_('home.day-view')}</Button>
 		<Button outline color="dark" on:click={cal?.setOption('view', 'listWeek')}>{$_('home.week-view')}</Button>
 		{#if !disabledMobile}
-			<Button outline color="dark" on:click={cal?.setOption('view', 'dayGridMonth')}
-				>{$_('home.month-view')}</Button
-			>
+			<Button outline color="dark" on:click={cal?.setOption('view', 'dayGridMonth')}>{$_('home.month-view')}</Button>
 		{/if}
 	</ButtonGroup>
 </div>
@@ -91,3 +96,10 @@
 	id="calendar-container"
 	class="mb-4 w-full items-center divide-gray-200 rounded-lg border border-gray-200 bg-white p-5 text-gray-900 shadow-md dark:divide-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
 ></div>
+
+<style>
+	:global(.dark .ec-list .ec-day-head) {
+		background-color: #4b5563 !important;
+		color: white !important;
+	}
+</style>
