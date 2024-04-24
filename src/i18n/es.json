@@ -113,7 +113,8 @@
 		"modified": "Turno modificado correctamente",
 		"mod-error": "Fallo al modificar el turno, error: ",
 		"not-enough-sis": "No hay suficientes hermanas para la fecha: ",
-		"not-enough-bro": "No hay suficientes hermanos para la fecha: "
+		"not-enough-bro": "No hay suficientes hermanos para la fecha: ",
+		"cong-inc": "Ignorado porque la congregación entera tiene una incidencia"
 	},
 	"incidences": {
 		"create-btn": "Crear nueva Incidencia",
@@ -127,7 +128,8 @@
 		"deleted": "Incidencia eliminada correctamente",
 		"failed": "Fallo al crear la incidencia, error: ",
 		"created": "Incidencia creada correctamente",
-		"past-incident": "No puedes crear una Incidencia en el pasado"
+		"past-incident": "No puedes crear una Incidencia en el pasado",
+		"all-cong": "Toda la congregación"
 	},
 	"settings": {
 		"cong-settings": "Ajustes de Congregación",

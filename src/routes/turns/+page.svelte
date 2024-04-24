@@ -123,8 +123,27 @@
 		}
 
 		//Loop over weekdays
-		for (var d = from; d <= to; d.setDate(d.getDate() + 1)) {
+		weekdayLoop: for (var d = from; d <= to; d.setDate(d.getDate() + 1)) {
 			let weekday = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d.getDay()]
+
+			//Check if the congregation has an incidence
+			const congIncidences = await db.incidence.where({user_id: -1}).toArray()
+			for (let incidence of congIncidences) {
+				if (
+					incidence.start_date <= d.toISOString().split('T')[0] &&
+					incidence.end_date >= d.toISOString().split('T')[0]
+				) {
+					new AlertToast({
+						target: document.querySelector('#toast-container'),
+						props: {
+							alertStatus: 'warning',
+							fadeDelay: 15000,
+							alertMessage: `${$_('general.' + weekday)} ${d.getDate()} ${$_('turns.cong-inc')}`
+						}
+					})
+					continue weekdayLoop
+				}
+			}
 			//Loop over schedules
 			for (let schedule of $schedules) {
 				if (schedule.weekday === weekday && schedule.id != undefined) {
@@ -284,12 +303,13 @@
 		if (!userList.includes(user_id)) {
 			return true
 		}
+
 		//Check if user has an incidence
 		const incidences = await db.incidence.where({user_id: user_id}).toArray()
 		for (let incidence of incidences) {
 			if (
-				incidence.start_date >= d.toISOString().split('T')[0] &&
-				d.toISOString().split('T')[0] <= incidence.end_date
+				incidence.start_date <= d.toISOString().split('T')[0] &&
+				incidence.end_date >= d.toISOString().split('T')[0]
 			) {
 				return true
 			}

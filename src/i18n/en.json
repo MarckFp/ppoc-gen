@@ -113,7 +113,8 @@
 		"modified": "Turn modified successfully",
 		"mod-error": "Failed to modify the turn, error: ",
 		"not-enough-sis": "Not enough sisters for date: ",
-		"not-enough-bro": "Not enough brothers for date: "
+		"not-enough-bro": "Not enough brothers for date: ",
+		"cong-inc": "Ignored because the whole congregation has an incidence"
 	},
 	"incidences": {
 		"create-btn": "Create new Incidence",
@@ -127,7 +128,8 @@
 		"deleted": "Incidence deleted successfully",
 		"failed": "Incidence to create schedule, error: ",
 		"created": "Incidence created successfully",
-		"past-incident": "You cannot create an Incident in the past"
+		"past-incident": "You cannot create an Incident in the past",
+		"all-cong": "The entire congregation"
 	},
 	"settings": {
 		"cong-settings": "Congregation Settings",

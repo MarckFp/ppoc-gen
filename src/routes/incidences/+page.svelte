@@ -32,6 +32,7 @@
 
 	let incidences = liveQuery(() => db.incidence.orderBy('start_date').toArray())
 
+	userSelect.push({value: -1, name: $_('incidences.all-cong')})
 	db.user.orderBy('firstname').each(user => {
 		userSelect.push({value: user.id, name: user.firstname + ' ' + user.lastname})
 		userList[user.id] = user.firstname + ' ' + user.lastname
@@ -180,7 +181,11 @@
 					<TableBody>
 						{#each filteredItems as incidence}
 							<TableBodyRow>
-								<TableBodyCell>{userList[incidence.user_id]}</TableBodyCell>
+								{#if incidence.user_id == -1}
+									<TableBodyCell>{$_('incidences.all-cong')}</TableBodyCell>
+								{:else}
+									<TableBodyCell>{userList[incidence.user_id]}</TableBodyCell>
+								{/if}
 								<TableBodyCell>{incidence.start_date}</TableBodyCell>
 								<TableBodyCell>{incidence.end_date}</TableBodyCell>
 								<TableBodyCell>
