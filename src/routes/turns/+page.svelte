@@ -207,25 +207,25 @@
 							) {
 								continue userLoop
 							}
-							await db.assignment.add({
-								user_id: user.id,
-								turn_id: turn_id
-							})
-							await db.user.update(user.id, {
-								counter: user.counter + user.weight
-							})
-							if (user.gender === 'male') {
-								brothers++
-							} else if (user.gender === 'female') {
-								sisters++
-							}
 
 							let affinities = await db.affinity.where({source_id: user.id}).toArray()
-							//Loop over affinities
-							affinitiesLoop: for (let affinity of affinities) {
-								let affinityUser = await db.user.where({id: affinity.destination_id}).first()
-								if (affinityUser && affinityUser.id) {
-									if (Math.round(user.counter) == Math.round(affinityUser.counter)) {
+							if (schedule.n_brothers + schedule.n_sisters - (brothers + sisters) >= 2) {
+								await db.assignment.add({
+									user_id: user.id,
+									turn_id: turn_id
+								})
+								await db.user.update(user.id, {
+									counter: user.counter + user.weight
+								})
+								if (user.gender === 'male') {
+									brothers++
+								} else if (user.gender === 'female') {
+									sisters++
+								}
+								//Loop over affinities
+								affinitiesLoop: for (let affinity of affinities) {
+									let affinityUser = await db.user.where({id: affinity.destination_id}).first()
+									if (affinityUser && affinityUser.id) {
 										if (
 											(await checkPublisherTurn(affinityUser.id, d)) ||
 											(brothers >= schedule.n_brothers && affinityUser?.gender == 'male') ||
@@ -246,6 +246,22 @@
 											sisters++
 										}
 									}
+								}
+							} else {
+								if (affinities.length > 0) {
+									continue userLoop
+								}
+								await db.assignment.add({
+									user_id: user.id,
+									turn_id: turn_id
+								})
+								await db.user.update(user.id, {
+									counter: user.counter + user.weight
+								})
+								if (user.gender === 'male') {
+									brothers++
+								} else if (user.gender === 'female') {
+									sisters++
 								}
 							}
 						}
@@ -323,7 +339,7 @@
 			}
 		}
 
-		/*//Check if user already exist on turns on the previous day
+		//Check if user already exist on turns on the previous day
 		const previousDay = new Date(d.toISOString())
 		previousDay.setDate(previousDay.getDate() - 1)
 		const previousTurns = await db.turn.where({date: previousDay.toISOString().split('T')[0]}).toArray()
@@ -331,7 +347,7 @@
 			if ((await db.assignment.where({turn_id: previousDayTurn.id, user_id: user_id}).toArray()).length != 0) {
 				return true
 			}
-		}*/
+		}
 
 		return false
 	}
