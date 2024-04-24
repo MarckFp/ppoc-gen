@@ -24,7 +24,7 @@
 			for (let assiggnment of assiggnments) {
 				const users = await db.user.where('id').equals(assiggnment.user_id).toArray()
 				for (let user of users) {
-					eventUsers.push('<p>- ' + user.firstname + ' ' + user.lastname + '</p>')
+					eventUsers.push(`<li class="ml-1">${user.firstname} ${user.lastname}</li>`)
 				}
 			}
 			events.push({
@@ -120,5 +120,9 @@
 	:global(.dark .ec-list .ec-day-head) {
 		background-color: #4b5563 !important;
 		color: white !important;
+	}
+
+	:global(.ec-event-body) {
+		flex-direction: column !important;
 	}
 </style>
