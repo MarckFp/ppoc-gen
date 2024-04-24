@@ -110,6 +110,16 @@
 						<span>{$_('settings.week-start-at')}:</span>
 						<Select items={week_order} bind:value={$congregation[0].week_order} />
 					</Label>
+					<div class="grid gap-6 md:grid-cols-2">
+						<Label class="space-y-2">
+							<span>Latitude:</span>
+							<Input type="text" bind:value={$congregation[0].lat} />
+						</Label>
+						<Label class="space-y-2">
+							<span>Longitude:</span>
+							<Input type="text" bind:value={$congregation[0].lon} />
+						</Label>
+					</div>
 					<Button color="blue" on:click={updateCongregation}>{$_('settings.update-cong')}</Button>
 					<Button color="red" on:click={() => (deleteModal = true)}>{$_('settings.delete-cong')}</Button>
 					<input

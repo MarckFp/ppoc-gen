@@ -30,7 +30,9 @@
 			await db.congregation.add({
 				name: congregation_name,
 				lang: currentLang,
-				week_order: week_order_cong
+				week_order: week_order_cong,
+				lat: 0.0,
+				lon: 0.0
 			})
 
 			new AlertToast({

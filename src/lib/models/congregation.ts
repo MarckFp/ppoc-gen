@@ -3,4 +3,6 @@ export interface Congregation {
 	name: string
 	lang: string
 	week_order: string
+	lat: number
+	lon: number
 }
