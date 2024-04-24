@@ -9,7 +9,12 @@
 	let congregation_name: string,
 		files: FileList,
 		langs: {value: string; name: string}[] = [],
-		currentLang: string
+		currentLang: string,
+		week_order_cong = 'monday'
+	$: week_order = [
+		{value: 'monday', name: $_('general.monday')},
+		{value: 'sunday', name: $_('general.sunday')}
+	]
 
 	$locales.forEach(lang => {
 		langs.push({value: lang, name: $_('general.' + lang)})
@@ -24,7 +29,8 @@
 		try {
 			await db.congregation.add({
 				name: congregation_name,
-				lang: currentLang
+				lang: currentLang,
+				week_order: week_order_cong
 			})
 
 			new AlertToast({
@@ -70,20 +76,24 @@
 					</h1>
 					<div class="space-y-4 md:space-y-6">
 						<div>
-							<Label for="name">
+							<Label class="mb-2">
 								{$_('settings.cong-name')}:
 								<Input
 									name="name"
 									id="name"
-									class="mb-2 mt-2 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-primary-600 focus:ring-primary-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 sm:text-sm"
+									class="mt-2 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-primary-600 focus:ring-primary-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 sm:text-sm"
 									placeholder="Warwick"
 									required
 									bind:value={congregation_name}
 								/>
 							</Label>
-							<Label>
+							<Label class="mb-2">
 								{$_('settings.language')}:
 								<Select items={langs} bind:value={currentLang} on:change={changeLang} class="mt-2" />
+							</Label>
+							<Label class="mb-2">
+								{$_('settings.week-start-at')}:
+								<Select items={week_order} bind:value={week_order_cong} class="mt-2" />
 							</Label>
 						</div>
 						<Button class="w-full" on:click={createCongregation}>{$_('settings.create-cong')}</Button>

@@ -42,13 +42,24 @@
 		}
 
 		let date = new Date()
+		let cong = await db.congregation.toArray()
+		let week_order = 1
+
+		if (cong[0] && cong[0].week_order) {
+			if (cong[0].week_order == 'monday') {
+				week_order = 1
+			}
+			if (cong[0].week_order == 'sunday') {
+				week_order = 0
+			}
+		}
 
 		let options = {
 			view: 'dayGridMonth',
 			locale: $locale,
 			dayHeaderFormat: {weekday: 'long'},
 			buttonText: {today: $_('turns.today')},
-			firstDay: 1,
+			firstDay: week_order,
 			date: date,
 			height: '100%',
 			events: events,

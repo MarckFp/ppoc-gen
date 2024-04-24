@@ -18,6 +18,7 @@
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {liveQuery} from 'dexie'
 	import {_} from 'svelte-i18n'
+	import {onMount} from 'svelte'
 
 	let createModal: boolean = false,
 		deleteModal: boolean = false,
@@ -30,6 +31,7 @@
 		n_brothers: number = 1,
 		n_sisters: number = 1,
 		selectedId: number,
+		sorter = {},
 		weekdays: {value: string; name: string}[] = [
 			{value: 'monday', name: $_('general.monday')},
 			{value: 'tuesday', name: $_('general.tuesday')},
@@ -40,15 +42,29 @@
 			{value: 'sunday', name: $_('general.sunday')}
 		]
 
-	const sorter = {
-		monday: 1,
-		tuesday: 2,
-		wednesday: 3,
-		thursday: 4,
-		friday: 5,
-		saturday: 6,
-		sunday: 7
-	}
+	onMount(async () => {
+		let cong = await db.congregation.toArray()
+		let sunday = 7
+
+		if (cong[0] && cong[0].week_order) {
+			if (cong[0].week_order == 'monday') {
+				sunday = 7
+			}
+			if (cong[0].week_order == 'sunday') {
+				sunday = 0
+			}
+		}
+
+		sorter = {
+			monday: 1,
+			tuesday: 2,
+			wednesday: 3,
+			thursday: 4,
+			friday: 5,
+			saturday: 6,
+			sunday: sunday
+		}
+	})
 
 	let schedules = liveQuery(() => db.schedule.toArray())
 	$: filteredItems = $schedules

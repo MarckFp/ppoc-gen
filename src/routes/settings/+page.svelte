@@ -14,6 +14,11 @@
 		files: FileList,
 		langs: {value: string; name: string}[] = []
 
+	$: week_order = [
+		{value: 'monday', name: $_('general.monday')},
+		{value: 'sunday', name: $_('general.sunday')}
+	]
+
 	let congregation = liveQuery(() => db.congregation.toArray())
 
 	$locales.forEach(lang => {
@@ -100,6 +105,10 @@
 					<Label class="space-y-2">
 						<span>{$_('settings.language')}:</span>
 						<Select items={langs} on:change={changeLang} bind:value={$congregation[0].lang} />
+					</Label>
+					<Label class="space-y-2">
+						<span>{$_('settings.week-start-at')}:</span>
+						<Select items={week_order} bind:value={$congregation[0].week_order} />
 					</Label>
 					<Button color="blue" on:click={updateCongregation}>{$_('settings.update-cong')}</Button>
 					<Button color="red" on:click={() => (deleteModal = true)}>{$_('settings.delete-cong')}</Button>

@@ -22,6 +22,7 @@
 	import {db} from '$lib/db'
 	import {liveQuery} from 'dexie'
 	import {_} from 'svelte-i18n'
+	import {onMount} from 'svelte'
 
 	let createModal: boolean = false,
 		deleteModal: boolean = false,
@@ -36,6 +37,7 @@
 		weight: number = 1,
 		pubAffinities: number[],
 		availabilities: boolean[] = [],
+		sorter = {},
 		affinityList: {value: number; name: string; color: string}[] = [],
 		genders: {value: string; name: string}[] = [
 			{value: 'male', name: $_('general.male')},
@@ -55,15 +57,30 @@
 				name: $_('publishers.low')
 			}
 		]
-	const sorter = {
-		monday: 1,
-		tuesday: 2,
-		wednesday: 3,
-		thursday: 4,
-		friday: 5,
-		saturday: 6,
-		sunday: 7
-	}
+
+	onMount(async () => {
+		let cong = await db.congregation.toArray()
+		let sunday = 7
+
+		if (cong[0] && cong[0].week_order) {
+			if (cong[0].week_order == 'monday') {
+				sunday = 7
+			}
+			if (cong[0].week_order == 'sunday') {
+				sunday = 0
+			}
+		}
+
+		sorter = {
+			monday: 1,
+			tuesday: 2,
+			wednesday: 3,
+			thursday: 4,
+			friday: 5,
+			saturday: 6,
+			sunday: sunday
+		}
+	})
 	let users = liveQuery(() => db.user.orderBy('[firstname+lastname]').toArray())
 	let schedules = liveQuery(() => db.schedule.toArray())
 	let affinities = liveQuery(() => db.affinity.toArray())

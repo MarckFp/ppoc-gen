@@ -151,6 +151,7 @@
 		"exported-successfully": "Datos de la congregación exportados correctamente",
 		"updated-successfully": "Congregación modificada correctamente",
 		"created-successfully": "Congregación creada correctamente",
-		"create-failed": "Error al crear la congregación, error: "
+		"create-failed": "Error al crear la congregación, error: ",
+		"week-start-at": "Primer día de la semana"
 	}
 }

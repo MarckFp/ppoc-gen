@@ -151,6 +151,7 @@
 		"exported-successfully": "Congregation Exported successfully",
 		"updated-successfully": "Congregation Updated successfully",
 		"created-successfully": "Congregation Added successfully",
-		"create-failed": "Failed to create a congregation, error: "
+		"create-failed": "Failed to create a congregation, error: ",
+		"week-start-at": "Weekday starts at"
 	}
 }
