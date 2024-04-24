@@ -54,6 +54,7 @@
 			events: events,
 			eventClassNames: 'm-0.5',
 			eventTextColor: 'black',
+			noEventsContent: $_('turns.no-turns'),
 			dayHeaderFormat: day => {
 				return $_(
 					'general.' + ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][day.getDay()]

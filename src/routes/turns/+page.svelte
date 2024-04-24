@@ -182,7 +182,7 @@
 					userLoop: for (let user of users) {
 						if (user && user.id) {
 							if (
-								(await checkPublisherTurn(user.id, turn_id, d)) ||
+								(await checkPublisherTurn(user.id, d)) ||
 								(brothers >= schedule.n_brothers && user.gender == 'male') ||
 								(sisters >= schedule.n_sisters && user.gender == 'female')
 							) {
@@ -208,7 +208,7 @@
 								if (affinityUser && affinityUser.id) {
 									if (Math.round(user.counter) == Math.round(affinityUser.counter)) {
 										if (
-											(await checkPublisherTurn(affinityUser.id, turn_id, d)) ||
+											(await checkPublisherTurn(affinityUser.id, d)) ||
 											(brothers >= schedule.n_brothers && affinityUser?.gender == 'male') ||
 											(sisters >= schedule.n_sisters && affinityUser?.gender == 'female')
 										) {
@@ -279,7 +279,7 @@
 		creationDisabled = false
 	}
 
-	async function checkPublisherTurn(user_id: number, turn_id: number, d: Date) {
+	async function checkPublisherTurn(user_id: number, d: Date) {
 		//Check if user has availability
 		if (!userList.includes(user_id)) {
 			return true
@@ -294,11 +294,6 @@
 				return true
 			}
 		}
-		//Check if user already exists on the same turn
-		const userAssignment = await db.assignment.where({user_id: user_id, turn_id: turn_id}).first()
-		if (userAssignment != undefined) {
-			return true
-		}
 
 		//Check if user already exist on turns at the same day
 		const sameDayTurns = await db.turn.where({date: d.toISOString().split('T')[0]}).toArray()
@@ -307,6 +302,17 @@
 				return true
 			}
 		}
+
+		/*//Check if user already exist on turns on the previous day
+		const previousDay = new Date(d.toISOString())
+		previousDay.setDate(previousDay.getDate() - 1)
+		const previousTurns = await db.turn.where({date: previousDay.toISOString().split('T')[0]}).toArray()
+		for (let previousDayTurn of previousTurns) {
+			if ((await db.assignment.where({turn_id: previousDayTurn.id, user_id: user_id}).toArray()).length != 0) {
+				return true
+			}
+		}*/
+
 		return false
 	}
 
