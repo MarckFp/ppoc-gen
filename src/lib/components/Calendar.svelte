@@ -53,7 +53,26 @@
 			height: '100%',
 			events: events,
 			eventClassNames: 'm-0.5',
-			eventTextColor: 'black'
+			eventTextColor: 'black',
+			dayHeaderFormat: day => {
+				return $_(
+					'general.' + ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][day.getDay()]
+				)
+			},
+			listDayFormat: day => {
+				return $_(
+					'general.' + ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][day.getDay()]
+				)
+			},
+			views: {
+				dayGridMonth: {
+					titleFormat: day => {
+						return (
+							$_('general.' + day.toLocaleString('default', {month: 'long'}).toLowerCase()) + ' ' + day.getFullYear()
+						)
+					}
+				}
+			}
 		}
 		cal = new Calendar({
 			target: document.querySelector('#calendar-container'),
