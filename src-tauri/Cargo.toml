@@ -1,6 +1,6 @@
 [package]
 name = "app"
-version = "0.7.3"
+version = "1.0.0-beta"
 description = "Web application in charge of generating dynamic public preaching turns"
 authors = ["Marcos Fernández"]
 license = ""

@@ -1,6 +1,7 @@
 {
   "name": "ppoc-gen",
   "description": "Web application in charge of generating dynamic public preaching turns",
+  "version": "1.0.0-beta",
   "private": true,
   "type": "module",
   "author": {
