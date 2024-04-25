@@ -19,7 +19,12 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
+      - uses: oven-sh/setup-bun@v1ç
+        with:
+          bun-version: latest
+      - run: |
+          git config --global user.email ${{ secrets.GH_EMAIL }}
+          git config --global user.name GitHub_Runner
       - run: bun install
       - run: npm version ${{  github.ref_name }}
       - run: bun run build
@@ -65,6 +70,9 @@ jobs:
       - uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
+      - run: |
+          git config --global user.email ${{ secrets.GH_EMAIL }}
+          git config --global user.name GitHub_Runner
       - run: bun install
       - run: npm version ${{  github.ref_name }}
       - uses: tauri-apps/tauri-action@v0
