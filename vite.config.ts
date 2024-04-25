@@ -4,7 +4,6 @@ import { enhancedImages } from '@sveltejs/enhanced-img';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-	base: process.argv.includes('dev') ? '/' : process.env.BASE_PATH + '/',
 	build: {
 		minify: 'esbuild'
 	},
@@ -12,7 +11,6 @@ export default defineConfig({
 		enhancedImages(),
 		sveltekit(),
 		SvelteKitPWA({
-			base: process.argv.includes('dev') ? '/' : process.env.BASE_PATH + '/',
 			devOptions: {
 				enabled: true,
 				type: 'module',
