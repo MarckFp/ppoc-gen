@@ -11,7 +11,7 @@ PPOC Gen es una applicación diseñada para generar y administrar los turnos de 
 - Incidencias: Es el conjunto de fechas en las que un publicador no puede estar asignado en un turno
 - Disponibilidad: Es la relación entre un publicador y un horario estableciendo que por norma general puede ser asignado en turnos con ese horario
 
-Está aplicación fue diseñada como hobby y aunque demos cierto soporte no aseguramos el correcto funcionamiento de esta el 100% del tiempo. La aplicación fue diseñada para almacenar los datos en local ¿Qué quiere decir? Que ni nosotros ni nadie dispone de dichos datos pues se almacenan en la memoria de su dispositivo. Debido a esto es imposible facilitar la sincronización de los datos entre dispositivos, para ello creamos la exportación e importación de datos, puede aprender más en la sección [¿Cómo exportar e importar datos?](#¿cómo-exportar-e-importar-datos)
+Está aplicación fue diseñada como hobby y aunque demos cierto soporte no aseguramos el correcto funcionamiento de esta el 100% del tiempo. La aplicación fue diseñada para almacenar los datos en local ¿Qué quiere decir? Que ni nosotros ni nadie dispone de dichos datos pues se almacenan en la memoria de su dispositivo. Debido a esto es imposible facilitar la sincronización de los datos entre dispositivos, para ello creamos la exportación e importación de datos, puede aprender más en la sección [¿Cómo exportar e importar datos?](#cómo-exportar-e-importar-datos)
 
 ## Crear un Horario
 
@@ -32,7 +32,7 @@ Tras crear los horarios el siguiente paso lógico es crear los publicadores. Rec
 - Nombre
 - Apellidos
 - Género
-- Prioridad: La frecuencia con la que el programa asignará a ese publicador a los respectivos turnos, para mejor entendimiento puede leer la sección [¿Cómo funciona la generación de turnos?](#¿cómo-funciona-la-generación-de-turnos)
+- Prioridad: La frecuencia con la que el programa asignará a ese publicador a los respectivos turnos, para mejor entendimiento puede leer la sección [¿Cómo funciona la generación de turnos?](#cómo-funciona-la-generación-de-turnos)
 - Afinidad: Si el Publicador por ejemplo estuviera casado/a o tuviera hijos sería recomendable rellenar este campo pues la aplicación intentará poner juntos a los publicadores junto con sus afinidades
 - Disponibilidad: Que horarios puede cubrir ese Publicador
 
@@ -44,8 +44,8 @@ Algo que podemos hacer es crear una incidencia, es decir, un conjunto de fechas 
 
 Para crear los turnos podremos hacerlo de 2 maneras: Generarlos o crearlos manualmente. Para ello debemos clickar en el menú "Turnos" y decidiremos de que forma crearlos:
 
-- Manualmente: Esto viene muy bien para hacer turnos rápidos, el programa no tomará en cuenta ni la prioridad ni la disponibilidad del publicador pues el turno es configurado al completo por usted. Rellenaremos los datos como la fecha, la hora de inicio y fin, los publicadores asignados y una ubicación si se desea.
-- Generados: Para ello deberemos poner la fecha de inicio y fin y tras clickar en el botón "Generar turnos", el programa automáticamente intentará crear los turnos desde 0 para el rango de fechas establecido. En caso de haber cualquier error como falta de hermanos para un día u hora la aplicación generará un aviso.
+- **Manualmente**: Esto viene muy bien para hacer turnos rápidos, el programa no tomará en cuenta ni la prioridad ni la disponibilidad del publicador pues el turno es configurado al completo por usted. Rellenaremos los datos como la fecha, la hora de inicio y fin, los publicadores asignados y una ubicación si se desea.
+- **Generados**: Para ello deberemos poner la fecha de inicio y fin y tras clickar en el botón "Generar turnos", el programa automáticamente intentará crear los turnos desde 0 para el rango de fechas establecido. En caso de haber cualquier error como falta de hermanos para un día u hora la aplicación generará un aviso.
 
 ### ¿Cómo funciona la generación de turnos?
 
