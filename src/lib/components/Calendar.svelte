@@ -131,7 +131,6 @@
 		let options = {
 			view: 'dayGridMonth',
 			locale: $locale,
-			dayHeaderFormat: {weekday: 'long'},
 			buttonText: {today: $_('turns.today')},
 			firstDay: week_order,
 			date: date,
@@ -153,9 +152,7 @@
 			views: {
 				dayGridMonth: {
 					titleFormat: day => {
-						return (
-							$_('general.' + day.toLocaleString('default', {month: 'long'}).toLowerCase()) + ' ' + day.getFullYear()
-						)
+						return $_('general.' + day.toLocaleString('en', {month: 'long'}).toLowerCase()) + ' ' + day.getFullYear()
 					}
 				}
 			}

@@ -58,9 +58,6 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
       - uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest

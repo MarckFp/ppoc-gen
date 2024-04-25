@@ -2,15 +2,17 @@
   "name": "ppoc-gen",
   "description": "Web application in charge of generating dynamic public preaching turns",
   "version": "0.7.1",
+  "private": true,
+  "type": "module",
   "author": {
     "name": "Marcos Fernández",
     "url": "https://github.com/MarckFp"
   },
-  "private": true,
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
+    "tauri": "tauri",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "prettier --check src/. && eslint src/.",
@@ -52,7 +54,6 @@
     "typescript": "^5.0.0",
     "vite": "^5.0.3"
   },
-  "type": "module",
   "dependencies": {
     "@popperjs/core": "^2.11.8",
     "@tauri-apps/api": "^1.5.3",
