@@ -20,7 +20,6 @@
 		"partially_cloud": "⛅",
 		"cloudy": "☁️",
 		"fog": "🌫️",
-		"fog": "🌫️",
 		"light_drizzle": "🌧️",
 		"moderate_drizzle": "🌧️",
 		"dense_drizzle": "🌧️",
@@ -180,6 +179,9 @@
 		"updated-successfully": "Congregation Updated successfully",
 		"created-successfully": "Congregation Added successfully",
 		"create-failed": "Failed to create a congregation, error: ",
-		"week-start-at": "Weekday starts at"
+		"week-start-at": "Weekday starts at",
+		"latitude": "Latitude",
+		"longitude": "Longitude",
+		"info-latitude": "This settings is to display weather at the home calendar. It's optional"
 	}
 }

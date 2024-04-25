@@ -1,6 +1,6 @@
 <script lang="ts">
-	import {Card, Button, Label, Input, ButtonGroup, Modal, Select} from 'flowbite-svelte'
-	import {CloudArrowUpSolid, DownloadSolid, ExclamationCircleOutline} from 'flowbite-svelte-icons'
+	import {Card, Button, Label, Input, ButtonGroup, Modal, Select, Tooltip} from 'flowbite-svelte'
+	import {CloudArrowUpSolid, DownloadSolid, ExclamationCircleOutline, InfoCircleSolid} from 'flowbite-svelte-icons'
 	import {db} from '$lib/db'
 	import {liveQuery} from 'dexie'
 	import {goto, invalidateAll} from '$app/navigation'
@@ -111,12 +111,16 @@
 						<Select items={week_order} bind:value={$congregation[0].week_order} />
 					</Label>
 					<div class="grid gap-6 md:grid-cols-2">
+						<Tooltip triggeredBy="#info-latitude" placement="left">{$_('settings.info-latitude')}</Tooltip>
 						<Label class="space-y-2">
-							<span>Latitude:</span>
+							<div class="flex flex-row">
+								<InfoCircleSolid id="info-latitude" class="mr-2" />
+								<span>{$_('settings.latitude')}:</span>
+							</div>
 							<Input type="text" bind:value={$congregation[0].lat} />
 						</Label>
 						<Label class="space-y-2">
-							<span>Longitude:</span>
+							<span>{$_('settings.longitude')}:</span>
 							<Input type="text" bind:value={$congregation[0].lon} />
 						</Label>
 					</div>

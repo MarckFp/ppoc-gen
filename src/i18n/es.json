@@ -20,7 +20,6 @@
 		"partially_cloud": "⛅",
 		"cloudy": "☁️",
 		"fog": "🌫️",
-		"fog": "🌫️",
 		"light_drizzle": "🌧️",
 		"moderate_drizzle": "🌧️",
 		"dense_drizzle": "🌧️",
@@ -180,6 +179,9 @@
 		"updated-successfully": "Congregación modificada correctamente",
 		"created-successfully": "Congregación creada correctamente",
 		"create-failed": "Error al crear la congregación, error: ",
-		"week-start-at": "Primer día de la semana"
+		"week-start-at": "Primer día de la semana",
+		"latitude": "Latitud",
+		"longitude": "Longitud",
+		"info-latitude": "Este ajuste es para mostrar el tiempo en el calendario de la portada. Es opcional"
 	}
 }
