@@ -41,7 +41,7 @@ jobs:
         settings:
           - platform: 'macos-latest'
             args: '--target aarch64-apple-darwin'
-          - platform: 'macos-latest'
+          - platform: 'macos-13'
             args: '--target x86_64-apple-darwin'
           - platform: 'ubuntu-latest'
             args: ''
@@ -58,6 +58,9 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
       - uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
@@ -66,6 +69,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          tauriScript: 'bun run tauri'
           tagName: ${{  github.ref_name }}
           releaseName: ${{  github.ref_name }}
           releaseDraft: false
