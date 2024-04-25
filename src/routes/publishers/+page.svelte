@@ -50,11 +50,11 @@
 				name: $_('publishers.high')
 			},
 			{
-				value: 1.5,
+				value: 2,
 				name: $_('publishers.medium')
 			},
 			{
-				value: 2,
+				value: 3,
 				name: $_('publishers.low')
 			}
 		]
@@ -355,9 +355,9 @@
 								<TableBodyCell>
 									{#if user.weight == 1}
 										<Badge large border color="yellow">{$_('publishers.high')}</Badge>
-									{:else if user.weight == 1.5}
-										<Badge large border color="indigo">{$_('publishers.medium')}</Badge>
 									{:else if user.weight == 2}
+										<Badge large border color="indigo">{$_('publishers.medium')}</Badge>
+									{:else if user.weight == 3}
 										<Badge large border color="red">{$_('publishers.low')}</Badge>
 									{:else}
 										<Badge large border color="pink">{$_('publishers.advanced')}: {user.weight}</Badge>
@@ -376,7 +376,7 @@
 											lastname = user.lastname
 											gender = user.gender
 											weight = user.weight
-											if (![1, 1.5, 2].includes(weight)) {
+											if (![1, 2, 3].includes(weight)) {
 												advanced = true
 												advanced_radio = 'yes'
 											}
@@ -447,7 +447,7 @@
 				</li>
 			</ul>
 			{#if advanced}
-				<Input type="number" id="weight" min="1" max="4" step=".1" bind:value={weight} class="mt-2" required />
+				<Input type="number" id="weight" min="1" max="10" step=".1" bind:value={weight} class="mt-2" required />
 			{/if}
 		</Label>
 		<Label>
