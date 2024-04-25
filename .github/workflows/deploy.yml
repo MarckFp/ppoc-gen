@@ -19,7 +19,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1ç
+      - uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
       - run: |
