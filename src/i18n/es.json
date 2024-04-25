@@ -97,7 +97,8 @@
 		"pub-deleted": "Publicador eliminado correctamente",
 		"pub-modified": "Publicador modificado correctamente",
 		"pub-create-failed": "Error al crear publicador, error: ",
-		"pub-create": "Publicador creado correctamente"
+		"pub-create": "Publicador creado correctamente",
+		"info-affinity": "Los publicadores con Afinidad son más proponesos a ser asignados con sus respectivas afinidades"
 	},
 	"schedule": {
 		"search-inp": "Buscar por Día de la Semana",

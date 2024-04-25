@@ -97,7 +97,7 @@
 				<h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
 					{$_('settings.cong-settings')}
 				</h3>
-				<form class="flex flex-col space-y-6" action="/">
+				<div class="flex flex-col space-y-6">
 					<Label class="space-y-2">
 						<span>{$_('settings.cong-name')}:</span>
 						<Input type="text" name="name" bind:value={$congregation[0].name} required />
@@ -145,7 +145,7 @@
 							{$_('settings.export')}
 						</Button>
 					</ButtonGroup>
-				</form>
+				</div>
 			</Card>
 
 			<Modal bind:open={deleteModal} size="xs" autoclose>

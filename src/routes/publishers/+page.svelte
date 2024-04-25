@@ -15,9 +15,10 @@
 		TableHeadCell,
 		Checkbox,
 		Radio,
-		Badge
+		Badge,
+		Tooltip
 	} from 'flowbite-svelte'
-	import {ExclamationCircleOutline} from 'flowbite-svelte-icons'
+	import {ExclamationCircleOutline, InfoCircleSolid} from 'flowbite-svelte-icons'
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {db} from '$lib/db'
 	import {liveQuery} from 'dexie'
@@ -450,7 +451,11 @@
 			{/if}
 		</Label>
 		<Label>
-			{$_('publishers.affinity')}:
+			<div class="flex flex-row">
+				<Tooltip triggeredBy="#info-affinity">{$_('publishers.info-affinity')}</Tooltip>
+				<InfoCircleSolid id="info-affinity" class="mr-2" />
+				{$_('publishers.affinity')}:
+			</div>
 			<MultiSelect items={affinityList} bind:value={pubAffinities} size="sm" let:item let:clear>
 				<Badge color={item.color} dismissable params={{duration: 100}} on:close={clear}>
 					{item.name}

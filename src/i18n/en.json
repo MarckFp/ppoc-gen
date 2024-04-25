@@ -97,7 +97,8 @@
 		"pub-deleted": "Publisher deleted successfully",
 		"pub-modified": "Publisher modified successfully",
 		"pub-create-failed": "Failed to create Publisher, error: ",
-		"pub-create": "Publisher created successfully"
+		"pub-create": "Publisher created successfully",
+		"info-affinity": "The publishers with affinity are more common to be assigned their affinities"
 	},
 	"schedule": {
 		"search-inp": "Search by Weekday",
