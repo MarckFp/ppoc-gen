@@ -407,15 +407,15 @@
 	<Modal bind:open={createModal} size="xs" autoclose outsideclose>
 		<Label>
 			{$_('publishers.firstname')}:
-			<Input type="text" id="firstname" bind:value={firstname} required />
+			<Input type="text" id="firstname" bind:value={firstname} data-testid="publishers-firstname" required />
 		</Label>
 		<Label>
 			{$_('publishers.lastname')}:
-			<Input type="text" id="lastname" bind:value={lastname} required />
+			<Input type="text" id="lastname" bind:value={lastname} data-testid="publishers-lastname" required />
 		</Label>
 		<Label>
 			{$_('publishers.gender')}:
-			<Select class="mt-2" id="gender" items={genders} bind:value={gender} />
+			<Select class="mt-2" id="gender" items={genders} bind:value={gender} data-testid="publishers-gender" required />
 		</Label>
 		<Label>
 			{$_('publishers.priority')}:
@@ -428,6 +428,7 @@
 							name="weight"
 							bind:group={weight}
 							{value}
+							data-testid="publishers-wight-{name}"
 							on:change={() => {
 								advanced = false
 							}}
@@ -440,6 +441,7 @@
 						name="weight"
 						value="yes"
 						group={advanced_radio}
+						data-testid="publishers-wight-advanced"
 						on:change={() => {
 							advanced = true
 						}}
@@ -448,7 +450,7 @@
 				</li>
 			</ul>
 			{#if advanced}
-				<Input type="number" id="weight" min="1" max="10" step=".1" bind:value={weight} class="mt-2" required />
+				<Input type="number" id="weight" min="1" max="10" step=".1" bind:value={weight} class="mt-2" data-testid="publishers-wight-advanced-input" required />
 			{/if}
 		</Label>
 		<Label>
