@@ -19,7 +19,7 @@
 		</NavBrand>
 		<div class="flex md:order-2">
 			<DarkMode class="black ml-2 dark:border-gray-800 dark:text-primary-200" />
-			<NavHamburger />
+			<NavHamburger data-testid="navbar-hamburger" />
 		</div>
 		<NavUl class="order-1">
 			<NavLi href="{base}/publishers" data-testid="navbar-publishers">
