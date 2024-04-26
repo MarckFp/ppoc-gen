@@ -311,6 +311,7 @@
 		<Button
 			color="blue"
 			class="mb-4 mt-1"
+			data-testid="publishers-create-btn"
 			on:click={() => {
 				createModal = true
 				edit = false

@@ -87,18 +87,27 @@
 									placeholder="Warwick"
 									required
 									bind:value={congregation_name}
+									data-testid="create-name"
 								/>
 							</Label>
 							<Label class="mb-2">
 								{$_('settings.language')}:
-								<Select items={langs} bind:value={currentLang} on:change={changeLang} class="mt-2" />
+								<Select
+									items={langs}
+									bind:value={currentLang}
+									on:change={changeLang}
+									class="mt-2"
+									data-testid="create-lang"
+								/>
 							</Label>
 							<Label class="mb-2">
 								{$_('settings.week-start-at')}:
-								<Select items={week_order} bind:value={week_order_cong} class="mt-2" />
+								<Select items={week_order} bind:value={week_order_cong} class="mt-2" data-testid="create-weekday" />
 							</Label>
 						</div>
-						<Button class="w-full" on:click={createCongregation}>{$_('settings.create-cong')}</Button>
+						<Button class="w-full" on:click={createCongregation} data-testid="create-btn"
+							>{$_('settings.create-cong')}</Button
+						>
 						<p class="text-center">- {$_('settings.or')} -</p>
 						<input
 							bind:files

@@ -509,7 +509,13 @@
 				{$_('turns.to')}:
 				<Input type="date" bind:value={toDate} />
 			</Label>
-			<Button color="green" class="ml-1 mr-1 w-4/12" on:click={generateTurns} disabled={creationDisabled}>
+			<Button
+				color="green"
+				class="ml-1 mr-1 w-4/12"
+				on:click={generateTurns}
+				disabled={creationDisabled}
+				data-testid="turns-generate-btn"
+			>
 				{#if loading}
 					<Spinner class="me-3" size="4" color="white" />
 					{$_('turns.creating')}
@@ -520,6 +526,7 @@
 			<Button
 				color="blue"
 				class="w-4/12"
+				data-testid="turns-create-btn"
 				on:click={() => {
 					createModal = true
 					edit = false

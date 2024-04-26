@@ -10,3 +10,7 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vscode
 dev-dist
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

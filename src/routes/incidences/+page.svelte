@@ -150,6 +150,7 @@
 		<Button
 			color="blue"
 			class="mb-4 mt-1"
+			data-testid="incidences-create-btn"
 			on:click={() => {
 				createModal = true
 				edit = false

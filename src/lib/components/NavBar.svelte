@@ -22,32 +22,32 @@
 			<NavHamburger />
 		</div>
 		<NavUl class="order-1">
-			<NavLi href="{base}/publishers">
+			<NavLi href="{base}/publishers" data-testid="navbar-publishers">
 				<div class="flex flex-row dark:text-white">
 					{$_('navbar.publishers')}
 					<UsersGroupOutline size="lg" color="red" class="dark:text-primary-400" />
 				</div>
 			</NavLi>
-			<NavLi href="{base}/schedules"
-				><div class="flex flex-row dark:text-white">
+			<NavLi href="{base}/schedules" data-testid="navbar-schedules">
+				<div class="flex flex-row dark:text-white">
 					{$_('navbar.schedules')}
 					<CalendarMonthOutline size="lg" color="red" class="dark:text-primary-400" />
 				</div></NavLi
 			>
-			<NavLi href="{base}/turns"
-				><div class="flex flex-row dark:text-white">
+			<NavLi href="{base}/turns" data-testid="navbar-turns">
+				<div class="flex flex-row dark:text-white">
 					{$_('navbar.turns')}
 					<EditOutline size="lg" color="red" class="dark:text-primary-400" />
 				</div></NavLi
 			>
-			<NavLi href="{base}/incidences"
-				><div class="flex flex-row dark:text-white">
+			<NavLi href="{base}/incidences" data-testid="navbar-incidences">
+				<div class="flex flex-row dark:text-white">
 					{$_('navbar.incidences')}
 					<BellRingOutline size="lg" color="red" class="dark:text-primary-400" />
 				</div></NavLi
 			>
-			<NavLi href="{base}/settings"
-				><div class="flex flex-row dark:text-white">
+			<NavLi href="{base}/settings" data-testid="navbar-settings">
+				<div class="flex flex-row dark:text-white">
 					{$_('navbar.settings')}
 					<CogOutline size="lg" color="red" class="dark:text-primary-400" />
 				</div></NavLi

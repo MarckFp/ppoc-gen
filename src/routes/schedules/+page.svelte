@@ -173,6 +173,7 @@
 		<Button
 			color="blue"
 			class="mb-4 mt-1"
+			data-testid="schedules-create-btn"
 			on:click={() => {
 				createModal = true
 				selected_weekday = 'monday'

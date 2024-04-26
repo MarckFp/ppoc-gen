@@ -124,7 +124,9 @@
 							<Input type="text" bind:value={$congregation[0].lon} />
 						</Label>
 					</div>
-					<Button color="blue" on:click={updateCongregation}>{$_('settings.update-cong')}</Button>
+					<Button color="blue" on:click={updateCongregation} data-testid="settings-update-btn"
+						>{$_('settings.update-cong')}</Button
+					>
 					<Button color="red" on:click={() => (deleteModal = true)}>{$_('settings.delete-cong')}</Button>
 					<input
 						bind:files
