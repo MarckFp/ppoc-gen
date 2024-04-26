@@ -15,6 +15,7 @@ jobs:
         bun-version: latest
     - run: bun install
     - run: npx playwright install --with-deps
+    - run: bun run dev
     - run: npx playwright test
     - uses: actions/upload-artifact@v4
       if: always()
