@@ -1,9 +1,9 @@
 name: E2E Tests
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
 jobs:
   test:
     timeout-minutes: 60
@@ -15,7 +15,6 @@ jobs:
         bun-version: latest
     - run: bun install
     - run: npx playwright install --with-deps
-    - run: bun run dev
     - run: npx playwright test
     - uses: actions/upload-artifact@v4
       if: always()
