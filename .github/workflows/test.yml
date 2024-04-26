@@ -5,11 +5,6 @@ jobs:
   playwright:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        shardCount: [10]
-        shardIndex: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     if: github.event.deployment_status.state == 'success'
     steps:
     - uses: actions/checkout@v4
@@ -18,7 +13,7 @@ jobs:
         bun-version: latest
     - run: bun install
     - run: npx playwright install --with-deps
-    - run: npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardCount }}
+    - run: npx playwright test
     - uses: actions/upload-artifact@v4
       if: always()
       with:
