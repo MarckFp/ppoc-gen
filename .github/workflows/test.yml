@@ -1,11 +1,14 @@
-name: E2E Tests
+name: Tests
+
 on:
-  deployment_status:
+  push:
+    tags:
+      - "*.*.*"
+
 jobs:
-  playwright:
+  e2e:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    if: github.event.deployment_status.state == 'success'
     steps:
     - uses: actions/checkout@v4
     - uses: oven-sh/setup-bun@v1
