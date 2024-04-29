@@ -7,6 +7,7 @@
 	import {pwaInfo} from 'virtual:pwa-info'
 	import {locale} from 'svelte-i18n'
 	import {onMount} from 'svelte'
+	import {Footer, Card} from 'flowbite-svelte'
 
 	onMount(async () => {
 		if (pwaInfo) {
@@ -58,4 +59,9 @@
 		<NavBar />
 		<slot />
 	{/if}
+	<Footer class="flex flex-row justify-center">
+		<Card class="mx-5 text-center dark:text-white" size="xl">
+			PPOC Gen version {PKG.version}
+		</Card>
+	</Footer>
 </main>
