@@ -214,6 +214,21 @@
 				})
 			}
 
+			if (name_order == 'firstname') {
+				if (gender == 'male') {
+					affinityList.push({value: id, name: firstname + ' ' + lastname, color: 'blue'})
+				} else {
+					affinityList.push({value: id, name: firstname + ' ' + lastname, color: 'pink'})
+				}
+			}
+			if (name_order == 'lastname') {
+				if (gender == 'male') {
+					affinityList.push({value: id, name: lastname + ' ' + firstname, color: 'blue'})
+				} else {
+					affinityList.push({value: id, name: lastname + ' ' + firstname, color: 'pink'})
+				}
+			}
+
 			new AlertToast({
 				target: document.querySelector('#toast-container'),
 				props: {alertStatus: 'success', alertMessage: $_('publishers.pub-create')}
@@ -281,6 +296,23 @@
 			})
 		}
 
+		affinityList.forEach((item, index) => {
+			if (item.value == selectedId) {
+				if (name_order == 'firstname') {
+					item.name = firstname + ' ' + lastname
+				}
+				if (name_order == 'lastname') {
+					item.name = lastname + ' ' + firstname
+				}
+				if (gender == 'male') {
+					item.color = 'blue'
+				}
+				if (gender == 'female') {
+					item.color = 'pink'
+				}
+			}
+		})
+
 		new AlertToast({
 			target: document.querySelector('#toast-container'),
 			props: {alertStatus: 'success', alertMessage: $_('publishers.pub-modified')}
@@ -315,6 +347,12 @@
 		const affinitiesPublishers = await db.affinity.where({destination_id: selectedId}).toArray()
 		affinitiesPublishers.forEach(async affinity => {
 			await db.affinity.delete(affinity.id)
+		})
+
+		affinityList.forEach((item, index) => {
+			if (item.value == selectedId) {
+				affinityList.splice(index, 1)
+			}
 		})
 
 		new AlertToast({
