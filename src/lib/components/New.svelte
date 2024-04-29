@@ -120,7 +120,7 @@
 						<Button class="w-full" on:click={createCongregation} data-testid="create-btn"
 							>{$_('settings.create-cong')}</Button
 						>
-						<p class="text-center">- {$_('settings.or')} -</p>
+						<p class="text-center dark:text-white">- {$_('settings.or')} -</p>
 						<input
 							bind:files
 							id="import"

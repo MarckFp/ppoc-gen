@@ -26,7 +26,7 @@
 		}
 	})
 
-	let congregation = liveQuery(() => db.congregation.orderBy('id').first())
+	const congregation = liveQuery(() => db.congregation.orderBy('id').first())
 	db.congregation
 		.orderBy('id')
 		.first()
@@ -47,17 +47,15 @@
 </svelte:head>
 
 <main>
-	{#if $congregation}
-		<div id="toast-container" class="fixed bottom-0 right-0 z-50">
-			{#await import('$lib/components/PWAPrompt.svelte') then { default: PWAPrompt }}
-				<PWAPrompt />
-			{/await}
-		</div>
-		{#if !$congregation}
-			<New />
-		{:else}
-			<NavBar />
-			<slot />
-		{/if}
+	<div id="toast-container" class="fixed bottom-0 right-0 z-50">
+		{#await import('$lib/components/PWAPrompt.svelte') then { default: PWAPrompt }}
+			<PWAPrompt />
+		{/await}
+	</div>
+	{#if !$congregation}
+		<New />
+	{:else}
+		<NavBar />
+		<slot />
 	{/if}
 </main>
