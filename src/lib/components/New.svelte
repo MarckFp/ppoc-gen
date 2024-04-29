@@ -10,10 +10,17 @@
 		files: FileList,
 		langs: {value: string; name: string}[] = [],
 		currentLang: string,
-		week_order_cong = 'monday'
+		week_order_cong = 'monday',
+		name_order_cong = 'firstname'
+
 	$: week_order = [
 		{value: 'monday', name: $_('general.monday')},
 		{value: 'sunday', name: $_('general.sunday')}
+	]
+
+	$: name_order = [
+		{value: 'firstname', name: $_('publishers.firstname')},
+		{value: 'lastname', name: $_('publishers.lastname')}
 	]
 
 	$locales.forEach(lang => {
@@ -32,7 +39,8 @@
 				lang: currentLang,
 				week_order: week_order_cong,
 				lat: 0.0,
-				lon: 0.0
+				lon: 0.0,
+				name_order: name_order_cong
 			})
 
 			new AlertToast({
@@ -103,6 +111,10 @@
 							<Label class="mb-2">
 								{$_('settings.week-start-at')}:
 								<Select items={week_order} bind:value={week_order_cong} class="mt-2" data-testid="create-weekday" />
+							</Label>
+							<Label class="mb-2">
+								{$_('settings.name-order')}:
+								<Select items={name_order} bind:value={name_order_cong} class="mt-2" data-testid="create-name-order" />
 							</Label>
 						</div>
 						<Button class="w-full" on:click={createCongregation} data-testid="create-btn"

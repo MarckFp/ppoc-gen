@@ -43,14 +43,14 @@
 		]
 
 	onMount(async () => {
-		let cong = await db.congregation.toArray()
+		let cong = await db.congregation.orderBy('id').first()
 		let sunday = 7
 
-		if (cong[0] && cong[0].week_order) {
-			if (cong[0].week_order == 'monday') {
+		if (cong && cong.week_order) {
+			if (cong.week_order == 'monday') {
 				sunday = 7
 			}
-			if (cong[0].week_order == 'sunday') {
+			if (cong.week_order == 'sunday') {
 				sunday = 0
 			}
 		}

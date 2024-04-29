@@ -26,14 +26,17 @@
 		}
 	})
 
-	let congregation = liveQuery(() => db.congregation.toArray())
-	db.congregation.toArray().then(cong => {
-		if (cong[0].lang) {
-			$locale = cong[0].lang
-		} else {
-			$locale = 'en'
-		}
-	})
+	let congregation = liveQuery(() => db.congregation.orderBy('id').first())
+	db.congregation
+		.orderBy('id')
+		.first()
+		.then(cong => {
+			if (cong?.lang) {
+				$locale = cong.lang
+			} else {
+				$locale = 'en'
+			}
+		})
 
 	$: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : ''
 </script>
@@ -50,7 +53,7 @@
 				<PWAPrompt />
 			{/await}
 		</div>
-		{#if !$congregation[0]}
+		{#if !$congregation}
 			<New />
 		{:else}
 			<NavBar />

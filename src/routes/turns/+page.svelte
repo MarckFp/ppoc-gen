@@ -33,6 +33,8 @@
 		edit: boolean = false,
 		userList: number[] = [],
 		searchTerm: string = '',
+		name_order = 'firstname',
+		query_name_order = 'firstname+lastname',
 		selectedId: number,
 		turnDate: string,
 		turnStartTime: string,
@@ -40,6 +42,24 @@
 		turnLocation: string,
 		turnAssignees: number[],
 		turnAssigneesList: {value: number; name: string; color: string}[] = []
+
+	onMount(async () => {
+		let cong = await db.congregation.orderBy('id').first()
+
+		if (cong) {
+			if (cong.name_order) {
+				if (cong.name_order == 'firstname') {
+					name_order = 'firstname'
+					query_name_order = 'firstname+lastname'
+				}
+				if (cong.name_order == 'lastname') {
+					name_order = 'lastname'
+					query_name_order = 'lastname+firstname'
+				}
+			}
+		}
+		await deleteYearlyTurns()
+	})
 
 	let turns = liveQuery(() =>
 		db.turn
@@ -54,12 +74,21 @@
 	let showUsers = liveQuery(() => db.user.toArray())
 	let schedules = liveQuery(() => db.schedule.toArray())
 
-	db.user.orderBy('firstname').each(user => {
+	db.user.orderBy(`[${query_name_order}]`).each(user => {
 		if (user.id != undefined) {
-			if (user.gender == 'male') {
-				turnAssigneesList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'blue'})
-			} else {
-				turnAssigneesList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'pink'})
+			if (name_order == 'firstname') {
+				if (user.gender == 'male') {
+					turnAssigneesList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'blue'})
+				} else {
+					turnAssigneesList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'pink'})
+				}
+			}
+			if (name_order == 'lastname') {
+				if (user.gender == 'male') {
+					turnAssigneesList.push({value: user.id, name: user.lastname + ' ' + user.firstname, color: 'blue'})
+				} else {
+					turnAssigneesList.push({value: user.id, name: user.lastname + ' ' + user.firstname, color: 'pink'})
+				}
 			}
 		}
 	})
@@ -84,10 +113,6 @@
 						.replace(/\p{Diacritic}/gu, '')
 				) !== -1
 	)
-
-	onMount(async () => {
-		deleteYearlyTurns()
-	})
 
 	async function generateTurns() {
 		let brothers: number = 0,
@@ -645,10 +670,19 @@
 											{/if}
 											{#each $showUsers as user}
 												{#if user.id == assignment.user_id}
-													{#if user.gender == 'male'}
-														<Badge color="blue" class="order-1 m-1">{user.firstname + ' ' + user.lastname}</Badge>
-													{:else}
-														<Badge color="pink" class="order-2 m-1">{user.firstname + ' ' + user.lastname}</Badge>
+													{#if name_order == 'firstname'}
+														{#if user.gender == 'male'}
+															<Badge color="blue" class="order-1 m-1">{user.firstname + ' ' + user.lastname}</Badge>
+														{:else}
+															<Badge color="pink" class="order-2 m-1">{user.firstname + ' ' + user.lastname}</Badge>
+														{/if}
+													{/if}
+													{#if name_order == 'lastname'}
+														{#if user.gender == 'male'}
+															<Badge color="blue" class="order-1 m-1">{user.lastname + ' ' + user.firstname}</Badge>
+														{:else}
+															<Badge color="pink" class="order-2 m-1">{user.lastname + ' ' + user.firstname}</Badge>
+														{/if}
 													{/if}
 												{/if}
 											{/each}
