@@ -19,14 +19,19 @@
 		{value: 'sunday', name: $_('general.sunday')}
 	]
 
-	let congregation = liveQuery(() => db.congregation.toArray())
+	$: name_order = [
+		{value: 'firstname', name: $_('publishers.firstname')},
+		{value: 'lastname', name: $_('publishers.lastname')}
+	]
+
+	const congregation = liveQuery(() => db.congregation.orderBy('id').first())
 
 	$locales.forEach(lang => {
 		langs.push({value: lang, name: $_('general.' + lang)})
 	})
 
 	function changeLang() {
-		$locale = $congregation[0].lang
+		$locale = $congregation?.lang
 	}
 
 	async function deleteCongregation() {
@@ -47,18 +52,20 @@
 	}
 
 	function updateCongregation() {
-		if ($congregation[0].name == '') {
+		if ($congregation) {
+			if ($congregation?.name == '') {
+				new AlertToast({
+					target: document.querySelector('#toast-container'),
+					props: {alertStatus: 'error', alertMessage: $_('general.invalid-data')}
+				})
+				return
+			}
+			db.congregation.update($congregation?.id, $congregation)
 			new AlertToast({
 				target: document.querySelector('#toast-container'),
-				props: {alertStatus: 'error', alertMessage: $_('general.invalid-data')}
+				props: {alertStatus: 'success', alertMessage: $_('settings.updated-successfully')}
 			})
-			return
 		}
-		db.congregation.update($congregation[0].id, $congregation[0])
-		new AlertToast({
-			target: document.querySelector('#toast-container'),
-			props: {alertStatus: 'success', alertMessage: $_('settings.updated-successfully')}
-		})
 	}
 
 	async function exportData() {
@@ -100,15 +107,19 @@
 				<div class="flex flex-col space-y-6">
 					<Label class="space-y-2">
 						<span>{$_('settings.cong-name')}:</span>
-						<Input type="text" name="name" bind:value={$congregation[0].name} required />
+						<Input type="text" name="name" bind:value={$congregation.name} required />
 					</Label>
 					<Label class="space-y-2">
 						<span>{$_('settings.language')}:</span>
-						<Select items={langs} on:change={changeLang} bind:value={$congregation[0].lang} />
+						<Select items={langs} on:change={changeLang} bind:value={$congregation.lang} />
 					</Label>
 					<Label class="space-y-2">
 						<span>{$_('settings.week-start-at')}:</span>
-						<Select items={week_order} bind:value={$congregation[0].week_order} />
+						<Select items={week_order} bind:value={$congregation.week_order} />
+					</Label>
+					<Label class="space-y-2">
+						<span>{$_('settings.name-order')}:</span>
+						<Select items={name_order} bind:value={$congregation.name_order} />
 					</Label>
 					<div class="grid gap-6 md:grid-cols-2">
 						<Tooltip triggeredBy="#info-latitude" placement="left">{$_('settings.info-latitude')}</Tooltip>
@@ -117,11 +128,11 @@
 								<InfoCircleSolid id="info-latitude" class="mr-2" />
 								<span>{$_('settings.latitude')}:</span>
 							</div>
-							<Input type="text" bind:value={$congregation[0].lat} />
+							<Input type="text" bind:value={$congregation.lat} />
 						</Label>
 						<Label class="space-y-2">
 							<span>{$_('settings.longitude')}:</span>
-							<Input type="text" bind:value={$congregation[0].lon} />
+							<Input type="text" bind:value={$congregation.lon} />
 						</Label>
 					</div>
 					<Button color="blue" on:click={updateCongregation} data-testid="settings-update-btn"

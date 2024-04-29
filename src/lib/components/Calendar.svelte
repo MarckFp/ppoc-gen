@@ -46,12 +46,12 @@
 	onMount(async () => {
 		let weatherData
 		//TODO: Add this to the congregation Settings so we could use always the cong ubication and prevent using the user location
-		let cong = await db.congregation.toArray()
-		if (cong[0].lat && cong[0].lon) {
+		let cong = await db.congregation.orderBy('id').first()
+		if (cong?.lat && cong?.lon) {
 			//Weather for Calendar forecast
 			const params = {
-				latitude: cong[0].lat,
-				longitude: cong[0].lon,
+				latitude: cong.lat,
+				longitude: cong.lon,
 				daily: ['weather_code'],
 				timezone: 'auto',
 				forecast_days: 14
@@ -89,7 +89,12 @@
 			for (let assiggnment of assiggnments) {
 				const users = await db.user.where('id').equals(assiggnment.user_id).toArray()
 				for (let user of users) {
-					eventUsers.push(`<li class="ml-1">${user.firstname} ${user.lastname}</li>`)
+					if (cong?.name_order == 'firstname') {
+						eventUsers.push(`<li class="ml-1">${user.firstname} ${user.lastname}</li>`)
+					}
+					if (cong?.name_order == 'lastname') {
+						eventUsers.push(`<li class="ml-1">${user.lastname} ${user.firstname}</li>`)
+					}
 				}
 			}
 			if (weatherData != undefined) {
@@ -119,11 +124,11 @@
 		let date = new Date()
 		let week_order = 1
 
-		if (cong[0] && cong[0].week_order) {
-			if (cong[0].week_order == 'monday') {
+		if (cong && cong.week_order) {
+			if (cong.week_order == 'monday') {
 				week_order = 1
 			}
-			if (cong[0].week_order == 'sunday') {
+			if (cong.week_order == 'sunday') {
 				week_order = 0
 			}
 		}

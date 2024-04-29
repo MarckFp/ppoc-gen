@@ -7,6 +7,7 @@
 	import {pwaInfo} from 'virtual:pwa-info'
 	import {locale} from 'svelte-i18n'
 	import {onMount} from 'svelte'
+	import {Footer, Card} from 'flowbite-svelte'
 
 	onMount(async () => {
 		if (pwaInfo) {
@@ -26,14 +27,17 @@
 		}
 	})
 
-	let congregation = liveQuery(() => db.congregation.toArray())
-	db.congregation.toArray().then(cong => {
-		if (cong[0].lang) {
-			$locale = cong[0].lang
-		} else {
-			$locale = 'en'
-		}
-	})
+	const congregation = liveQuery(() => db.congregation.orderBy('id').first())
+	db.congregation
+		.orderBy('id')
+		.first()
+		.then(cong => {
+			if (cong?.lang) {
+				$locale = cong.lang
+			} else {
+				$locale = 'en'
+			}
+		})
 
 	$: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : ''
 </script>
@@ -44,17 +48,20 @@
 </svelte:head>
 
 <main>
-	{#if $congregation}
-		<div id="toast-container" class="fixed bottom-0 right-0 z-50">
-			{#await import('$lib/components/PWAPrompt.svelte') then { default: PWAPrompt }}
-				<PWAPrompt />
-			{/await}
-		</div>
-		{#if !$congregation[0]}
-			<New />
-		{:else}
-			<NavBar />
-			<slot />
-		{/if}
+	<div id="toast-container" class="fixed bottom-0 right-0 z-50">
+		{#await import('$lib/components/PWAPrompt.svelte') then { default: PWAPrompt }}
+			<PWAPrompt />
+		{/await}
+	</div>
+	{#if !$congregation}
+		<New />
+	{:else}
+		<NavBar />
+		<slot />
 	{/if}
+	<Footer class="flex flex-row justify-center">
+		<Card class="mx-5 text-center dark:text-white" size="xl">
+			PPOC Gen version {PKG.version}
+		</Card>
+	</Footer>
 </main>

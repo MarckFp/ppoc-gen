@@ -6,7 +6,7 @@
 	import {_} from 'svelte-i18n'
 	import Calendar from '$lib/components/Calendar.svelte'
 
-	let congregation = liveQuery(() => db.congregation.toArray())
+	let congregation = liveQuery(() => db.congregation.orderBy('id').first())
 </script>
 
 <div class="m-5 flex flex-col items-center">
@@ -14,7 +14,7 @@
 		<Card class="text-center" size="xl" padding="xl">
 			<h1 class="text-3xl font-bold text-gray-900 dark:text-white">
 				{$_('home.welcome')}
-				{$congregation[0].name}
+				{$congregation.name}
 			</h1>
 		</Card>
 	{/if}

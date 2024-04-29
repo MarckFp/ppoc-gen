@@ -79,7 +79,8 @@
 	},
 	"publishers": {
 		"create-btn": "Crear nuevo Publicador",
-		"search-inp": "Buscar por Nombre de Publicador",
+		"search-inp": "Buscar por Nombre del Publicador",
+		"search-inp-lastname": "Buscar por Apellidos del Publicador",
 		"firstname": "Nombre",
 		"lastname": "Apellidos",
 		"gender": "Género",
@@ -183,6 +184,7 @@
 		"week-start-at": "Primer día de la semana",
 		"latitude": "Latitud",
 		"longitude": "Longitud",
-		"info-latitude": "Este ajuste es para mostrar el tiempo en el calendario de la portada. Es opcional"
+		"info-latitude": "Este ajuste es para mostrar el tiempo en el calendario de la portada. Es opcional",
+		"name-order": "Ordenar publicador por"
 	}
 }

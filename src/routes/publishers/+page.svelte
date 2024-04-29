@@ -35,6 +35,8 @@
 		lastname: string = '',
 		gender: string = 'male',
 		advanced_radio: string = 'no',
+		name_order = 'firstname',
+		query_name_order = 'firstname+lastname',
 		weight: number = 1,
 		pubAffinities: number[],
 		availabilities: boolean[] = [],
@@ -60,15 +62,27 @@
 		]
 
 	onMount(async () => {
-		let cong = await db.congregation.toArray()
+		let cong = await db.congregation.orderBy('id').first()
 		let sunday = 7
 
-		if (cong[0] && cong[0].week_order) {
-			if (cong[0].week_order == 'monday') {
-				sunday = 7
+		if (cong) {
+			if (cong.week_order) {
+				if (cong.week_order == 'monday') {
+					sunday = 7
+				}
+				if (cong.week_order == 'sunday') {
+					sunday = 0
+				}
 			}
-			if (cong[0].week_order == 'sunday') {
-				sunday = 0
+			if (cong.name_order) {
+				if (cong.name_order == 'firstname') {
+					name_order = 'firstname'
+					query_name_order = 'firstname+lastname'
+				}
+				if (cong.name_order == 'lastname') {
+					name_order = 'lastname'
+					query_name_order = 'lastname+firstname'
+				}
 			}
 		}
 
@@ -82,33 +96,59 @@
 			sunday: sunday
 		}
 	})
-	let users = liveQuery(() => db.user.orderBy('[firstname+lastname]').toArray())
+	$: users = liveQuery(() => db.user.orderBy(`[${query_name_order}]`).toArray())
 	let schedules = liveQuery(() => db.schedule.toArray())
 	let affinities = liveQuery(() => db.affinity.toArray())
 
-	db.user.orderBy('firstname').each(user => {
+	db.user.orderBy(`[${query_name_order}]`).each(user => {
 		if (user.id != undefined) {
-			if (user.gender == 'male') {
-				affinityList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'blue'})
-			} else {
-				affinityList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'pink'})
+			if (name_order == 'firstname') {
+				if (user.gender == 'male') {
+					affinityList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'blue'})
+				} else {
+					affinityList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'pink'})
+				}
+			}
+			if (name_order == 'lastname') {
+				if (user.gender == 'male') {
+					affinityList.push({value: user.id, name: user.lastname + ' ' + user.firstname, color: 'blue'})
+				} else {
+					affinityList.push({value: user.id, name: user.lastname + ' ' + user.firstname, color: 'pink'})
+				}
 			}
 		}
 	})
 
-	$: filteredItems = $users?.filter(
-		user =>
-			user.firstname
-				.toLowerCase()
-				.normalize('NFD')
-				.replace(/\p{Diacritic}/gu, '')
-				.indexOf(
-					searchTerm
-						.toLowerCase()
-						.normalize('NFD')
-						.replace(/\p{Diacritic}/gu, '')
-				) !== -1
-	)
+	$: filteredItems = $users?.filter(user => {
+		if (name_order == 'firstname') {
+			return (
+				user.firstname
+					.toLowerCase()
+					.normalize('NFD')
+					.replace(/\p{Diacritic}/gu, '')
+					.indexOf(
+						searchTerm
+							.toLowerCase()
+							.normalize('NFD')
+							.replace(/\p{Diacritic}/gu, '')
+					) !== -1
+			)
+		}
+		if (name_order == 'lastname') {
+			return (
+				user.lastname
+					.toLowerCase()
+					.normalize('NFD')
+					.replace(/\p{Diacritic}/gu, '')
+					.indexOf(
+						searchTerm
+							.toLowerCase()
+							.normalize('NFD')
+							.replace(/\p{Diacritic}/gu, '')
+					) !== -1
+			)
+		}
+	})
 
 	$: $schedules?.sort(function sortByDay(a, b) {
 		let day1 = a.weekday
@@ -329,13 +369,17 @@
 				</Card>
 			{:else}
 				<TableSearch
-					placeholder={$_('publishers.search-inp')}
+					placeholder={name_order == 'firstname' ? $_('publishers.search-inp') : $_('publishers.search-inp-lastname')}
 					striped={true}
 					hoverable={true}
 					bind:inputValue={searchTerm}
 				>
 					<TableHead>
-						<TableHeadCell>{$_('publishers.firstname')}</TableHeadCell>
+						{#if name_order == 'lastname'}
+							<TableHeadCell>{$_('publishers.lastname')} & {$_('publishers.firstname')}</TableHeadCell>
+						{:else}
+							<TableHeadCell>{$_('publishers.firstname')} & {$_('publishers.lastname')}</TableHeadCell>
+						{/if}
 						<TableHeadCell>{$_('publishers.gender')}</TableHeadCell>
 						<TableHeadCell>{$_('publishers.priority')}</TableHeadCell>
 						<TableHeadCell>
@@ -345,7 +389,11 @@
 					<TableBody>
 						{#each filteredItems as user}
 							<TableBodyRow>
-								<TableBodyCell>{user.firstname + ' ' + user.lastname}</TableBodyCell>
+								{#if name_order == 'lastname'}
+									<TableBodyCell>{user.lastname + ' ' + user.firstname}</TableBodyCell>
+								{:else}
+									<TableBodyCell>{user.firstname + ' ' + user.lastname}</TableBodyCell>
+								{/if}
 								<TableBodyCell>
 									{#if user.gender == 'male'}
 										<Badge large border rounded color="blue">{$_('general.' + user.gender)} ♂️</Badge>
@@ -450,7 +498,17 @@
 				</li>
 			</ul>
 			{#if advanced}
-				<Input type="number" id="weight" min="1" max="10" step=".1" bind:value={weight} class="mt-2" data-testid="publishers-wight-advanced-input" required />
+				<Input
+					type="number"
+					id="weight"
+					min="1"
+					max="10"
+					step=".1"
+					bind:value={weight}
+					class="mt-2"
+					data-testid="publishers-wight-advanced-input"
+					required
+				/>
 			{/if}
 		</Label>
 		<Label>

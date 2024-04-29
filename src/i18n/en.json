@@ -80,6 +80,7 @@
 	"publishers": {
 		"create-btn": "Create new Publisher",
 		"search-inp": "Search by Publisher name",
+		"search-inp-lastname": "Search by Publisher lastname",
 		"firstname": "Firstname",
 		"lastname": "Lastname",
 		"gender": "Gender",
@@ -183,6 +184,7 @@
 		"week-start-at": "Weekday starts at",
 		"latitude": "Latitude",
 		"longitude": "Longitude",
-		"info-latitude": "This settings is to display weather at the home calendar. It's optional"
+		"info-latitude": "This settings is to display weather at the home calendar. It's optional",
+		"name-order": "Order publishers by"
 	}
 }

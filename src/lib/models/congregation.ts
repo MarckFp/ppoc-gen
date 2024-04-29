@@ -5,4 +5,5 @@ export interface Congregation {
 	week_order: string
 	lat: number
 	lon: number
+	name_order: string
 }
