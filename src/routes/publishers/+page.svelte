@@ -514,7 +514,7 @@
 							name="weight"
 							bind:group={weight}
 							{value}
-							data-testid="publishers-wight-{name}"
+							data-testid="publishers-weight-{name}"
 							on:change={() => {
 								advanced = false
 							}}
@@ -527,7 +527,7 @@
 						name="weight"
 						value="yes"
 						group={advanced_radio}
-						data-testid="publishers-wight-advanced"
+						data-testid="publishers-weight-advanced"
 						on:change={() => {
 							advanced = true
 						}}
@@ -544,7 +544,7 @@
 					step=".1"
 					bind:value={weight}
 					class="mt-2"
-					data-testid="publishers-wight-advanced-input"
+					data-testid="publishers-weight-advanced-input"
 					required
 				/>
 			{/if}
@@ -584,7 +584,7 @@
 			{/if}
 		</Label>
 		<div class="text-center">
-			<Button color="red" class="me-2" on:click={createPublisher}>
+			<Button color="red" class="me-2" on:click={createPublisher} data-testid="publishers-create-submit">
 				{#if edit}
 					{$_('general.edit-btn')}
 				{:else}

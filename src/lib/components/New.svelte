@@ -27,12 +27,25 @@
 		langs.push({value: lang, name: $_('general.' + lang)})
 	})
 	currentLang = $locale?.split('-')[0]
+	if (!$locales.includes(currentLang)) {
+		currentLang = 'en'
+	}
+
+	$locale = currentLang
+	console.log($locale)
 
 	function changeLang() {
 		$locale = currentLang
 	}
 
 	async function createCongregation() {
+		if (congregation_name == undefined || congregation_name == '') {
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: $_('general.invalid-data')}
+			})
+			return
+		}
 		try {
 			await db.congregation.add({
 				name: congregation_name,
