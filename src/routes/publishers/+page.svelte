@@ -86,6 +86,25 @@
 			}
 		}
 
+		db.user.orderBy(`[${query_name_order}]`).each(user => {
+			if (user.id != undefined) {
+				if (name_order == 'firstname') {
+					if (user.gender == 'male') {
+						affinityList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'blue'})
+					} else {
+						affinityList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'pink'})
+					}
+				}
+				if (name_order == 'lastname') {
+					if (user.gender == 'male') {
+						affinityList.push({value: user.id, name: user.lastname + ' ' + user.firstname, color: 'blue'})
+					} else {
+						affinityList.push({value: user.id, name: user.lastname + ' ' + user.firstname, color: 'pink'})
+					}
+				}
+			}
+		})
+
 		sorter = {
 			monday: 1,
 			tuesday: 2,
@@ -99,25 +118,6 @@
 	$: users = liveQuery(() => db.user.orderBy(`[${query_name_order}]`).toArray())
 	let schedules = liveQuery(() => db.schedule.toArray())
 	let affinities = liveQuery(() => db.affinity.toArray())
-
-	db.user.orderBy(`[${query_name_order}]`).each(user => {
-		if (user.id != undefined) {
-			if (name_order == 'firstname') {
-				if (user.gender == 'male') {
-					affinityList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'blue'})
-				} else {
-					affinityList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'pink'})
-				}
-			}
-			if (name_order == 'lastname') {
-				if (user.gender == 'male') {
-					affinityList.push({value: user.id, name: user.lastname + ' ' + user.firstname, color: 'blue'})
-				} else {
-					affinityList.push({value: user.id, name: user.lastname + ' ' + user.firstname, color: 'pink'})
-				}
-			}
-		}
-	})
 
 	$: filteredItems = $users?.filter(user => {
 		if (name_order == 'firstname') {
