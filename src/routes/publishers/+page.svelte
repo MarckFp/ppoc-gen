@@ -296,7 +296,7 @@
 			})
 		}
 
-		affinityList.forEach((item, index) => {
+		affinityList.forEach(item => {
 			if (item.value == selectedId) {
 				if (name_order == 'firstname') {
 					item.name = firstname + ' ' + lastname

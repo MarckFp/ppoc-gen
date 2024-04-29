@@ -45,7 +45,6 @@
 
 	onMount(async () => {
 		let weatherData
-		//TODO: Add this to the congregation Settings so we could use always the cong ubication and prevent using the user location
 		let cong = await db.congregation.orderBy('id').first()
 		if (cong?.lat && cong?.lon) {
 			//Weather for Calendar forecast
