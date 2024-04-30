@@ -1,5 +1,4 @@
 import { test, expect, type Page } from '@playwright/test'
-import { faker } from '@faker-js/faker/locale/en'
 import { createCongregation } from './helpers/congregation'
 import { createPublisher } from './helpers/publisher'
 import { createSchedule } from './helpers/schedule'
