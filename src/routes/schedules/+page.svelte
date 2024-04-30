@@ -255,32 +255,52 @@
 	<Modal bind:open={createModal} size="xs" autoclose outsideclose>
 		<Label>
 			{$_('schedule.weekday')}:
-			<Select class="mt-2" id="weekday" items={weekdays} bind:value={selected_weekday} />
+			<Select
+				class="mt-2"
+				id="weekday"
+				items={weekdays}
+				bind:value={selected_weekday}
+				data-testid="schedules-create-weekday"
+			/>
 		</Label>
 		<Label>
 			{$_('schedule.start-time')}:
-			<Input type="time" bind:value={start_time} />
+			<Input type="time" bind:value={start_time} data-testid="schedules-create-startTime" />
 		</Label>
 		<Label>
 			{$_('schedule.end-time')}:
-			<Input type="time" bind:value={end_time} />
+			<Input type="time" bind:value={end_time} data-testid="schedules-create-endTime" />
 		</Label>
 		<Label>
 			{$_('schedule.location')}:
-			<Input type="text" id="location" bind:value={location} required />
+			<Input type="text" id="location" bind:value={location} required data-testid="schedules-create-location" />
 		</Label>
 		<div class="mb-6 grid gap-6 md:grid-cols-2">
 			<div>
 				<Label for="n_brothers" class="mb-2">{$_('schedule.n-bro')}:</Label>
-				<Input type="number" id="n_brothers" min="1" bind:value={n_brothers} required />
+				<Input
+					type="number"
+					id="n_brothers"
+					min="1"
+					bind:value={n_brothers}
+					required
+					data-testid="schedules-create-nBrothers"
+				/>
 			</div>
 			<div>
 				<Label for="n_sisters" class="mb-2">{$_('schedule.n-sis')}:</Label>
-				<Input type="number" id="n_sisters" min="1" bind:value={n_sisters} required />
+				<Input
+					type="number"
+					id="n_sisters"
+					min="1"
+					bind:value={n_sisters}
+					required
+					data-testid="schedules-create-nSisters"
+				/>
 			</div>
 		</div>
 		<div class="text-center">
-			<Button color="red" class="me-2" on:click={createSchedule}>
+			<Button color="red" class="me-2" on:click={createSchedule} data-testid="schedules-create-submit">
 				{#if edit}
 					{$_('general.edit-btn')}
 				{:else}
