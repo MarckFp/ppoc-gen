@@ -27,6 +27,8 @@
 		}
 	})
 
+	// eslint-disable-next-line
+	const version = PKG.version ?? 'unknown'
 	const congregation = liveQuery(() => db.congregation.orderBy('id').first())
 	db.congregation
 		.orderBy('id')
@@ -61,7 +63,7 @@
 	{/if}
 	<Footer class="flex flex-row justify-center">
 		<Card class="mx-5 text-center dark:text-white" size="xl">
-			PPOC Gen version {PKG.version}
+			PPOC Gen version {version}
 		</Card>
 	</Footer>
 </main>

@@ -17,7 +17,7 @@ export default [
 		languageOptions: {
 			parser: svelteParser,
 			sourceType: 'module',
-			ecmaVersion: 2020,
+			ecmaVersion: 2023,
 			parserOptions: {
 				extraFileExtensions: ['.svelte'],
 				parser: tsEslint.parser

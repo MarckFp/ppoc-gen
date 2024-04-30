@@ -10,6 +10,7 @@
 	import {fetchWeatherApi} from 'openmeteo'
 
 	//Doesn't support typescript yet
+	// eslint-disable-next-line
 	var cal: any
 	let disabledMobile = false
 	const WMO = {
