@@ -1,7 +1,5 @@
-import { test, expect, type Page } from '@playwright/test'
+import { test, expect } from '@playwright/test'
 import { createCongregation } from './helpers/congregation'
-import { createPublisher } from './helpers/publisher'
-import { createSchedule } from './helpers/schedule'
 
 test('Congregation creation', async ({ page }) => {
   await createCongregation(page)
@@ -32,16 +30,6 @@ test('Navbar menu', async ({ page, isMobile }) => {
   await page.getByTestId('navbar-settings').click()
   await page.getByTestId('settings-update-btn').waitFor()
   await expect(page.getByTestId('settings-update-btn')).toContainText('Update Congregation')
-})
-
-test('Create schedule', async ({ page }) => {
-  await createCongregation(page)
-  await createSchedule(page)
-})
-
-test('Create publisher', async ({ page }) => {
-  await createCongregation(page)
-  await createPublisher(page)
 })
 
 test.afterEach(async ({ page }, testInfo) => {

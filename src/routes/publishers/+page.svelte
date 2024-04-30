@@ -455,6 +455,7 @@
 										color="blue"
 										class="mr-2"
 										id="edit-{user.id}"
+										data-testid="publishers-edit-btn"
 										on:click={() => {
 											createModal = true
 											advanced = false

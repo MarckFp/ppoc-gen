@@ -224,18 +224,24 @@
 	<Modal bind:open={createModal} size="xs" autoclose outsideclose>
 		<Label>
 			{$_('incidences.publisher')}:
-			<Select id="publisher" bind:value={user_id} items={userSelect} required />
+			<Select
+				id="publisher"
+				bind:value={user_id}
+				items={userSelect}
+				required
+				data-testid="incidences-create-publisher"
+			/>
 		</Label>
 		<Label>
 			{$_('incidences.start-date')}:
-			<Input type="date" id="start_date" bind:value={start_date} required />
+			<Input type="date" id="start_date" bind:value={start_date} required data-testid="incidences-create-startDate" />
 		</Label>
 		<Label>
 			{$_('incidences.end-date')}:
-			<Input type="date" id="end_date" bind:value={end_date} required />
+			<Input type="date" id="end_date" bind:value={end_date} required data-testid="incidences-create-endDate" />
 		</Label>
 		<div class="text-center">
-			<Button color="red" class="me-2" on:click={createIncidence}>
+			<Button color="red" class="me-2" on:click={createIncidence} data-testid="incidences-create-submit">
 				{#if edit}
 					{$_('general.edit-btn')}
 				{:else}
