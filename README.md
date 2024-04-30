@@ -8,7 +8,6 @@ It is built using svelte and tauri and IndexedDB as storage. I made the decision
 
 ## Requirements
 
-- Node 21.x
 - Bun 1.x
 - Tauri 1.x
 - Svelte 4.x
