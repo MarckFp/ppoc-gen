@@ -1,11 +1,12 @@
 import { test } from '@playwright/test'
 import { createCongregation } from './helpers/congregation'
-import { createSchedule } from './helpers/schedule'
+import { createPublisher } from './helpers/publisher'
+import { createIncidence } from './helpers/incidence'
 
-
-test('Create schedule', async ({ page }) => {
+test('Create incidence', async ({ page }) => {
   await createCongregation(page)
-  await createSchedule(page)
+  const publisher_id = await createPublisher(page)
+  await createIncidence(page, publisher_id)
 })
 
 test.afterEach(async ({ page }, testInfo) => {

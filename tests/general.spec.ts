@@ -1,11 +1,13 @@
 import { test, expect } from '@playwright/test'
 import { createCongregation } from './helpers/congregation'
+import { createSchedule } from './helpers/schedule'
+import { createPublisher } from './helpers/publisher'
 
-test('Congregation creation', async ({ page }) => {
+test('Congregation Creation', async ({ page }) => {
   await createCongregation(page)
 })
 
-test('Navbar menu', async ({ page, isMobile }) => {
+test('Navbar Menu', async ({ page, isMobile }) => {
   await createCongregation(page)
   if (isMobile) {
     await page.getByTestId('navbar-hamburger').click()
@@ -30,6 +32,21 @@ test('Navbar menu', async ({ page, isMobile }) => {
   await page.getByTestId('navbar-settings').click()
   await page.getByTestId('settings-update-btn').waitFor()
   await expect(page.getByTestId('settings-update-btn')).toContainText('Update Congregation')
+})
+
+test('Create Full Congregation', async ({ page }) => {
+  const users = []
+  await createCongregation(page)
+  //Create 20 schedules
+  for (let i = 0; i < 20; i++) {
+    await createSchedule(page)
+  }
+
+  //Create 60 publishers
+  for (let i = 0; i < 60; i++) {
+    const user_id = await createPublisher(page, 'firstname', true)
+    users.push(user_id)
+  }
 })
 
 test.afterEach(async ({ page }, testInfo) => {

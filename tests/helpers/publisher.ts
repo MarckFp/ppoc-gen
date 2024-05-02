@@ -22,13 +22,13 @@ export async function createPublisher(page: Page, name_order: string = 'firstnam
         const availabilitiesCount = await availabilities.count()
         let selected: number[] = []
         for (let i = 0; i < 5; i++) {
-            let random = Math.floor(Math.random() * (availabilitiesCount - 1 + 1) + 1)
+            let random = Math.floor(Math.random() * (availabilitiesCount - 1 + 0) + 0)
             if (selected.includes(random)) {
                 i--
                 continue
             }
-            selected.push(random)
             await availabilities.nth(random).check()
+            selected.push(random)
         }
     }
     await page.getByTestId('publishers-create-submit').click()
@@ -43,11 +43,9 @@ export async function createPublisher(page: Page, name_order: string = 'firstnam
         child = await page.locator("table > tbody > tr > td").getByText(lastname + ' ' + firstname)
     }
     await expect(page.getByRole('alert')).toContainText('Publisher created successfully')
-    await page.getByRole('alert').locator("button").click()
-    await page.getByRole('alert').waitFor({state: 'hidden'})
 
     //Retrieve User ID
-    const editBtn = await page.locator('table > tbody > tr').locator('xpath=..').getByTestId('publishers-edit-btn')
+    const editBtn = await child.locator('xpath=..').getByTestId('publishers-edit-btn')
     publisher_id = await editBtn.getAttribute('id')
     return publisher_id?.split('-')[1]
 }
