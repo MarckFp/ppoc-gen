@@ -28,10 +28,9 @@ export async function createPublisher(page: Page, name_order: string = 'firstnam
                 continue
             }
             selected.push(random)
-            availabilities.nth(random).check()
+            await availabilities.nth(random).check()
         }
     }
-    await page.getByTestId('publishers-create-submit').focus()
     await page.getByTestId('publishers-create-submit').click()
 
     //Checks

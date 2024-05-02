@@ -22,6 +22,4 @@ export async function createSchedule(page: Page) {
     await page.getByTestId('schedules-create-submit').click()
     await page.getByRole('alert').waitFor()
     await expect(page.getByRole('alert')).toContainText('Schedule created successfully')
-    await page.getByRole('alert').locator("button").click()
-    await page.getByRole('alert').waitFor({state: 'hidden'})
 }
