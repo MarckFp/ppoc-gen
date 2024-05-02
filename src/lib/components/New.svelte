@@ -143,7 +143,7 @@
 							class="hidden"
 							on:change={importData}
 						/>
-						<Button class="w-full" on:click={importDataBtn}>
+						<Button class="w-full" on:click={importDataBtn} data-testid="create-import">
 							<CloudArrowUpSolid class="me-3 h-6 w-6" />
 							{$_('settings.import')}
 						</Button>

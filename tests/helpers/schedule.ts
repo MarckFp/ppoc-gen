@@ -6,8 +6,8 @@ export async function createSchedule(page: Page) {
     const startTime = '10:00'
     const endTime = '14:00'
     const location = faker.location.street()
-    const n_brothers = faker.number.int({min: 1, max: 5}).toString()
-    const n_sisters = faker.number.int({min: 1, max: 5}).toString()
+    const n_brothers = faker.number.int({min: 1, max: 4}).toString()
+    const n_sisters = faker.number.int({min: 1, max: 4}).toString()
 
     await page.goto('/schedules')
     await page.getByTestId('schedules-create-btn').waitFor()

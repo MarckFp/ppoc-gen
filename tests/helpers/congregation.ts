@@ -11,6 +11,16 @@ export async function createCongregation(page: Page, lang: string = 'en', weekda
     await page.getByTestId('create-btn').click()
     await page.getByRole('alert').waitFor()
     await expect(page.getByRole('alert')).toContainText('Congregation Added successfully')
-    await page.getByRole('alert').locator("button").click()
-    await page.getByRole('alert').waitFor({state: 'hidden'})
+}
+
+export async function importCongregation(page: Page) {
+    await page.goto('/')
+    await page.getByTestId('create-import').waitFor()
+    const fileChooserPromise = page.waitForEvent('filechooser')
+    await page.getByTestId('create-import').click()
+    const fileChooser = await fileChooserPromise
+    await fileChooser.setFiles('./tests/helpers/test.pgen')
+    await page.getByRole('alert').waitFor()
+    await expect(page.getByRole('alert')).toContainText('Congregation Imported successfully')
+    await expect(page.getByText('Welcome Test')).toBeVisible()
 }

@@ -15,6 +15,4 @@ export async function createIncidence(page: Page, publisher_id: number) {
     await page.getByTestId('incidences-create-submit').click()
     await page.getByRole('alert').waitFor()
     await expect(page.getByRole('alert')).toContainText('Incidence created successfully')
-    await page.getByRole('alert').locator("button").click()
-    await page.getByRole('alert').waitFor({state: 'hidden'})
 }

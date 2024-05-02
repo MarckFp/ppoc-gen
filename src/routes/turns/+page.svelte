@@ -528,11 +528,11 @@
 		<div class="mb-4 mt-1 flex flex-row justify-between">
 			<Label class="w-2/12">
 				{$_('turns.from')}:
-				<Input type="date" bind:value={fromDate} />
+				<Input type="date" bind:value={fromDate} data-testid="turns-date-from" />
 			</Label>
 			<Label class="ml-1 mr-1 w-2/12">
 				{$_('turns.to')}:
-				<Input type="date" bind:value={toDate} />
+				<Input type="date" bind:value={toDate} data-testid="turns-date-to" />
 			</Label>
 			<Button
 				color="green"

@@ -1,11 +1,16 @@
 import { test, expect } from '@playwright/test'
-import { createCongregation } from './helpers/congregation'
+import { createCongregation, importCongregation } from './helpers/congregation'
 import { createSchedule } from './helpers/schedule'
 import { createPublisher } from './helpers/publisher'
 import { createIncidence } from './helpers/incidence'
+import { generateTurns } from './helpers/turn'
 
 test('Congregation Creation', async ({ page }) => {
   await createCongregation(page)
+})
+
+test('Import Congregation', async ({ page }) => {
+  await importCongregation(page)
 })
 
 test('Navbar Menu', async ({ page, isMobile }) => {
@@ -41,13 +46,13 @@ test('Create Full Congregation', async ({ page }) => {
   //Create congregaiton
   await createCongregation(page)
 
-  //Create 20 schedules
-  for (let i = 0; i < 20; i++) {
+  //Create 10 schedules
+  for (let i = 0; i < 10; i++) {
     await createSchedule(page)
   }
 
-  //Create 60 publishers
-  for (let i = 0; i < 60; i++) {
+  //Create 80 publishers
+  for (let i = 0; i < 80; i++) {
     const user_id = await createPublisher(page, 'firstname', true)
     users.push(user_id)
   }
@@ -57,6 +62,35 @@ test('Create Full Congregation', async ({ page }) => {
     await createIncidence(page, users[Math.floor(Math.random() * users.length)])
   }
 })
+
+/*test('Create Turns', async ({ page }) => {
+  const users = []
+
+  //Create congregaiton
+  await createCongregation(page)
+
+  //Create 8 schedules
+  for (let i = 0; i < 8; i++) {
+    await createSchedule(page)
+  }
+
+  //Create 80 publishers
+  for (let i = 0; i < 80; i++) {
+    const user_id = await createPublisher(page, 'firstname', true)
+    users.push(user_id)
+  }
+
+  //Create 15 incidences
+  for (let i = 0; i < 15; i++) {
+    await createIncidence(page, users[Math.floor(Math.random() * users.length)])
+  }
+
+  //Create turns
+  const date = new Date(), y = date.getFullYear(), m = date.getMonth();
+  const firstDay = new Date(y, m, 1);
+  const lastDay = new Date(y, m + 1, 0);
+  await generateTurns(page, firstDay, lastDay)
+})*/
 
 test.afterEach(async ({ page }, testInfo) => {
   if (testInfo.status !== testInfo.expectedStatus) {
