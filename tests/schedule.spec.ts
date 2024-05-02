@@ -2,7 +2,6 @@ import { test } from '@playwright/test'
 import { createCongregation } from './helpers/congregation'
 import { createSchedule } from './helpers/schedule'
 
-
 test('Create schedule', async ({ page }) => {
   await createCongregation(page)
   await createSchedule(page)

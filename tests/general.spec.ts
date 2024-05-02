@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test'
 import { createCongregation } from './helpers/congregation'
 import { createSchedule } from './helpers/schedule'
 import { createPublisher } from './helpers/publisher'
+import { createIncidence } from './helpers/incidence'
 
 test('Congregation Creation', async ({ page }) => {
   await createCongregation(page)
@@ -36,7 +37,10 @@ test('Navbar Menu', async ({ page, isMobile }) => {
 
 test('Create Full Congregation', async ({ page }) => {
   const users = []
+
+  //Create congregaiton
   await createCongregation(page)
+
   //Create 20 schedules
   for (let i = 0; i < 20; i++) {
     await createSchedule(page)
@@ -46,6 +50,11 @@ test('Create Full Congregation', async ({ page }) => {
   for (let i = 0; i < 60; i++) {
     const user_id = await createPublisher(page, 'firstname', true)
     users.push(user_id)
+  }
+
+  //Create 15 incidences
+  for (let i = 0; i < 15; i++) {
+    await createIncidence(page, users[Math.floor(Math.random() * users.length)])
   }
 })
 
