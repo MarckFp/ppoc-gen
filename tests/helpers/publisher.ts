@@ -1,7 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test'
 import { faker } from '@faker-js/faker/locale/en'
 
-export async function createPublisher(page: Page, name_order: string = 'firstname') {
+export async function createPublisher(page: Page, name_order: string = 'firstname', availability: boolean = false) {
     const gender = ['male', 'female'][Math.round(Math.random())]
     const firstname = faker.person.firstName(gender)
     const lastname = faker.person.lastName(gender)
@@ -17,6 +17,21 @@ export async function createPublisher(page: Page, name_order: string = 'firstnam
     await page.getByTestId('publishers-lastname').fill(lastname)
     await page.getByTestId('publishers-gender').selectOption(gender)
     await page.getByTestId('publishers-weight-' + priority).check()
+    if (availability) {
+        const availabilities = await page.getByTestId('publishers-availability').getByRole('checkbox')
+        const availabilitiesCount = await availabilities.count()
+        let selected: number[] = []
+        for (let i = 0; i < 5; i++) {
+            let random = Math.floor(Math.random() * (availabilitiesCount - 1 + 1) + 1)
+            if (selected.includes(random)) {
+                i--
+                continue
+            }
+            selected.push(random)
+            availabilities.nth(random).check()
+        }
+    }
+    await page.getByTestId('publishers-create-submit').focus()
     await page.getByTestId('publishers-create-submit').click()
 
     //Checks

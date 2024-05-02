@@ -568,7 +568,7 @@
 				{#if $schedules.length == 0}
 					<p class="text-center">{$_('publishers.no-schedules')}</p>
 				{:else}
-					<ul class="grid w-full grid-cols-1 items-center rounded-lg">
+					<ul class="grid w-full grid-cols-1 items-center rounded-lg" data-testid="publishers-availability">
 						{#each $schedules as schedule}
 							{#if schedule.id}
 								<li class="w-full border">

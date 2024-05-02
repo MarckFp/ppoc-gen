@@ -60,10 +60,10 @@
 	{:else}
 		<NavBar />
 		<slot />
+		<Footer class="flex flex-row justify-center">
+			<Card class="mx-5 my-1 text-center dark:text-white" size="xl">
+				PPOC Gen version {version}
+			</Card>
+		</Footer>
 	{/if}
-	<Footer class="flex flex-row justify-center">
-		<Card class="mx-5 text-center dark:text-white" size="xl">
-			PPOC Gen version {version}
-		</Card>
-	</Footer>
 </main>
