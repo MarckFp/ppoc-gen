@@ -22,6 +22,7 @@
 	import {liveQuery} from 'dexie'
 	import {_} from 'svelte-i18n'
 	import {onMount} from 'svelte'
+	import Calendar from '$lib/components/Calendar.svelte'
 
 	var date: Date = new Date()
 	let fromDate: string,
@@ -523,7 +524,11 @@
 	}
 </script>
 
-<div class="mx-auto flex flex-col items-center justify-center px-6 py-8">
+<div class="hidden print:inline">
+	<Calendar />
+</div>
+
+<div class="mx-auto flex flex-col items-center justify-center px-6 py-8 print:hidden">
 	<Card size="xl" class="mb-2 print:hidden">
 		<div class="mb-4 mt-1 flex flex-row justify-between">
 			<Label class="w-2/12">

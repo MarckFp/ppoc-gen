@@ -21,7 +21,7 @@
 </script>
 
 {#if alertVisible}
-	<Toast {color} class="m-3" transition={slide}>
+	<Toast {color} class="m-3 print:hidden" transition={slide}>
 		<svelte:fragment slot="icon">
 			{#if alertStatus.toLowerCase() == 'success' || alertStatus.toLowerCase() == 'ok'}
 				<CheckCircleSolid class="h-5 w-5" />

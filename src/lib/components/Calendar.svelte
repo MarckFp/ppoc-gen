@@ -191,7 +191,7 @@
 	})
 </script>
 
-<div class="m-3">
+<div class="m-3 print:hidden">
 	<ButtonGroup>
 		<Button outline color="dark" on:click={cal?.setOption('view', 'listDay')}>{$_('home.day-view')}</Button>
 		<Button outline color="dark" on:click={cal?.setOption('view', 'listWeek')}>{$_('home.week-view')}</Button>
