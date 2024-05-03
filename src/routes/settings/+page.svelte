@@ -30,10 +30,6 @@
 		langs.push({value: lang, name: $_('general.' + lang)})
 	})
 
-	function changeLang() {
-		$locale = $congregation?.lang
-	}
-
 	async function deleteCongregation() {
 		await db.congregation.clear()
 		await db.user.clear()
@@ -61,6 +57,11 @@
 				return
 			}
 			db.congregation.update($congregation?.id, $congregation)
+			$locale = $congregation?.lang
+			langs = []
+			$locales.forEach(lang => {
+				langs.push({value: lang, name: $_('general.' + lang)})
+			})
 			new AlertToast({
 				target: document.querySelector('#toast-container'),
 				props: {alertStatus: 'success', alertMessage: $_('settings.updated-successfully')}
@@ -111,7 +112,7 @@
 					</Label>
 					<Label class="space-y-2">
 						<span>{$_('settings.language')}:</span>
-						<Select items={langs} on:change={changeLang} bind:value={$congregation.lang} />
+						<Select items={langs} bind:value={$congregation.lang} />
 					</Label>
 					<Label class="space-y-2">
 						<span>{$_('settings.week-start-at')}:</span>

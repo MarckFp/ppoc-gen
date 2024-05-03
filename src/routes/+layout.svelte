@@ -5,7 +5,7 @@
 	import NavBar from '$lib/components/NavBar.svelte'
 	import New from '$lib/components/New.svelte'
 	import {pwaInfo} from 'virtual:pwa-info'
-	import {locale} from 'svelte-i18n'
+	import {locale, locales} from 'svelte-i18n'
 	import {onMount} from 'svelte'
 	import {Footer, Card} from 'flowbite-svelte'
 
@@ -37,7 +37,9 @@
 			if (cong?.lang) {
 				$locale = cong.lang
 			} else {
-				$locale = 'en'
+				if (!$locales.includes($locale?.split('-')[0])) {
+					$locale = 'en'
+				}
 			}
 		})
 

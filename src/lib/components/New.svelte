@@ -27,12 +27,6 @@
 		langs.push({value: lang, name: $_('general.' + lang)})
 	})
 	currentLang = $locale?.split('-')[0]
-	if (!$locales.includes(currentLang)) {
-		currentLang = 'en'
-	}
-
-	$locale = currentLang
-	console.log($locale)
 
 	function changeLang() {
 		$locale = currentLang
