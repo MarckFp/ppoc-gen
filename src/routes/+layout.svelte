@@ -69,3 +69,10 @@
 		</Footer>
 	{/if}
 </main>
+
+<style lang="postcss">
+	main {
+		-webkit-print-color-adjust: exact;
+		color-adjust: exact;
+	}
+</style>
