@@ -214,4 +214,8 @@
 	:global(.ec-event-body) {
 		flex-direction: column !important;
 	}
+
+	:global(.dark .ec-button):hover {
+		background-color: rgb(75 85 99 / var(--tw-bg-opacity));
+	}
 </style>
