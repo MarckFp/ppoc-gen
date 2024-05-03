@@ -524,11 +524,7 @@
 	}
 </script>
 
-<div class="hidden print:inline">
-	<Calendar />
-</div>
-
-<div class="mx-auto flex flex-col items-center justify-center px-6 py-8 print:hidden">
+<div class="mx-auto flex flex-col items-center justify-center px-6 py-8">
 	<Card size="xl" class="mb-2 print:hidden">
 		<div class="mb-4 mt-1 flex flex-row justify-between">
 			<Label class="w-2/12">
