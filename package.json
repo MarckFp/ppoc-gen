@@ -8,6 +8,9 @@
     "name": "Marcos Fernández",
     "url": "https://github.com/MarckFp"
   },
+  "bugs": {
+    "url": "https://github.com/MarckFp/ppoc-gen/issues"
+  },
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",

@@ -459,6 +459,7 @@
 										on:click={() => {
 											createModal = true
 											advanced = false
+											advanced_radio = 'no'
 											selectedId = user.id
 											firstname = user.firstname
 											lastname = user.lastname
