@@ -73,6 +73,6 @@
 <style lang="postcss">
 	main {
 		-webkit-print-color-adjust: exact;
-		color-adjust: exact;
+		print-color-adjust: exact;
 	}
 </style>
