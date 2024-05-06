@@ -98,7 +98,7 @@
 	}
 </script>
 
-<div class="mx-auto px-6 py-8">
+<section class="mx-auto px-6 py-8">
 	{#if $congregation}
 		<div class="mx-auto flex flex-col items-center justify-center px-6 py-8 md:h-5/6 lg:py-0">
 			<Card size="xl">
@@ -185,4 +185,4 @@
 			</Modal>
 		</div>
 	{/if}
-</div>
+</section>

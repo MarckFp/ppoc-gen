@@ -145,7 +145,7 @@
 	}
 </script>
 
-<div class="mx-auto flex flex-col items-center justify-center px-6 py-8">
+<section class="mx-auto flex flex-col items-center justify-center px-6 py-8">
 	<Card size="xl">
 		<Button
 			color="blue"
@@ -262,4 +262,4 @@
 			<Button color="alternative">{$_('general.no-cancel')}</Button>
 		</div>
 	</Modal>
-</div>
+</section>
