@@ -22,7 +22,6 @@
 	import {liveQuery} from 'dexie'
 	import {_} from 'svelte-i18n'
 	import {onMount} from 'svelte'
-	import Calendar from '$lib/components/Calendar.svelte'
 
 	var date: Date = new Date()
 	let fromDate: string,
@@ -223,7 +222,7 @@
 							}
 						})
 					}
-					//Loop over users
+					//Loop over users with Affinities
 					userLoop: for (let user of users) {
 						if (user && user.id) {
 							if (
@@ -235,7 +234,7 @@
 							}
 
 							let affinities = await db.affinity.where({source_id: user.id}).toArray()
-							if (schedule.n_brothers + schedule.n_sisters - (brothers + sisters) >= 2) {
+							if (affinities.length > 0) {
 								await db.assignment.add({
 									user_id: user.id,
 									turn_id: turn_id
@@ -252,11 +251,7 @@
 								affinitiesLoop: for (let affinity of affinities) {
 									let affinityUser = await db.user.where({id: affinity.destination_id}).first()
 									if (affinityUser && affinityUser.id) {
-										if (
-											(await checkPublisherTurn(affinityUser.id, d)) ||
-											(brothers >= schedule.n_brothers && affinityUser?.gender == 'male') ||
-											(sisters >= schedule.n_sisters && affinityUser?.gender == 'female')
-										) {
+										if (await checkPublisherTurn(affinityUser.id, d)) {
 											continue affinitiesLoop
 										}
 										await db.assignment.add({
@@ -273,10 +268,25 @@
 										}
 									}
 								}
-							} else {
-								if (affinities.length > 0) {
-									continue userLoop
-								}
+							}
+							if (schedule.n_brothers - brothers < 1 || schedule.n_sisters - sisters < 1) {
+								break userLoop
+							}
+						}
+					}
+					//Loop over users without Affinities
+					userLoop: for (let user of users) {
+						if (user && user.id) {
+							if (
+								(await checkPublisherTurn(user.id, d)) ||
+								(brothers >= schedule.n_brothers && user.gender == 'male') ||
+								(sisters >= schedule.n_sisters && user.gender == 'female')
+							) {
+								continue userLoop
+							}
+
+							let affinities = await db.affinity.where({source_id: user.id}).toArray()
+							if (affinities.length <= 0) {
 								await db.assignment.add({
 									user_id: user.id,
 									turn_id: turn_id

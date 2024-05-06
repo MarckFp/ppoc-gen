@@ -79,7 +79,7 @@
 		a.click()
 		new AlertToast({
 			target: document.querySelector('#toast-container'),
-			props: {alertStatus: 'error', alertMessage: $_('settings.exported-successfully')}
+			props: {alertStatus: 'success', alertMessage: $_('settings.exported-successfully')}
 		})
 	}
 
