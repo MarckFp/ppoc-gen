@@ -8,6 +8,9 @@ on:
 jobs:
   deploy-web:
     runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-web
+      cancel-in-progress: true
     permissions:
       pages: write
       id-token: write
