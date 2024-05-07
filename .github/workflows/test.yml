@@ -7,11 +7,11 @@ on:
 
 jobs:
   e2e:
-    timeout-minutes: 30
+    timeout-minutes: 15
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        browser: ['chromium', 'firefox', 'webkit', 'Mobile Chrome', 'Mobile Safari']
+        browser: ['chromium', 'firefox', 'webkit', 'mobile-chrome', 'mobile-safari']
     steps:
     - uses: actions/checkout@v4
     - uses: oven-sh/setup-bun@v1
@@ -19,10 +19,10 @@ jobs:
         bun-version: latest
     - run: bun install
     - run: bunx playwright install --with-deps
-    - run: bun playwright test ./test --project '${{ matrix.browser }}'
+    - run: bun playwright test ./test --project ${{ matrix.browser }}
     - uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: playwright-report
+        name: playwright-report-${{ matrix.browser }}
         path: playwright-report/
         retention-days: 15
