@@ -56,23 +56,28 @@
 				timezone: 'auto',
 				forecast_days: 14
 			}
-			const url = 'https://api.open-meteo.com/v1/forecast'
-			const responses = await fetchWeatherApi(url, params)
+			try {
+				const url = 'https://api.open-meteo.com/v1/forecast'
+				const responses = await fetchWeatherApi(url, params)
 
-			const range = (start: number, stop: number, step: number) =>
-				Array.from({length: (stop - start) / step}, (_, i) => start + i * step)
+				const range = (start: number, stop: number, step: number) =>
+					Array.from({length: (stop - start) / step}, (_, i) => start + i * step)
 
-			const response = responses[0]
-			const utcOffsetSeconds = response.utcOffsetSeconds()
-			const daily = response.daily()!
+				const response = responses[0]
+				const utcOffsetSeconds = response.utcOffsetSeconds()
+				const daily = response.daily()!
 
-			weatherData = {
-				daily: {
-					time: range(Number(daily.time()), Number(daily.timeEnd()), daily.interval()).map(
-						t => new Date((t + utcOffsetSeconds) * 1000)
-					),
-					weatherCode: daily.variables(0)!.valuesArray()!
+				weatherData = {
+					daily: {
+						time: range(Number(daily.time()), Number(daily.timeEnd()), daily.interval()).map(
+							t => new Date((t + utcOffsetSeconds) * 1000)
+						),
+						weatherCode: daily.variables(0)!.valuesArray()!
+					}
 				}
+			} catch (error) {
+				console.log('Error at retrieving the weather')
+				console.log(error)
 			}
 		}
 
