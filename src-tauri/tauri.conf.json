@@ -52,7 +52,7 @@
     },
     "updater": {
       "active": true,
-      "endpoints": ["https://gist.githubusercontent.com/MarckFp/8925cc5babe67bed81c0c8366b2bb906/raw"],
+      "endpoints": ["https://github.com/MarckFp/ppoc-gen/releases/latest/download/latest.json"],
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEQwM0JCRTI2NEJDRTNEMEIKUldRTFBjNUxKcjQ3ME9ZSVphaGxiNXRiaG5UWmFnL0lCVlM2RGtvbExaemxqV2J5V3pLS3FMTEEK"
     },
     "windows": [

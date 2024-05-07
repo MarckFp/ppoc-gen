@@ -87,38 +87,3 @@ jobs:
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
-  generate-updater:
-    runs-on: 'ubuntu-latest'
-    needs: deploy-desktop
-    steps:
-      - uses: actions/checkout@v4
-      - id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%dT%H:%M:00Z')"
-      - id: linux-x86_64
-        run: echo "signature=$(cat ppoc-gen_${{ github.ref_name }}.app.AppImage.tar.gz.sig)" >> $GITHUB_OUTPUT
-      - id: windows-x86_64
-        run: echo "signature=$(cat ppoc-gen_${{ github.ref_name }}.app.msi.sig)" >> $GITHUB_OUTPUT
-      - id: darwin-x86_64
-        run: echo "signature=$(cat ppoc-gen_${{ github.ref_name }}.app.tar.gz.sig)" >> $GITHUB_OUTPUT
-      - id: darwin-aarch64
-        run: echo "signature=$(cat ppoc-gen_${{ github.ref_name }}.app.tar.gz.sig)" >> $GITHUB_OUTPUT
-      - run: |
-          git config --global credential.helper 'f() {sleep 1; echo "username=git token=${{ secrets.GH_GIST }}";}; f'
-          git clone https://gist.github.com/MarckFp/8925cc5babe67bed81c0c8366b2bb906 && cd 8925cc5babe67bed81c0c8366b2bb906
-          echo "`jq '.version="${{ github.ref_name }}"' ppoc-gen-updater.json`" > ppoc-gen-updater.json
-          echo "`jq '.pub_date="${{ steps.date.outputs.date }}"' ppoc-gen-updater.json`" > ppoc-gen-updater.json
-
-          echo "`jq '.platforms."linux-x86_64".url="https://github.com/MarckFp/ppoc-gen/releases/download/${{ github.ref_name }}/ppoc-gen_${{ github.ref_name }}_amd64.AppImage"' ppoc-gen-updater.json`" > ppoc-gen-updater.json
-          echo "`jq '.platforms."linux-x86_64".signature="${{ steps.linux-x86_64.outputs.signature }}"' ppoc-gen-updater.json`" > ppoc-gen-updater.json
-
-          echo "`jq '.platforms."windows-x86_64".url="https://github.com/MarckFp/ppoc-gen/releases/download/${{ github.ref_name }}/PPOC.Gen_${{ github.ref_name }}_x64_en-US.msi"' ppoc-gen-updater.json`" > ppoc-gen-updater.json
-          echo "`jq '.platforms."windows-x86_64".signature="${{ steps.windows-x86_64.outputs.signature }}"' ppoc-gen-updater.json`" > ppoc-gen-updater.json
-
-          echo "`jq '.platforms."darwin-aarch64".url="https://github.com/MarckFp/ppoc-gen/releases/download/${{ github.ref_name }}/PPOC.Gen_aarch64.app.tar.gz"' ppoc-gen-updater.json`" > ppoc-gen-updater.json
-          echo "`jq '.platforms."darwin-aarch64".signature="${{ steps.darwin-x86_64.outputs.signature }}"' ppoc-gen-updater.json`" > ppoc-gen-updater.json
-
-          echo "`jq '.platforms."darwin-x86_64".url="https://github.com/MarckFp/ppoc-gen/releases/download/${{ github.ref_name }}/PPOC.Gen_x64.app.tar.gz"' ppoc-gen-updater.json`" > ppoc-gen-updater.json
-          echo "`jq '.platforms."darwin-x86_64".signature="${{ steps.darwin-x86_64.outputs.signature }}"' ppoc-gen-updater.json`" > ppoc-gen-updater.json
-
-          git commit -m "Updated to version ${{ github.ref_name }}"
-          git push
