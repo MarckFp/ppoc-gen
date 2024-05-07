@@ -6,4 +6,5 @@ const precache_list = [...build, ...files, ...prerendered].map(s => ({
 	revision: version
 }))
 
+cleanupOutdatedCaches()
 precacheAndRoute(precache_list)
