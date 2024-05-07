@@ -9,7 +9,7 @@
 
 	// eslint-disable-next-line
 	const version = PKG.version ?? 'unknown'
-	const congregation = liveQuery(() => db.congregation.orderBy('id').first())
+	const congregation = liveQuery(() => db.congregation.orderBy('id').toArray())
 	db.congregation
 		.orderBy('id')
 		.first()
@@ -24,22 +24,24 @@
 		})
 </script>
 
-<main>
-	<div id="toast-container" class="fixed bottom-0 right-0 z-50"></div>
-	{#if !$congregation}
-		<New />
-	{:else}
-		<NavBar />
-		<slot />
-	{/if}
-</main>
-
 {#if $congregation}
-	<Footer class="flex flex-row justify-center print:hidden">
-		<Card class="mx-5 my-1 text-center dark:text-white" size="xl">
-			PPOC Gen version {version}
-		</Card>
-	</Footer>
+	<main>
+		<div id="toast-container" class="fixed bottom-0 right-0 z-50"></div>
+		{#if $congregation.length == 0}
+			<New />
+		{:else}
+			<NavBar />
+			<slot />
+		{/if}
+	</main>
+
+	{#if $congregation.length > 0}
+		<Footer class="flex flex-row justify-center print:hidden">
+			<Card class="mx-5 my-1 text-center dark:text-white" size="xl">
+				PPOC Gen version {version}
+			</Card>
+		</Footer>
+	{/if}
 {/if}
 
 <style lang="postcss">
