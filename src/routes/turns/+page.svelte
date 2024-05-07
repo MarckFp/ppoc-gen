@@ -214,7 +214,12 @@
 								fadeDelay: 15000,
 								alertMessage:
 									$_('turns.no-publishers') +
-									d.toISOString().split('T')[0] +
+									$_(
+										'general.' +
+											['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d.getDay()]
+									) +
+									' ' +
+									d.getDate() +
 									' ' +
 									schedule.start_time +
 									' - ' +
@@ -310,7 +315,12 @@
 								fadeDelay: 15000,
 								alertMessage:
 									$_('turns.not-enough-sis') +
-									d.toISOString().split('T')[0] +
+									$_(
+										'general.' +
+											['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d.getDay()]
+									) +
+									' ' +
+									d.getDate() +
 									' ' +
 									schedule.start_time +
 									' - ' +
@@ -326,7 +336,12 @@
 								fadeDelay: 15000,
 								alertMessage:
 									$_('turns.not-enough-bro') +
-									d.toISOString().split('T')[0] +
+									$_(
+										'general.' +
+											['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d.getDay()]
+									) +
+									' ' +
+									d.getDate() +
 									' ' +
 									schedule.start_time +
 									' - ' +
