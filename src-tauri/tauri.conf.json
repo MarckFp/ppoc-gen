@@ -7,7 +7,7 @@
     "distDir": "../build"
   },
   "package": {
-    "productName": "ppoc-gen",
+    "productName": "PPOC Gen",
     "version": "../package.json"
   },
   "tauri": {
