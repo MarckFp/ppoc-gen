@@ -7,10 +7,13 @@ const config = {
 	kit: {
 		adapter: adapter({
 			precompress: true
-		})
+		}),
+		paths: {
+			base: process.argv.includes('dev') ? '' : process.env.BASE_PATH
+		}
 	},
 	paths: {
-		base: process.argv.includes('dev') ? '/' : process.env.BASE_PATH + '/'
+		base: process.argv.includes('dev') ? '' : process.env.BASE_PATH
 	}
 }
 

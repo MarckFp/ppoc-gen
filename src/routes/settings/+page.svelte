@@ -3,7 +3,6 @@
 	import {CloudArrowUpSolid, DownloadSolid, ExclamationCircleOutline, InfoCircleSolid} from 'flowbite-svelte-icons'
 	import {db} from '$lib/db'
 	import {liveQuery} from 'dexie'
-	import {goto, invalidateAll} from '$app/navigation'
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {exportDB, importInto} from 'dexie-export-import'
 	import {locale, locales, _} from 'svelte-i18n'
@@ -39,12 +38,7 @@
 		await db.turn.clear()
 		await db.assignment.clear()
 		await db.affinity.clear()
-		await invalidateAll()
-		goto(base)
-		new AlertToast({
-			target: document.querySelector('#toast-container'),
-			props: {alertStatus: 'success', alertMessage: 'Congregation deleted successfully'}
-		})
+		window.location.href = base
 	}
 
 	function updateCongregation() {
