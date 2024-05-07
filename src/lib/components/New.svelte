@@ -29,7 +29,11 @@
 	currentLang = $locale?.split('-')[0]
 
 	function changeLang() {
+		langs = []
 		$locale = currentLang
+		$locales.forEach(lang => {
+			langs.push({value: lang, name: $_('general.' + lang)})
+		})
 	}
 
 	async function createCongregation() {
