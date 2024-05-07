@@ -141,7 +141,7 @@
 		let options = {
 			view: 'dayGridMonth',
 			locale: $locale,
-			buttonText: {today: $_('turns.today')},
+			buttonText: {today: $_('turns.today'), next: 'Next', prev: 'Previous'},
 			firstDay: week_order,
 			date: date,
 			height: '100%',
