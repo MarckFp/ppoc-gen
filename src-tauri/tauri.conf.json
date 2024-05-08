@@ -51,9 +51,7 @@
       "csp": null
     },
     "updater": {
-      "active": true,
-      "endpoints": ["https://github.com/MarckFp/ppoc-gen/releases/download/{{current_version}}/latest.json"],
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEQwM0JCRTI2NEJDRTNEMEIKUldRTFBjNUxKcjQ3ME9ZSVphaGxiNXRiaG5UWmFnL0lCVlM2RGtvbExaemxqV2J5V3pLS3FMTEEK"
+      "active": false
     },
     "windows": [
       {
