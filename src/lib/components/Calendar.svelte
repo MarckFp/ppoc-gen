@@ -148,20 +148,23 @@
 			events: events,
 			eventClassNames: 'm-0.5',
 			eventTextColor: 'black',
+			editable: false,
+			eventDurationEditable: false,
+			eventStartEditable: false,
 			noEventsContent: $_('turns.no-turns'),
-			dayHeaderFormat: day => {
+			dayHeaderFormat: (day: Date) => {
 				return $_(
 					'general.' + ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][day.getDay()]
 				)
 			},
-			listDayFormat: day => {
+			listDayFormat: (day: Date) => {
 				return $_(
 					'general.' + ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][day.getDay()]
 				)
 			},
 			views: {
 				dayGridMonth: {
-					titleFormat: day => {
+					titleFormat: (day: Date) => {
 						return $_('general.' + day.toLocaleString('en', {month: 'long'}).toLowerCase()) + ' ' + day.getFullYear()
 					}
 				}
