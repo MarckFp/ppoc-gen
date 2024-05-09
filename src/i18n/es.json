@@ -190,6 +190,9 @@
 		"latitude": "Latitud",
 		"longitude": "Longitud",
 		"info-latitude": "Este ajuste es para mostrar el tiempo en el calendario de la portada. Es opcional",
-		"name-order": "Ordenar publicador por"
+		"name-order": "Ordenar publicador por",
+		"city-or-town": "Ciudad o Pueblo",
+		"zipcode": "Código Postal",
+		"country": "País"
 	}
 }

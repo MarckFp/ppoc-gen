@@ -190,6 +190,9 @@
 		"latitude": "Latitude",
 		"longitude": "Longitude",
 		"info-latitude": "This settings is to display weather at the home calendar. It's optional",
-		"name-order": "Order publishers by"
+		"name-order": "Order publishers by",
+		"city-or-town": "City or Town",
+		"zipcode": "Zipcode",
+		"country": "Country"
 	}
 }

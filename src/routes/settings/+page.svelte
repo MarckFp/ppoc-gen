@@ -174,20 +174,20 @@
 						<Select items={name_order} bind:value={$congregation.name_order} />
 					</Label>
 					<Tooltip triggeredBy="#info-latitude" placement="left">{$_('settings.info-latitude')}</Tooltip>
-					<div class="grid grid-cols-3">
-						<Label class="m-1 space-y-2">
+					<div class="grid grid-cols-1 gap-1 md:grid-cols-3">
+						<Label class="space-y-2">
 							<div class="flex flex-row">
 								<InfoCircleSolid id="info-latitude" class="mr-2" />
-								<span>City or Town:</span>
+								<span>{$_('settings.city-or-town')}:</span>
 							</div>
 							<Input type="text" bind:value={location} />
 						</Label>
-						<Label class="m-1 space-y-2">
-							<span>Zipcode:</span>
+						<Label class="space-y-2">
+							<span>{$_('settings.zipcode')}:</span>
 							<Input type="text" bind:value={zipcode} />
 						</Label>
-						<Label class="m-1 space-y-2">
-							<span>Country:</span>
+						<Label class="space-y-2">
+							<span>{$_('settings.country')}:</span>
 							<Input type="text" bind:value={country} />
 						</Label>
 					</div>
