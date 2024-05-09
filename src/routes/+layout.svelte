@@ -6,6 +6,8 @@
 	import New from '$lib/components/New.svelte'
 	import {locale, locales} from 'svelte-i18n'
 	import {Footer, Card} from 'flowbite-svelte'
+	import {page} from '$app/stores'
+	import {base} from '$app/paths'
 
 	// eslint-disable-next-line
 	const version = PKG.version ?? 'unknown'
@@ -30,17 +32,22 @@
 		{#if $congregation.length == 0}
 			<New />
 		{:else}
-			<NavBar />
+			<p>{base}</p>
+			{#if [`${base}/`, `${base}/settings`, `${base}/publishers`, `${base}/schedules`, `${base}/turns`, `${base}/incidences`].includes($page.url.pathname)}
+				<NavBar />
+			{/if}
 			<slot />
 		{/if}
 	</main>
 
 	{#if $congregation.length > 0}
-		<Footer class="flex flex-row justify-center print:hidden">
-			<Card class="mx-5 my-1 text-center dark:text-white" size="xl">
-				PPOC Gen version {version}
-			</Card>
-		</Footer>
+		{#if [`${base}/`, `${base}/settings`, `${base}/publishers`, `${base}/schedules`, `${base}/turns`, `${base}/incidences`].includes($page.url.pathname)}
+			<Footer class="flex flex-row justify-center print:hidden">
+				<Card class="mx-5 my-1 text-center dark:text-white" size="xl">
+					PPOC Gen version {version}
+				</Card>
+			</Footer>
+		{/if}
 	{/if}
 {/if}
 

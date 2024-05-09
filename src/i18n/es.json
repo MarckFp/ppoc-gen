@@ -1,4 +1,9 @@
 {
+	"errors": {
+		"404": "Página no encontrada",
+		"404-msg": "Lo siento, no pudimos encontrar esa página. Puedes explorar más de la app en la página de inicio.",
+		"404-btn": "De vuelta a la Página de Inicio"
+	},
 	"navbar": {
 		"publishers": "Publicadores",
 		"schedules": "Horarios",
