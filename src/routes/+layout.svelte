@@ -32,7 +32,6 @@
 		{#if $congregation.length == 0}
 			<New />
 		{:else}
-			<p>{base}</p>
 			{#if [`${base}/`, `${base}/settings`, `${base}/publishers`, `${base}/schedules`, `${base}/turns`, `${base}/incidences`].includes($page.url.pathname)}
 				<NavBar />
 			{/if}
