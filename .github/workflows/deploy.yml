@@ -42,6 +42,7 @@ jobs:
       - uses: actions/deploy-pages@v4
         id: deployment
   deploy-desktop:
+    name: ${{ matrix.settings.name }}
     permissions:
       contents: write
       discussions: write
@@ -51,12 +52,19 @@ jobs:
         settings:
           - platform: 'macos-latest'
             args: '--target aarch64-apple-darwin'
+            name: 'MacOS ARM'
           - platform: 'macos-13'
             args: '--target x86_64-apple-darwin'
+            name: 'MacOS x86_64'
           - platform: 'ubuntu-latest'
             args: ''
+            name: 'Linux'
           - platform: 'windows-latest'
             args: ''
+            name: 'Windows x86_64'
+          - platform: 'windows-latest'
+            args: '--target aarch64-pc-windows-msvc'
+            name: 'Windows ARM'
     runs-on: ${{ matrix.settings.platform }}
     steps:
       - uses: actions/checkout@v4
