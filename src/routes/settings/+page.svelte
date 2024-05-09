@@ -7,11 +7,15 @@
 	import {exportDB, importInto} from 'dexie-export-import'
 	import {locale, locales, _} from 'svelte-i18n'
 	import {base} from '$app/paths'
+	import {onMount} from 'svelte'
 
 	let deleteModal: boolean = false,
 		importModal: boolean = false,
 		files: FileList,
-		langs: {value: string; name: string}[] = []
+		langs: {value: string; name: string}[] = [],
+		location: string = '',
+		country: string = '',
+		zipcode: string = ''
 
 	$: week_order = [
 		{value: 'monday', name: $_('general.monday')},
@@ -24,6 +28,25 @@
 	]
 
 	const congregation = liveQuery(() => db.congregation.orderBy('id').first())
+
+	onMount(async () => {
+		const congregation = await db.congregation.orderBy('id').first()
+		if (congregation?.lat && congregation?.lon && congregation?.lat != 0.0 && congregation?.lon != 0.0) {
+			const res = await fetch(
+				`https://nominatim.openstreetmap.org/reverse.php?lat=${congregation.lat}&lon=${congregation.lon}&format=jsonv2&zoom=13&accept-language=${$locale}`
+			)
+			if (res.ok) {
+				const json = await res.json()
+				if (json.address.town) {
+					location = json.address.town
+				} else {
+					location = json.address.city
+				}
+				country = json.address.country
+				zipcode = json.address.postcode
+			}
+		}
+	})
 
 	$locales.forEach(lang => {
 		langs.push({value: lang, name: $_('general.' + lang)})
@@ -41,7 +64,7 @@
 		window.location.href = base
 	}
 
-	function updateCongregation() {
+	async function updateCongregation() {
 		if ($congregation) {
 			if ($congregation?.name == '') {
 				new AlertToast({
@@ -50,12 +73,46 @@
 				})
 				return
 			}
-			db.congregation.update($congregation?.id, $congregation)
+			let lat = 0.0
+			let lon = 0.0
+			if (location != '' && country != '' && zipcode != '') {
+				const res = await fetch(
+					`https://nominatim.openstreetmap.org/search.php?q=${encodeURIComponent(location + ' ' + zipcode + ' ' + country)}&format=jsonv2`
+				)
+				if (res.ok) {
+					const json = await res.json()
+					if (json.length >= 1) {
+						lat = json[0].lat
+						lon = json[0].lon
+					}
+				}
+			}
+			db.congregation.update($congregation?.id, {
+				name: $congregation.name,
+				lang: $congregation.lang,
+				week_order: $congregation.week_order,
+				name_order: $congregation.name_order,
+				lat: lat,
+				lon: lon
+			})
 			$locale = $congregation?.lang
 			langs = []
 			$locales.forEach(lang => {
 				langs.push({value: lang, name: $_('general.' + lang)})
 			})
+			const showRes = await fetch(
+				`https://nominatim.openstreetmap.org/reverse.php?lat=${lat}&lon=${lon}&format=jsonv2&zoom=13&accept-language=${$locale}`
+			)
+			if (showRes.ok) {
+				const json = await showRes.json()
+				if (json.address.town) {
+					location = json.address.town
+				} else {
+					location = json.address.city
+				}
+				country = json.address.country
+				zipcode = json.address.postcode
+			}
 			new AlertToast({
 				target: document.querySelector('#toast-container'),
 				props: {alertStatus: 'success', alertMessage: $_('settings.updated-successfully')}
@@ -116,18 +173,22 @@
 						<span>{$_('settings.name-order')}:</span>
 						<Select items={name_order} bind:value={$congregation.name_order} />
 					</Label>
-					<div class="grid gap-6 md:grid-cols-2">
-						<Tooltip triggeredBy="#info-latitude" placement="left">{$_('settings.info-latitude')}</Tooltip>
-						<Label class="space-y-2">
+					<Tooltip triggeredBy="#info-latitude" placement="left">{$_('settings.info-latitude')}</Tooltip>
+					<div class="grid grid-cols-3">
+						<Label class="m-1 space-y-2">
 							<div class="flex flex-row">
 								<InfoCircleSolid id="info-latitude" class="mr-2" />
-								<span>{$_('settings.latitude')}:</span>
+								<span>City or Town:</span>
 							</div>
-							<Input type="text" bind:value={$congregation.lat} />
+							<Input type="text" bind:value={location} />
 						</Label>
-						<Label class="space-y-2">
-							<span>{$_('settings.longitude')}:</span>
-							<Input type="text" bind:value={$congregation.lon} />
+						<Label class="m-1 space-y-2">
+							<span>Zipcode:</span>
+							<Input type="text" bind:value={zipcode} />
+						</Label>
+						<Label class="m-1 space-y-2">
+							<span>Country:</span>
+							<Input type="text" bind:value={country} />
 						</Label>
 					</div>
 					<Button color="blue" on:click={updateCongregation} data-testid="settings-update-btn"
