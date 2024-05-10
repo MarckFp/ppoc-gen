@@ -1,14 +1,17 @@
 changelog:
   categories:
-    - title: Dependencies 🛠
+    - title: Dependencies 🔗
       labels:
-        - dependencies
+        - dependency
     - title: New Features 🎉
       labels:
-        - new-feature
+        - new feature
     - title: Improvements 💪🏼
       labels:
         - enhancement
+    - title: Fixes 🛠
+      labels:
+        - bug
     - title: Other Changes
       labels:
         - "*"
