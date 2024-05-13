@@ -6,19 +6,16 @@
 		Modal,
 		Label,
 		Select,
-		TableSearch,
-		TableBody,
-		TableBodyRow,
-		TableBodyCell,
-		TableHead,
 		MultiSelect,
-		TableHeadCell,
 		Checkbox,
 		Radio,
 		Badge,
-		Tooltip
+		Tooltip,
+		Dropdown,
+		Search,
+		DropdownItem
 	} from 'flowbite-svelte'
-	import {ExclamationCircleOutline, InfoCircleSolid} from 'flowbite-svelte-icons'
+	import {DotsHorizontalOutline, ExclamationCircleOutline, InfoCircleSolid, SearchOutline} from 'flowbite-svelte-icons'
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {db} from '$lib/db'
 	import {liveQuery} from 'dexie'
@@ -42,6 +39,7 @@
 		availabilities: boolean[] = [],
 		sorter = {},
 		affinityList: {value: number; name: string; color: string}[] = [],
+		modalTitle: string = $_('general.create-btn'),
 		genders: {value: string; name: string}[] = [
 			{value: 'male', name: $_('general.male')},
 			{value: 'female', name: $_('general.female')}
@@ -386,74 +384,39 @@
 
 <section class="mx-auto flex flex-col items-center justify-center px-6 py-8">
 	<Card size="xl">
-		<Button
-			color="blue"
-			class="mb-4 mt-1"
-			data-testid="publishers-create-btn"
-			on:click={() => {
-				createModal = true
-				edit = false
-				firstname = ''
-				lastname = ''
-				gender = 'male'
-				availabilities = []
-				weight = 1
-			}}>{$_('publishers.create-btn')}</Button
-		>
+		<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+			<div class="mt-1">
+				<Search size="md" bind:value={searchTerm} placeholder={$_('publishers.search-inp')} />
+			</div>
+			<Button
+				color="blue"
+				class="mb-4 mt-1"
+				data-testid="publishers-create-btn"
+				on:click={() => {
+					createModal = true
+					edit = false
+					firstname = ''
+					lastname = ''
+					gender = 'male'
+					availabilities = []
+					weight = 1
+					modalTitle = $_('general.create-btn')
+				}}>{$_('publishers.create-btn')}</Button
+			>
+		</div>
 		{#if $users}
 			{#if $users.length == 0}
 				<Card size="xl" class="mt-5">
 					<h1 class="text-center dark:text-white">{$_('publishers.no-publishers')}</h1>
 				</Card>
 			{:else}
-				<TableSearch
-					placeholder={name_order == 'firstname' ? $_('publishers.search-inp') : $_('publishers.search-inp-lastname')}
-					striped={true}
-					hoverable={true}
-					bind:inputValue={searchTerm}
-				>
-					<TableHead>
-						{#if name_order == 'lastname'}
-							<TableHeadCell>{$_('publishers.lastname')} & {$_('publishers.firstname')}</TableHeadCell>
-						{:else}
-							<TableHeadCell>{$_('publishers.firstname')} & {$_('publishers.lastname')}</TableHeadCell>
-						{/if}
-						<TableHeadCell>{$_('publishers.gender')}</TableHeadCell>
-						<TableHeadCell>{$_('publishers.priority')}</TableHeadCell>
-						<TableHeadCell>
-							<span class="sr-only">Actions</span>
-						</TableHeadCell>
-					</TableHead>
-					<TableBody>
-						{#each filteredItems as user}
-							<TableBodyRow>
-								{#if name_order == 'lastname'}
-									<TableBodyCell>{user.lastname + ' ' + user.firstname}</TableBodyCell>
-								{:else}
-									<TableBodyCell>{user.firstname + ' ' + user.lastname}</TableBodyCell>
-								{/if}
-								<TableBodyCell>
-									{#if user.gender == 'male'}
-										<Badge large border rounded color="blue">{$_('general.' + user.gender)} ♂️</Badge>
-									{:else}
-										<Badge large border rounded color="pink">{$_('general.' + user.gender)} ♀️</Badge>
-									{/if}
-								</TableBodyCell>
-								<TableBodyCell>
-									{#if user.weight == 1}
-										<Badge large border color="yellow">{$_('publishers.high')}</Badge>
-									{:else if user.weight == 2}
-										<Badge large border color="indigo">{$_('publishers.medium')}</Badge>
-									{:else if user.weight == 3}
-										<Badge large border color="red">{$_('publishers.low')}</Badge>
-									{:else}
-										<Badge large border color="pink">{$_('publishers.advanced')}: {user.weight}</Badge>
-									{/if}
-								</TableBodyCell>
-								<TableBodyCell>
-									<Button
-										color="blue"
-										class="mr-2"
+				<div class="grid grid-cols-1 gap-2 md:grid-cols-4">
+					{#each filteredItems as user}
+						<Card padding="none" class="p-2">
+							<div class="flex justify-end">
+								<DotsHorizontalOutline />
+								<Dropdown class="w-36">
+									<DropdownItem
 										id="edit-{user.id}"
 										data-testid="publishers-edit-btn"
 										on:click={() => {
@@ -465,6 +428,7 @@
 											lastname = user.lastname
 											gender = user.gender
 											weight = user.weight
+											modalTitle = $_('general.edit-btn')
 											if (![1, 2, 3].includes(weight)) {
 												advanced = true
 												advanced_radio = 'yes'
@@ -472,27 +436,55 @@
 											getAffinities(user.id)
 											retrieveAvailabilities(user.id)
 											edit = true
-										}}>{$_('general.edit-btn')}</Button
+										}}
 									>
-									<Button
-										color="red"
-										class="ml-2"
+										{$_('general.edit-btn')}
+									</DropdownItem>
+									<DropdownItem
 										id="delete-{user.id}"
 										on:click={() => {
 											deleteModal = true
 											selectedId = user.id
-										}}>{$_('general.delete-btn')}</Button
-									>
-								</TableBodyCell>
-							</TableBodyRow>
-						{/each}
-					</TableBody>
-				</TableSearch>
+										}}
+										>{$_('general.delete-btn')}
+									</DropdownItem>
+								</Dropdown>
+							</div>
+							<div class="flex flex-col items-center pb-2">
+								{#if name_order == 'lastname'}
+									<h5 class="text-xl font-medium text-gray-900 dark:text-white">
+										{user.lastname + ' ' + user.firstname}
+									</h5>
+								{:else}
+									<h5 class="text-xl font-medium text-gray-900 dark:text-white">
+										{user.firstname + ' ' + user.lastname}
+									</h5>
+								{/if}
+								<div class="mt-2 flex space-x-3 lg:mt-2 rtl:space-x-reverse">
+									{#if user.gender == 'male'}
+										<Badge large border rounded color="blue">{$_('general.' + user.gender)}</Badge>
+									{:else}
+										<Badge large border rounded color="pink">{$_('general.' + user.gender)}</Badge>
+									{/if}
+									{#if user.weight == 1}
+										<Badge large border rounded color="yellow">{$_('publishers.high')}</Badge>
+									{:else if user.weight == 2}
+										<Badge large border rounded color="indigo">{$_('publishers.medium')}</Badge>
+									{:else if user.weight == 3}
+										<Badge large border rounded color="red">{$_('publishers.low')}</Badge>
+									{:else}
+										<Badge large border rounded color="pink">{$_('publishers.advanced')}: {user.weight}</Badge>
+									{/if}
+								</div>
+							</div>
+						</Card>
+					{/each}
+				</div>
 			{/if}
 		{/if}
 	</Card>
 
-	<Modal bind:open={createModal} size="xs" autoclose outsideclose>
+	<Modal title={modalTitle} bind:open={createModal} size="lg" autoclose outsideclose>
 		<Label>
 			{$_('publishers.firstname')}:
 			<Input type="text" id="firstname" bind:value={firstname} data-testid="publishers-firstname" required />
@@ -557,7 +549,7 @@
 				<InfoCircleSolid id="info-affinity" class="mr-2" />
 				{$_('publishers.affinity')}:
 			</div>
-			<MultiSelect items={affinityList} bind:value={pubAffinities} size="sm" let:item let:clear>
+			<MultiSelect items={affinityList} bind:value={pubAffinities} size="sm" let:item let:clear class="mt-1">
 				<Badge color={item.color} dismissable params={{duration: 100}} on:close={clear}>
 					{item.name}
 				</Badge>
@@ -567,16 +559,20 @@
 			{$_('publishers.availability')}:
 			{#if $schedules}
 				{#if $schedules.length == 0}
-					<p class="text-center">{$_('publishers.no-schedules')}</p>
+					<p class="m-1 text-center">{$_('publishers.no-schedules')}</p>
 				{:else}
-					<ul class="grid w-full grid-cols-1 items-center rounded-lg" data-testid="publishers-availability">
+					<ul
+						class="m-1 grid w-full grid-cols-1 items-center gap-2 rounded-lg md:grid-cols-2"
+						data-testid="publishers-availability"
+					>
 						{#each $schedules as schedule}
 							{#if schedule.id}
-								<li class="w-full border">
+								<li class="w-full rounded border">
 									<Checkbox class="p-3" id="availability-{schedule.id}" bind:checked={availabilities[schedule.id]}
-										><Badge color="red" class="m-1">{$_('general.' + schedule.weekday)}</Badge><Badge color="indigo"
-											>{schedule.start_time + '-' + schedule.end_time}</Badge
-										><Badge class="m-1" color="pink">{schedule.location}</Badge></Checkbox
+										><Badge rounded color="red" class="m-1">{$_('general.' + schedule.weekday)}</Badge><Badge
+											rounded
+											color="indigo">{schedule.start_time + '-' + schedule.end_time}</Badge
+										><Badge rounded class="m-1" color="pink">{schedule.location}</Badge></Checkbox
 									>
 								</li>
 							{/if}
