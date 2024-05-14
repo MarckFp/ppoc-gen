@@ -16,7 +16,7 @@
     },
     "bundle": {
       "active": true,
-      "category": "DeveloperTool",
+      "category": "Utility",
       "copyright": "",
       "deb": {
         "depends": []
@@ -30,7 +30,7 @@
         "icons/icon.ico"
       ],
       "identifier": "com.ppoc-gen.dev",
-      "longDescription": "",
+      "longDescription": "Web application in charge of generating dynamic public preaching turns",
       "macOS": {
         "entitlements": null,
         "exceptionDomain": "",
@@ -39,7 +39,7 @@
         "signingIdentity": null
       },
       "resources": [],
-      "shortDescription": "",
+      "shortDescription": "Public Preaching Generator",
       "targets": "all",
       "windows": {
         "certificateThumbprint": null,
@@ -59,7 +59,10 @@
         "height": 600,
         "resizable": true,
         "title": "PPOC Gen",
-        "width": 800
+        "width": 800,
+        "minWidth": 600,
+        "minHeight": 400,
+        "maximized": true
       }
     ]
   }
