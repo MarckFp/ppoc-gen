@@ -11,9 +11,12 @@
 		TableBodyRow,
 		TableHeadCell,
 		TableSearch,
-		TableHead
+		TableHead,
+		Search,
+		Dropdown,
+		DropdownItem
 	} from 'flowbite-svelte'
-	import {ExclamationCircleOutline} from 'flowbite-svelte-icons'
+	import {DotsHorizontalOutline, ExclamationCircleOutline} from 'flowbite-svelte-icons'
 	import {db} from '$lib/db'
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {liveQuery} from 'dexie'
@@ -187,27 +190,79 @@
 
 <section class="mx-auto flex flex-col items-center justify-center px-6 py-8">
 	<Card size="xl">
-		<Button
-			color="blue"
-			class="mb-4 mt-1"
-			data-testid="schedules-create-btn"
-			on:click={() => {
-				createModal = true
-				selected_weekday = 'monday'
-				start_time = '00:00'
-				end_time = '00:00'
-				location = ''
-				n_brothers = 1
-				n_sisters = 1
-				modalTitle = $_('general.create-btn')
-				edit = false
-			}}>{$_('schedule.create-btn')}</Button
-		>
+		<div class="grid grid-cols-1 gap-3">
+			{#if mobile}
+				<div class="mt-1">
+					<Search size="md" bind:value={searchTerm} placeholder={$_('schedule.search-inp')} />
+				</div>
+			{/if}
+			<Button
+				color="blue"
+				class="mb-4 mt-1"
+				data-testid="schedules-create-btn"
+				on:click={() => {
+					createModal = true
+					selected_weekday = 'monday'
+					start_time = '00:00'
+					end_time = '00:00'
+					location = ''
+					n_brothers = 1
+					n_sisters = 1
+					modalTitle = $_('general.create-btn')
+					edit = false
+				}}>{$_('schedule.create-btn')}</Button
+			>
+		</div>
 		{#if $schedules}
 			{#if $schedules.length == 0}
 				<Card size="xl" class="mt-5">
 					<h1 class="text-center dark:text-white">{$_('schedule.no-schedules')}</h1>
 				</Card>
+			{:else if mobile}
+				<div class="grid grid-cols-1 gap-2 md:grid-cols-4">
+					{#each filteredItems as schedule}
+						<Card padding="none" class="p-2" size="xl">
+							<div class="flex justify-end">
+								<DotsHorizontalOutline />
+								<Dropdown class="p-1">
+									<DropdownItem
+										id="edit-{schedule.id}"
+										on:click={() => {
+											createModal = true
+											selectedId = schedule.id
+											edit = true
+											selected_weekday = schedule.weekday
+											n_brothers = schedule.n_brothers
+											n_sisters = schedule.n_sisters
+											location = schedule.location
+											start_time = schedule.start_time
+											end_time = schedule.end_time
+											modalTitle = $_('general.edit-btn')
+										}}
+									>
+										{$_('general.edit-btn')}
+									</DropdownItem>
+									<DropdownItem
+										id="delete-{schedule.id}"
+										on:click={() => {
+											deleteModal = true
+											selectedId = schedule.id
+										}}
+										>{$_('general.delete-btn')}
+									</DropdownItem>
+								</Dropdown>
+							</div>
+							<div class="flex flex-col items-center text-center">
+								<div>{$_('general.' + schedule.weekday)}</div>
+								<div>{schedule.start_time}</div>
+								<div>{schedule.end_time}</div>
+								<div>{schedule.location}</div>
+								<div>{schedule.n_brothers}</div>
+								<div>{schedule.n_sisters}</div>
+							</div>
+						</Card>
+					{/each}
+				</div>
 			{:else}
 				<TableSearch
 					placeholder={$_('schedule.search-inp')}
