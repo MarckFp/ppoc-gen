@@ -33,10 +33,11 @@
 		const congregation = await db.congregation.orderBy('id').first()
 		if (congregation?.lat && congregation?.lon && congregation?.lat != 0.0 && congregation?.lon != 0.0) {
 			const res = await fetch(
-				`https://nominatim.openstreetmap.org/reverse.php?lat=${congregation.lat}&lon=${congregation.lon}&format=jsonv2&zoom=13&accept-language=${$locale}`
+				`https://nominatim.openstreetmap.org/reverse.php?lat=${congregation.lat}&lon=${congregation.lon}&format=jsonv2&zoom=16&accept-language=${$locale}`
 			)
 			if (res.ok) {
 				const json = await res.json()
+				console.log(json)
 				if (json.address.town) {
 					location = json.address.town
 				} else {
@@ -101,7 +102,7 @@
 				langs.push({value: lang, name: $_('general.' + lang)})
 			})
 			const showRes = await fetch(
-				`https://nominatim.openstreetmap.org/reverse.php?lat=${lat}&lon=${lon}&format=jsonv2&zoom=13&accept-language=${$locale}`
+				`https://nominatim.openstreetmap.org/reverse.php?lat=${lat}&lon=${lon}&format=jsonv2&zoom=16&accept-language=${$locale}`
 			)
 			if (showRes.ok) {
 				const json = await showRes.json()
