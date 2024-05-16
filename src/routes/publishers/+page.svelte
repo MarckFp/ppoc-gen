@@ -13,7 +13,13 @@
 		Tooltip,
 		Dropdown,
 		Search,
-		DropdownItem
+		DropdownItem,
+		TableSearch,
+		TableHead,
+		TableHeadCell,
+		TableBody,
+		TableBodyRow,
+		TableBodyCell
 	} from 'flowbite-svelte'
 	import {DotsHorizontalOutline, ExclamationCircleOutline, InfoCircleSolid, SearchOutline} from 'flowbite-svelte-icons'
 	import AlertToast from '$lib/components/AlertToast.svelte'
@@ -21,11 +27,13 @@
 	import {liveQuery} from 'dexie'
 	import {_} from 'svelte-i18n'
 	import {onMount} from 'svelte'
+	import {labelClass} from 'flowbite-svelte/Radio.svelte'
 
 	let createModal: boolean = false,
 		deleteModal: boolean = false,
 		advanced: boolean = false,
 		edit: boolean = false,
+		mobile: boolean = false,
 		selectedId: number,
 		searchTerm: string = '',
 		firstname: string = '',
@@ -380,14 +388,31 @@
 			}
 		}
 	}
+
+	//Media Queries for Calendar View
+	const mediaQuery = window.matchMedia('(width <= 600px)')
+	mediaQuery.addEventListener('change', ({matches}) => {
+		if (matches) {
+			mobile = true
+		} else {
+			mobile = false
+		}
+	})
+	if (mediaQuery.matches) {
+		mobile = true
+	} else {
+		mobile = false
+	}
 </script>
 
 <section class="mx-auto flex flex-col items-center justify-center px-6 py-8">
 	<Card size="xl">
-		<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-			<div class="mt-1">
-				<Search size="md" bind:value={searchTerm} placeholder={$_('publishers.search-inp')} />
-			</div>
+		<div class="grid grid-cols-1 gap-3">
+			{#if mobile}
+				<div class="mt-1">
+					<Search size="md" bind:value={searchTerm} placeholder={$_('publishers.search-inp')} />
+				</div>
+			{/if}
 			<Button
 				color="blue"
 				class="mb-4 mt-1"
@@ -409,13 +434,13 @@
 				<Card size="xl" class="mt-5">
 					<h1 class="text-center dark:text-white">{$_('publishers.no-publishers')}</h1>
 				</Card>
-			{:else}
+			{:else if mobile}
 				<div class="grid grid-cols-1 gap-2 md:grid-cols-4">
 					{#each filteredItems as user}
 						<Card padding="none" class="p-2">
 							<div class="flex justify-end">
 								<DotsHorizontalOutline />
-								<Dropdown class="w-36">
+								<Dropdown class="p-1">
 									<DropdownItem
 										id="edit-{user.id}"
 										data-testid="publishers-edit-btn"
@@ -450,36 +475,121 @@
 									</DropdownItem>
 								</Dropdown>
 							</div>
-							<div class="flex flex-col items-center pb-2">
+							<div class="flex flex-col items-center text-center">
 								{#if name_order == 'lastname'}
-									<h5 class="text-xl font-medium text-gray-900 dark:text-white">
+									<h5 class="w-full text-xl font-medium text-gray-900 dark:text-white">
 										{user.lastname + ' ' + user.firstname}
 									</h5>
 								{:else}
-									<h5 class="text-xl font-medium text-gray-900 dark:text-white">
+									<h5 class="w-full text-xl font-medium text-gray-900 dark:text-white">
 										{user.firstname + ' ' + user.lastname}
 									</h5>
 								{/if}
-								<div class="mt-2 flex space-x-3 lg:mt-2 rtl:space-x-reverse">
-									{#if user.gender == 'male'}
-										<Badge large border rounded color="blue">{$_('general.' + user.gender)}</Badge>
-									{:else}
-										<Badge large border rounded color="pink">{$_('general.' + user.gender)}</Badge>
-									{/if}
-									{#if user.weight == 1}
-										<Badge large border rounded color="yellow">{$_('publishers.high')}</Badge>
-									{:else if user.weight == 2}
-										<Badge large border rounded color="indigo">{$_('publishers.medium')}</Badge>
-									{:else if user.weight == 3}
-										<Badge large border rounded color="red">{$_('publishers.low')}</Badge>
-									{:else}
-										<Badge large border rounded color="pink">{$_('publishers.advanced')}: {user.weight}</Badge>
-									{/if}
+								<div class="mt-2 w-full">
+									<div class="grid h-fit grid-cols-2 gap-4">
+										{#if user.gender == 'male'}
+											<Badge large color="blue">{$_('general.' + user.gender)}</Badge>
+										{:else}
+											<Badge large color="pink">{$_('general.' + user.gender)}</Badge>
+										{/if}
+										{#if user.weight == 1}
+											<Badge large color="yellow">{$_('publishers.high')}</Badge>
+										{:else if user.weight == 2}
+											<Badge large color="indigo">{$_('publishers.medium')}</Badge>
+										{:else if user.weight == 3}
+											<Badge large color="green">{$_('publishers.low')}</Badge>
+										{:else}
+											<Badge large color="red">{$_('publishers.advanced')}: {user.weight}</Badge>
+										{/if}
+									</div>
 								</div>
 							</div>
 						</Card>
 					{/each}
 				</div>
+			{:else}
+				<TableSearch
+					placeholder={name_order == 'firstname' ? $_('publishers.search-inp') : $_('publishers.search-inp-lastname')}
+					striped={true}
+					hoverable={true}
+					bind:inputValue={searchTerm}
+				>
+					<TableHead>
+						{#if name_order == 'lastname'}
+							<TableHeadCell>{$_('publishers.lastname')} & {$_('publishers.firstname')}</TableHeadCell>
+						{:else}
+							<TableHeadCell>{$_('publishers.firstname')} & {$_('publishers.lastname')}</TableHeadCell>
+						{/if}
+						<TableHeadCell>{$_('publishers.gender')}</TableHeadCell>
+						<TableHeadCell>{$_('publishers.priority')}</TableHeadCell>
+						<TableHeadCell>
+							<span class="sr-only">Actions</span>
+						</TableHeadCell>
+					</TableHead>
+					<TableBody>
+						{#each filteredItems as user}
+							<TableBodyRow>
+								{#if name_order == 'lastname'}
+									<TableBodyCell>{user.lastname + ' ' + user.firstname}</TableBodyCell>
+								{:else}
+									<TableBodyCell>{user.firstname + ' ' + user.lastname}</TableBodyCell>
+								{/if}
+								<TableBodyCell>
+									{#if user.gender == 'male'}
+										<Badge large border rounded color="blue">{$_('general.' + user.gender)} ♂️</Badge>
+									{:else}
+										<Badge large border rounded color="pink">{$_('general.' + user.gender)} ♀️</Badge>
+									{/if}
+								</TableBodyCell>
+								<TableBodyCell>
+									{#if user.weight == 1}
+										<Badge large border color="yellow">{$_('publishers.high')}</Badge>
+									{:else if user.weight == 2}
+										<Badge large border color="indigo">{$_('publishers.medium')}</Badge>
+									{:else if user.weight == 3}
+										<Badge large border color="red">{$_('publishers.low')}</Badge>
+									{:else}
+										<Badge large border color="pink">{$_('publishers.advanced')}: {user.weight}</Badge>
+									{/if}
+								</TableBodyCell>
+								<TableBodyCell>
+									<Button
+										color="blue"
+										class="mr-2"
+										id="edit-{user.id}"
+										data-testid="publishers-edit-btn"
+										on:click={() => {
+											createModal = true
+											advanced = false
+											advanced_radio = 'no'
+											selectedId = user.id
+											firstname = user.firstname
+											lastname = user.lastname
+											gender = user.gender
+											weight = user.weight
+											if (![1, 2, 3].includes(weight)) {
+												advanced = true
+												advanced_radio = 'yes'
+											}
+											getAffinities(user.id)
+											retrieveAvailabilities(user.id)
+											edit = true
+										}}>{$_('general.edit-btn')}</Button
+									>
+									<Button
+										color="red"
+										class="ml-2"
+										id="delete-{user.id}"
+										on:click={() => {
+											deleteModal = true
+											selectedId = user.id
+										}}>{$_('general.delete-btn')}</Button
+									>
+								</TableBodyCell>
+							</TableBodyRow>
+						{/each}
+					</TableBody>
+				</TableSearch>
 			{/if}
 		{/if}
 	</Card>
