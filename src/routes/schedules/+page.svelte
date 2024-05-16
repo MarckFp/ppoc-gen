@@ -23,10 +23,12 @@
 	let createModal: boolean = false,
 		deleteModal: boolean = false,
 		edit: boolean = false,
+		mobile: boolean = false,
 		searchTerm: string = '',
 		selected_weekday: string = 'monday',
 		start_time: string = '00:00',
 		end_time: string = '00:00',
+		modalTitle: string = $_('general.create-btn'),
 		location: string = '',
 		n_brothers: number = 1,
 		n_sisters: number = 1,
@@ -166,6 +168,21 @@
 		n_sisters = 1
 		edit = false
 	}
+
+	//Media Queries for Calendar View
+	const mediaQuery = window.matchMedia('(width <= 600px)')
+	mediaQuery.addEventListener('change', ({matches}) => {
+		if (matches) {
+			mobile = true
+		} else {
+			mobile = false
+		}
+	})
+	if (mediaQuery.matches) {
+		mobile = true
+	} else {
+		mobile = false
+	}
 </script>
 
 <section class="mx-auto flex flex-col items-center justify-center px-6 py-8">
@@ -182,6 +199,7 @@
 				location = ''
 				n_brothers = 1
 				n_sisters = 1
+				modalTitle = $_('general.create-btn')
 				edit = false
 			}}>{$_('schedule.create-btn')}</Button
 		>
@@ -232,6 +250,7 @@
 											location = schedule.location
 											start_time = schedule.start_time
 											end_time = schedule.end_time
+											modalTitle = $_('general.edit-btn')
 										}}>{$_('general.edit-btn')}</Button
 									>
 									<Button
@@ -252,7 +271,7 @@
 		{/if}
 	</Card>
 
-	<Modal bind:open={createModal} size="xs" autoclose outsideclose>
+	<Modal title={modalTitle} bind:open={createModal} size="xs" autoclose outsideclose>
 		<Label>
 			{$_('schedule.weekday')}:
 			<Select

@@ -196,7 +196,7 @@
 			{:else if mobile}
 				<div class="grid grid-cols-1 gap-2 md:grid-cols-4">
 					{#each filteredItems as incidence}
-						<Card padding="none" class="p-2">
+						<Card padding="none" class="p-2" size="xl">
 							<div class="flex justify-end">
 								<DotsHorizontalOutline />
 								<Dropdown class="p-1">
