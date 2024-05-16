@@ -1,12 +1,12 @@
 <script lang="ts">
-	import Calendar from '@event-calendar/core'
-	import TimeGrid from '@event-calendar/time-grid'
-	import List from '@event-calendar/list'
-	import DayGrid from '@event-calendar/day-grid'
+	import {Calendar, type EventInput, type EventSourceInput} from '@fullcalendar/core'
+	import dayGridPlugin from '@fullcalendar/daygrid'
+	import timeGridPlugin from '@fullcalendar/timegrid'
+	import listPlugin from '@fullcalendar/list'
 	import {db} from '$lib/db'
 	import {locale, _} from 'svelte-i18n'
 	import {onMount} from 'svelte'
-	import {Button, ButtonGroup} from 'flowbite-svelte'
+	import {Button, ButtonGroup, Spinner} from 'flowbite-svelte'
 	import {fetchWeatherApi} from 'openmeteo'
 
 	//Doesn't support typescript yet
@@ -82,23 +82,34 @@
 		}
 
 		//Calendar
-		let events = []
+		let date = new Date()
+		let week_order = 1
+		let events: EventInput[] = []
 		let eventUsers = []
-		let plugins = [TimeGrid, List, DayGrid]
 		let backgroundColors = ['#ffee93', '#92dce5', '#ecbad3', '#f0e6ef', '#b8bedd']
 		let index = 0
 		let weather = ''
 		const turns = await db.turn.toArray()
+
+		if (cong && cong.week_order) {
+			if (cong.week_order == 'monday') {
+				week_order = 1
+			}
+			if (cong.week_order == 'sunday') {
+				week_order = 0
+			}
+		}
+
 		for (let turn of turns) {
 			const assiggnments = await db.assignment.where({turn_id: turn.id}).toArray()
 			for (let assiggnment of assiggnments) {
 				const users = await db.user.where('id').equals(assiggnment.user_id).toArray()
 				for (let user of users) {
 					if (cong?.name_order == 'firstname') {
-						eventUsers.push(`<li class="ml-1">${user.firstname} ${user.lastname}</li>`)
+						eventUsers.push(`${user.firstname} ${user.lastname}`)
 					}
 					if (cong?.name_order == 'lastname') {
-						eventUsers.push(`<li class="ml-1">${user.lastname} ${user.firstname}</li>`)
+						eventUsers.push(`${user.lastname} ${user.firstname}`)
 					}
 				}
 			}
@@ -113,8 +124,10 @@
 				id: turn.id,
 				start: new Date(turn.date + ' ' + turn.start_time + ':00'),
 				end: new Date(turn.date + ' ' + turn.end_time + ':00'),
-				title: {
-					html: `<strong>${turn.location}</strong> <small>${weather}</small>${eventUsers.join('')}`
+				title: turn.location,
+				extendedProps: {
+					users: eventUsers,
+					weather: weather
 				},
 				backgroundColor: backgroundColors[index]
 			})
@@ -126,104 +139,87 @@
 			weather = ''
 		}
 
-		let date = new Date()
-		let week_order = 1
-
-		if (cong && cong.week_order) {
-			if (cong.week_order == 'monday') {
-				week_order = 1
-			}
-			if (cong.week_order == 'sunday') {
-				week_order = 0
-			}
-		}
-
-		let options = {
-			view: 'dayGridMonth',
-			locale: $locale,
-			buttonText: {today: $_('turns.today'), next: 'Next', prev: 'Previous'},
-			firstDay: week_order,
-			date: date,
-			height: '100%',
-			events: events,
-			eventClassNames: 'm-0.5',
-			eventTextColor: 'black',
-			editable: false,
-			eventDurationEditable: false,
-			eventStartEditable: false,
-			noEventsContent: $_('turns.no-turns'),
-			dayHeaderFormat: (day: Date) => {
-				return $_(
-					'general.' + ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][day.getDay()]
-				)
-			},
-			listDayFormat: (day: Date) => {
-				return $_(
-					'general.' + ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][day.getDay()]
-				)
-			},
-			views: {
-				dayGridMonth: {
-					titleFormat: (day: Date) => {
-						return $_('general.' + day.toLocaleString('en', {month: 'long'}).toLowerCase()) + ' ' + day.getFullYear()
+		const calDiv = document.getElementById('calendar')
+		if (calDiv) {
+			cal = new Calendar(calDiv, {
+				plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
+				initialView: 'dayGridMonth',
+				locale: $locale?.toString(),
+				initialDate: date,
+				events: events,
+				buttonText: {
+					today: $_('turns.today'),
+					month: $_('home.month-view'),
+					week: $_('home.week-view'),
+					day: $_('home.day-view'),
+					list: $_('home.list-view')
+				},
+				firstDay: week_order,
+				fixedWeekCount: false,
+				displayEventEnd: true,
+				eventContent: function (info) {
+					const startTime = info.event.start?.toLocaleTimeString($locale?.toString(), {
+						hour: 'numeric',
+						minute: '2-digit'
+					})
+					const endTime = info.event.end?.toLocaleTimeString($locale?.toString(), {hour: 'numeric', minute: '2-digit'})
+					let userDiv = ''
+					let weatherDiv = ''
+					info.event.extendedProps.users.forEach(user => {
+						userDiv += `<p class="break-all">- ${user}</p>`
+					})
+					if (info.event.extendedProps.weather != '') {
+						weatherDiv = `<span class="border rounded-full p-1 bg-gray-700">${info.event.extendedProps.weather}</span>`
 					}
+					let eventContent: string = `
+					<div class="flex flex-col rounded-lg p-2 m-1 w-full text-surface shadow-secondary-1 text-black" style="background-color:${info.event.backgroundColor};">
+						<div class="flex flex-row justify-between"><span>${startTime} - ${endTime}</span> ${weatherDiv}</div>
+						<div class="h3 font-bold">${info.event.title}</div>
+						<div>${userDiv}</div>
+					</div>
+					`
+					return {html: eventContent}
+				},
+				eventTimeFormat: {
+					hour: 'numeric',
+					minute: '2-digit',
+					meridiem: false
 				}
-			}
+			})
+			cal.render()
 		}
-		cal = new Calendar({
-			target: document.querySelector('#calendar-container'),
-			props: {
-				plugins: plugins,
-				options: options
-			}
-		})
 
 		//Media Queries for Calendar View
 		const mediaQuery = window.matchMedia('(width <= 860px)')
 		mediaQuery.addEventListener('change', ({matches}) => {
 			if (matches) {
 				disabledMobile = true
-				cal?.setOption('view', 'listWeek')
+				cal?.changeView('listWeek')
 			} else {
 				disabledMobile = false
-				cal?.setOption('view', 'dayGridMonth')
+				cal?.changeView('dayGridMonth')
 			}
 		})
 		if (mediaQuery.matches) {
 			disabledMobile = true
-			cal?.setOption('view', 'listWeek')
+			cal?.changeView('listWeek')
 		} else {
 			disabledMobile = false
-			cal?.setOption('view', 'dayGridMonth')
+			cal?.changeView('dayGridMonth')
 		}
 	})
 </script>
 
 <div class="m-3 print:hidden">
 	<ButtonGroup>
-		<Button outline color="dark" on:click={cal?.setOption('view', 'listDay')}>{$_('home.day-view')}</Button>
-		<Button outline color="dark" on:click={cal?.setOption('view', 'listWeek')}>{$_('home.week-view')}</Button>
+		<Button outline color="dark" on:click={cal?.changeView('listDay')}>{$_('home.day-view')}</Button>
+		<Button outline color="dark" on:click={cal?.changeView('listWeek')}>{$_('home.week-view')}</Button>
 		{#if !disabledMobile}
-			<Button outline color="dark" on:click={cal?.setOption('view', 'dayGridMonth')}>{$_('home.month-view')}</Button>
+			<Button outline color="dark" on:click={cal?.changeView('dayGridMonth')}>{$_('home.month-view')}</Button>
 		{/if}
 	</ButtonGroup>
 </div>
-<div
-	id="calendar-container"
-	class="mb-4 w-full items-center divide-gray-200 rounded-lg border border-gray-200 bg-white p-5 text-gray-900 shadow-md dark:divide-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
-></div>
 
-<style>
-	:global(.dark .ec-list .ec-day-head) {
-		background-color: #4b5563 !important;
-		color: white !important;
-	}
-
-	:global(.ec-event-body) {
-		flex-direction: column !important;
-	}
-
-	:global(.dark .ec-button):hover {
-		background-color: rgb(75 85 99 / var(--tw-bg-opacity));
-	}
-</style>
+<div id="calendar" class="w-full">
+	<div class="text-center"><Spinner /></div>
+</div>
