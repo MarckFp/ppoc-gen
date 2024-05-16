@@ -567,6 +567,7 @@
 											lastname = user.lastname
 											gender = user.gender
 											weight = user.weight
+											modalTitle = $_('general.edit-btn')
 											if (![1, 2, 3].includes(weight)) {
 												advanced = true
 												advanced_radio = 'yes'

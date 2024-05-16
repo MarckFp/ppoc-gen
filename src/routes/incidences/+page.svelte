@@ -11,9 +11,13 @@
 		TableBodyRow,
 		TableBodyCell,
 		TableHead,
-		TableHeadCell
+		TableHeadCell,
+		Search,
+		Dropdown,
+		DropdownItem,
+		Badge
 	} from 'flowbite-svelte'
-	import {ExclamationCircleOutline} from 'flowbite-svelte-icons'
+	import {DotsHorizontalOutline, ExclamationCircleOutline} from 'flowbite-svelte-icons'
 	import {db} from '$lib/db'
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {liveQuery} from 'dexie'
@@ -22,8 +26,10 @@
 	let createModal: boolean = false,
 		deleteModal: boolean = false,
 		edit: boolean = false,
+		mobile: boolean = false,
 		selectedId: number,
 		searchTerm: string = '',
+		modalTitle: string = $_('general.create-btn'),
 		user_id: number = 0,
 		userSelect: {value: number; name: string}[] = [],
 		userList: string[] = [],
@@ -143,27 +149,98 @@
 			props: {alertStatus: 'success', alertMessage: $_('incidences.deleted')}
 		})
 	}
+
+	//Media Queries for Calendar View
+	const mediaQuery = window.matchMedia('(width <= 600px)')
+	mediaQuery.addEventListener('change', ({matches}) => {
+		if (matches) {
+			mobile = true
+		} else {
+			mobile = false
+		}
+	})
+	if (mediaQuery.matches) {
+		mobile = true
+	} else {
+		mobile = false
+	}
 </script>
 
 <section class="mx-auto flex flex-col items-center justify-center px-6 py-8">
 	<Card size="xl">
-		<Button
-			color="blue"
-			class="mb-4 mt-1"
-			data-testid="incidences-create-btn"
-			on:click={() => {
-				createModal = true
-				edit = false
-				user_id = 0
-				start_date = new Date().toISOString().split('T')[0]
-				end_date = new Date().toISOString().split('T')[0]
-			}}>{$_('incidences.create-btn')}</Button
-		>
+		<div class="grid grid-cols-1 gap-3">
+			{#if mobile}
+				<div class="mt-1">
+					<Search size="md" bind:value={searchTerm} placeholder={$_('incidences.search-by')} />
+				</div>
+			{/if}
+			<Button
+				color="blue"
+				class="mb-4 mt-1"
+				data-testid="incidences-create-btn"
+				on:click={() => {
+					createModal = true
+					edit = false
+					user_id = 0
+					start_date = new Date().toISOString().split('T')[0]
+					end_date = new Date().toISOString().split('T')[0]
+					modalTitle = $_('general.create-btn')
+				}}>{$_('incidences.create-btn')}</Button
+			>
+		</div>
 		{#if $incidences}
 			{#if $incidences.length == 0}
 				<Card size="xl" class="mt-5">
 					<h1 class="text-center dark:text-white">{$_('incidences.no-incidences')}</h1>
 				</Card>
+			{:else if mobile}
+				<div class="grid grid-cols-1 gap-2 md:grid-cols-4">
+					{#each filteredItems as incidence}
+						<Card padding="none" class="p-2">
+							<div class="flex justify-end">
+								<DotsHorizontalOutline />
+								<Dropdown class="p-1">
+									<DropdownItem
+										id="edit-{incidence.id}"
+										on:click={() => {
+											createModal = true
+											selectedId = incidence.id
+											user_id = incidence.user_id
+											start_date = incidence.start_date
+											end_date = incidence.end_date
+											modalTitle = $_('general.edit-btn')
+											edit = true
+										}}
+									>
+										{$_('general.edit-btn')}
+									</DropdownItem>
+									<DropdownItem
+										id="delete-{incidence.id}"
+										on:click={() => {
+											deleteModal = true
+											selectedId = incidence.id
+										}}
+										>{$_('general.delete-btn')}
+									</DropdownItem>
+								</Dropdown>
+							</div>
+							<div class="flex flex-col items-center text-center">
+								{#if incidence.user_id == -1}
+									<h4 class="w-full text-xl font-medium text-gray-900 dark:text-white">{$_('incidences.all-cong')}</h4>
+								{:else}
+									<h4 class="w-full text-xl font-medium text-gray-900 dark:text-white">
+										{userList[incidence.user_id]}
+									</h4>
+								{/if}
+								<h5 class="w-ful mt-2 text-lg font-medium text-gray-900 dark:text-white">
+									<Badge large color="blue">{incidence.start_date}</Badge> - <Badge large color="red"
+										>{incidence.end_date}</Badge
+									>
+								</h5>
+							</div>
+						</Card>
+					{/each}
+				</div>
 			{:else}
 				<TableSearch
 					placeholder={$_('incidences.search-by')}
@@ -200,6 +277,7 @@
 											user_id = incidence.user_id
 											start_date = incidence.start_date
 											end_date = incidence.end_date
+											modalTitle = $_('general.edit-btn')
 											edit = true
 										}}>{$_('general.edit-btn')}</Button
 									>
@@ -221,7 +299,7 @@
 		{/if}
 	</Card>
 
-	<Modal bind:open={createModal} size="xs" autoclose outsideclose>
+	<Modal title={modalTitle} bind:open={createModal} size="xs" autoclose outsideclose>
 		<Label>
 			{$_('incidences.publisher')}:
 			<Select
