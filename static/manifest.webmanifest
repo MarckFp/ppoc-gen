@@ -3,9 +3,29 @@
   "short_name": "PPOC Gen",
   "start_url": "/",
   "scope": "/",
+  "id": "/ppoc-gen/",
   "display": "standalone",
+  "display_override": ["fullscreen", "minimal-ui"],
   "background_color": "#ffffff",
   "lang": "en",
+  "dir": "auto",
+  "launch_handler": {
+    "client_mode": ["auto", "navigate-existing"]
+  },
+  "edge_side_panel": {
+    "preferred_width": 500
+  },
+  "file_handlers": [
+    {
+      "action": "/settings",
+      "accept": {
+        "text/plain": [".pgen"]
+      }
+    }
+  ],
+  "categories": ["utilities", "productivity"],
+  "handle_links": "preferred",
+  "orientation": "landscape-primary",
   "description": "Web application in charge of generating dynamic public preaching turns",
   "theme_color": "#eb4034",
   "icons": [
