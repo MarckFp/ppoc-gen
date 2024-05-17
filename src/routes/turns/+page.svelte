@@ -13,9 +13,18 @@
 		TableHeadCell,
 		TableSearch,
 		TableHead,
-		Modal
+		Modal,
+		Dropdown,
+		DropdownItem,
+		Search
 	} from 'flowbite-svelte'
-	import {ExclamationCircleOutline, ArrowLeftOutline, ArrowRightOutline, FilePdfSolid} from 'flowbite-svelte-icons'
+	import {
+		ExclamationCircleOutline,
+		ArrowLeftOutline,
+		ArrowRightOutline,
+		FilePdfSolid,
+		DotsHorizontalOutline
+	} from 'flowbite-svelte-icons'
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {db} from '$lib/db'
 	import {liveQuery} from 'dexie'
@@ -524,6 +533,14 @@
 	}
 
 	async function exportToPDF() {
+		if (mobile) {
+			const delay = ms => new Promise(res => setTimeout(res, ms))
+			mobile = false
+			await delay(10)
+			window.print()
+			mobile = true
+			return
+		}
 		window.print()
 	}
 
@@ -605,7 +622,7 @@
 	{#if $turns && $schedules && $assignments && $showUsers}
 		<Card size="xl" class="mt-2">
 			{#if mobile}
-				<Badge border color="red" class="text-lg print:hidden">
+				<Badge border color="red" class="my-2 text-lg print:hidden">
 					{$_('general.' + date.toLocaleString('en', {month: 'long'}).toLowerCase())}
 					{date.getFullYear()}
 				</Badge>
@@ -664,10 +681,93 @@
 					}}><ArrowRightOutline></ArrowRightOutline></Button
 				>
 			</div>
+			{#if mobile}
+				<div class="my-2 print:hidden">
+					<Search size="md" bind:value={searchTerm} placeholder={$_('turns.search-by')} />
+				</div>
+			{/if}
 			{#if $turns.length == 0 || $schedules.length == 0}
 				<Card size="xl" class="mt-5">
 					<h1 class="text-center dark:text-white">{$_('turns.no-turns')}</h1>
 				</Card>
+			{:else if mobile}
+				<div class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-4">
+					{#each filteredItems as turn}
+						<Card padding="none" class="p-2 print:hidden" size="xl">
+							<div class="flex justify-end">
+								<DotsHorizontalOutline />
+								<Dropdown class="p-1">
+									<DropdownItem
+										id="edit-{turn.id}"
+										on:click={async () => {
+											createModal = true
+											edit = true
+											turnLocation = turn.location
+											turnDate = turn.date
+											turnStartTime = turn.start_time
+											turnEndTime = turn.end_time
+											selectedId = turn.id
+											modalTitle = $_('general.edit-btn')
+											await getAssignees(turn.id)
+										}}
+									>
+										{$_('general.edit-btn')}
+									</DropdownItem>
+									<DropdownItem
+										id="delete-{turn.id}"
+										on:click={() => {
+											deleteModal = true
+											selectedId = turn.id
+										}}
+										>{$_('general.delete-btn')}
+									</DropdownItem>
+								</Dropdown>
+							</div>
+							<div class="my-2 grid grid-cols-2 gap-2 text-center">
+								<div>
+									🗓️ {$_(
+										'general.' +
+											['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][
+												new Date(turn.date).getDay()
+											]
+									) +
+										' ' +
+										new Date(turn.date).getDate()}
+								</div>
+								<div>🕑 {turn.start_time + ' - ' + turn.end_time}</div>
+							</div>
+							<div class="my-2 text-center">📍 {turn.location}</div>
+							<hr />
+							<div class="my-2 grid grid-cols-2 text-center text-gray-900 dark:text-white sm:grid-cols-4">
+								{#each $assignments as assignment}
+									{#if assignment.turn_id == turn.id}
+										{#if assignment.user_id === -1}
+											<Badge color="yellow" class="m-1">{$_('turns.deleted-pub')}</Badge>
+										{/if}
+										{#each $showUsers as user}
+											{#if user.id == assignment.user_id}
+												{#if name_order == 'firstname'}
+													{#if user.gender == 'male'}
+														<Badge color="blue" class="order-1 m-1">{user.firstname + ' ' + user.lastname}</Badge>
+													{:else}
+														<Badge color="pink" class="order-2 m-1">{user.firstname + ' ' + user.lastname}</Badge>
+													{/if}
+												{/if}
+												{#if name_order == 'lastname'}
+													{#if user.gender == 'male'}
+														<Badge color="blue" class="order-1 m-1">{user.lastname + ' ' + user.firstname}</Badge>
+													{:else}
+														<Badge color="pink" class="order-2 m-1">{user.lastname + ' ' + user.firstname}</Badge>
+													{/if}
+												{/if}
+											{/if}
+										{/each}
+									{/if}
+								{/each}
+							</div>
+						</Card>
+					{/each}
+				</div>
 			{:else}
 				<TableSearch
 					placeholder={$_('turns.search-by')}
