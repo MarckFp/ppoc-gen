@@ -252,13 +252,15 @@
 									</DropdownItem>
 								</Dropdown>
 							</div>
-							<div class="flex flex-col items-center text-center">
-								<div>{$_('general.' + schedule.weekday)}</div>
-								<div>{schedule.start_time}</div>
-								<div>{schedule.end_time}</div>
-								<div>{schedule.location}</div>
-								<div>{schedule.n_brothers}</div>
-								<div>{schedule.n_sisters}</div>
+							<div class="my-4 grid w-full grid-cols-2 gap-2 text-center text-gray-900 dark:text-white">
+								<div>🗓️ {$_('general.' + schedule.weekday)}</div>
+								<div>🕑 {schedule.start_time} - {schedule.end_time}</div>
+							</div>
+							<hr />
+							<div class="my-4 grid grid-cols-3 gap-2 text-center text-gray-900 dark:text-white">
+								<div>📍 {schedule.location}</div>
+								<div>👔 {schedule.n_brothers}</div>
+								<div>👗 {schedule.n_sisters}</div>
 							</div>
 						</Card>
 					{/each}
