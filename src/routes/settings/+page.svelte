@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {Card, Button, Label, Input, ButtonGroup, Modal, Select, Tooltip} from 'flowbite-svelte'
+	import {Card, Button, Label, Input, ButtonGroup, Modal, Select, Tooltip, DarkMode} from 'flowbite-svelte'
 	import {CloudArrowUpSolid, DownloadSolid, ExclamationCircleOutline, InfoCircleSolid} from 'flowbite-svelte-icons'
 	import {db} from '$lib/db'
 	import {liveQuery} from 'dexie'
@@ -11,6 +11,7 @@
 
 	let deleteModal: boolean = false,
 		importModal: boolean = false,
+		mobile: boolean = false,
 		files: FileList,
 		langs: {value: string; name: string}[] = [],
 		location: string = '',
@@ -148,6 +149,21 @@
 			})
 		})
 	}
+
+	//Media Queries for Calendar View
+	const mediaQuery = window.matchMedia('(width <= 640px)')
+	mediaQuery.addEventListener('change', ({matches}) => {
+		if (matches) {
+			mobile = true
+		} else {
+			mobile = false
+		}
+	})
+	if (mediaQuery.matches) {
+		mobile = true
+	} else {
+		mobile = false
+	}
 </script>
 
 <section class="m-5 flex flex-col items-center">
@@ -190,6 +206,12 @@
 						<span>{$_('settings.country')}:</span>
 						<Input type="text" bind:value={country} />
 					</Label>
+					{#if mobile}
+						<Label class="space-y-2 text-center">
+							<span>Mode:</span>
+							<DarkMode class="black ml-2 border dark:border-gray-800 dark:text-primary-200" />
+						</Label>
+					{/if}
 				</div>
 				<Button color="blue" on:click={updateCongregation} data-testid="settings-update-btn"
 					>{$_('settings.update-cong')}</Button

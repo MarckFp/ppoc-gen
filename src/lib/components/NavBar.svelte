@@ -31,7 +31,7 @@
 </script>
 
 {#if mobile}
-	<BottomNav {activeUrl} position="fixed" classInner="grid-cols-7">
+	<BottomNav {activeUrl} position="fixed" classInner="grid-cols-6">
 		<BottomNavItem href="{base}/">
 			<img src="favicon.ico" class="me-3 h-6 rounded-lg sm:h-9" alt="PPOC Gen Logo" />
 		</BottomNavItem>
@@ -50,10 +50,8 @@
 		<BottomNavItem href="{base}/settings">
 			<CogOutline size="lg" color="red" class="dark:text-primary-400" />
 		</BottomNavItem>
-		<BottomNavItem>
-			<DarkMode class="black ml-2 dark:border-gray-800 dark:text-primary-200" />
-		</BottomNavItem>
 	</BottomNav>
+	<DarkMode class="hidden" />
 {:else}
 	<Navbar let:NavContainer class="dark:bg-gray-700 print:hidden">
 		<NavContainer class="rounded-lg border bg-white px-5 py-2 dark:bg-gray-600">
