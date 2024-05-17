@@ -533,14 +533,6 @@
 	}
 
 	async function exportToPDF() {
-		if (mobile) {
-			const delay = ms => new Promise(res => setTimeout(res, ms))
-			mobile = false
-			await delay(10)
-			window.print()
-			mobile = true
-			return
-		}
 		window.print()
 	}
 
@@ -664,7 +656,9 @@
 						{date.getFullYear()}
 					</Badge>
 				{/if}
-				<Button on:click={exportToPDF} aria-label="Export to PDF"><FilePdfSolid></FilePdfSolid></Button>
+				<Button on:click={exportToPDF} aria-label="Export to PDF" disabled={mobile ? true : false}
+					><FilePdfSolid></FilePdfSolid></Button
+				>
 				<Button
 					aria-label="Next Month"
 					on:click={() => {

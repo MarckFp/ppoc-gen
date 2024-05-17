@@ -46,7 +46,8 @@
 		"heavy_snow_shower": "🌨️",
 		"thunderstorm": "🌩️",
 		"thunderstorm_slight_hail": "🌩️",
-		"thunderstorm_heavy_hail": "🌩️"
+		"thunderstorm_heavy_hail": "🌩️",
+		"announcement": "Anuncio"
 	},
 	"general": {
 		"edit-btn": "Editar",
