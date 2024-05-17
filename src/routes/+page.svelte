@@ -12,7 +12,7 @@
 `
 </script>
 
-<div class="m-5 flex flex-col items-center">
+<section class="m-5 flex flex-col items-center">
 	{#if $congregation}
 		<Card class="text-center" size="xl" padding="xl">
 			<h1 class="text-3xl font-bold text-gray-900 dark:text-white">
@@ -50,4 +50,4 @@
 	<Card size="xl" padding="sm" class="dark:ec-auto-dark m-4 flex flex-col items-center">
 		<Calendar />
 	</Card>
-</div>
+</section>

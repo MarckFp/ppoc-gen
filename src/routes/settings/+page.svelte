@@ -150,95 +150,85 @@
 	}
 </script>
 
-<section class="mx-auto px-6 py-8">
+<section class="m-5 flex flex-col items-center">
 	{#if $congregation}
-		<div class="mx-auto flex flex-col items-center justify-center px-6 py-8 md:h-5/6 lg:py-0">
-			<Card size="xl">
-				<h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-					{$_('settings.cong-settings')}
+		<Card size="xl">
+			<h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+				{$_('settings.cong-settings')}
+			</h3>
+			<div class="flex flex-col space-y-6">
+				<Label class="space-y-2">
+					<span>{$_('settings.cong-name')}:</span>
+					<Input type="text" name="name" bind:value={$congregation.name} required />
+				</Label>
+				<Label class="space-y-2">
+					<span>{$_('settings.language')}:</span>
+					<Select items={langs} bind:value={$congregation.lang} />
+				</Label>
+				<Label class="space-y-2">
+					<span>{$_('settings.week-start-at')}:</span>
+					<Select items={week_order} bind:value={$congregation.week_order} />
+				</Label>
+				<Label class="space-y-2">
+					<span>{$_('settings.name-order')}:</span>
+					<Select items={name_order} bind:value={$congregation.name_order} />
+				</Label>
+				<Tooltip triggeredBy="#info-latitude" placement="left">{$_('settings.info-latitude')}</Tooltip>
+				<div class="grid grid-cols-1 gap-1 md:grid-cols-3">
+					<Label class="space-y-2">
+						<div class="flex flex-row">
+							<InfoCircleSolid id="info-latitude" class="mr-2" />
+							<span>{$_('settings.city-or-town')}:</span>
+						</div>
+						<Input type="text" bind:value={location} />
+					</Label>
+					<Label class="space-y-2">
+						<span>{$_('settings.zipcode')}:</span>
+						<Input type="text" bind:value={zipcode} />
+					</Label>
+					<Label class="space-y-2">
+						<span>{$_('settings.country')}:</span>
+						<Input type="text" bind:value={country} />
+					</Label>
+				</div>
+				<Button color="blue" on:click={updateCongregation} data-testid="settings-update-btn"
+					>{$_('settings.update-cong')}</Button
+				>
+				<Button color="red" on:click={() => (deleteModal = true)}>{$_('settings.delete-cong')}</Button>
+				<input bind:files id="import" name="import" type="file" accept=".pgen" class="hidden" on:change={importData} />
+				<ButtonGroup class="flex justify-center">
+					<Button on:click={() => (importModal = true)}>
+						<CloudArrowUpSolid class="me-3 h-6 w-6" />
+						{$_('settings.import')}
+					</Button>
+					<Button on:click={exportData}>
+						<DownloadSolid class="me-3 h-6 w-6" />
+						{$_('settings.export')}
+					</Button>
+				</ButtonGroup>
+			</div>
+		</Card>
+
+		<Modal bind:open={deleteModal} size="xs" autoclose>
+			<div class="text-center">
+				<ExclamationCircleOutline class="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200" />
+				<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+					{$_('settings.are-you-sure')}
 				</h3>
-				<div class="flex flex-col space-y-6">
-					<Label class="space-y-2">
-						<span>{$_('settings.cong-name')}:</span>
-						<Input type="text" name="name" bind:value={$congregation.name} required />
-					</Label>
-					<Label class="space-y-2">
-						<span>{$_('settings.language')}:</span>
-						<Select items={langs} bind:value={$congregation.lang} />
-					</Label>
-					<Label class="space-y-2">
-						<span>{$_('settings.week-start-at')}:</span>
-						<Select items={week_order} bind:value={$congregation.week_order} />
-					</Label>
-					<Label class="space-y-2">
-						<span>{$_('settings.name-order')}:</span>
-						<Select items={name_order} bind:value={$congregation.name_order} />
-					</Label>
-					<Tooltip triggeredBy="#info-latitude" placement="left">{$_('settings.info-latitude')}</Tooltip>
-					<div class="grid grid-cols-1 gap-1 md:grid-cols-3">
-						<Label class="space-y-2">
-							<div class="flex flex-row">
-								<InfoCircleSolid id="info-latitude" class="mr-2" />
-								<span>{$_('settings.city-or-town')}:</span>
-							</div>
-							<Input type="text" bind:value={location} />
-						</Label>
-						<Label class="space-y-2">
-							<span>{$_('settings.zipcode')}:</span>
-							<Input type="text" bind:value={zipcode} />
-						</Label>
-						<Label class="space-y-2">
-							<span>{$_('settings.country')}:</span>
-							<Input type="text" bind:value={country} />
-						</Label>
-					</div>
-					<Button color="blue" on:click={updateCongregation} data-testid="settings-update-btn"
-						>{$_('settings.update-cong')}</Button
-					>
-					<Button color="red" on:click={() => (deleteModal = true)}>{$_('settings.delete-cong')}</Button>
-					<input
-						bind:files
-						id="import"
-						name="import"
-						type="file"
-						accept=".pgen"
-						class="hidden"
-						on:change={importData}
-					/>
-					<ButtonGroup class="flex justify-center">
-						<Button on:click={() => (importModal = true)}>
-							<CloudArrowUpSolid class="me-3 h-6 w-6" />
-							{$_('settings.import')}
-						</Button>
-						<Button on:click={exportData}>
-							<DownloadSolid class="me-3 h-6 w-6" />
-							{$_('settings.export')}
-						</Button>
-					</ButtonGroup>
-				</div>
-			</Card>
+				<Button color="red" class="me-2" on:click={deleteCongregation}>{$_('general.yes-sure')}</Button>
+				<Button color="alternative">{$_('general.no-cancel')}</Button>
+			</div>
+		</Modal>
 
-			<Modal bind:open={deleteModal} size="xs" autoclose>
-				<div class="text-center">
-					<ExclamationCircleOutline class="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200" />
-					<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-						{$_('settings.are-you-sure')}
-					</h3>
-					<Button color="red" class="me-2" on:click={deleteCongregation}>{$_('general.yes-sure')}</Button>
-					<Button color="alternative">{$_('general.no-cancel')}</Button>
-				</div>
-			</Modal>
-
-			<Modal bind:open={importModal} size="xs" autoclose>
-				<div class="text-center">
-					<ExclamationCircleOutline class="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200" />
-					<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-						{$_('settings.are-you-sure-import')}
-					</h3>
-					<Button color="red" class="me-2" on:click={importDataBtn}>{$_('general.yes-sure')}</Button>
-					<Button color="alternative">{$_('general.no-cancel')}</Button>
-				</div>
-			</Modal>
-		</div>
+		<Modal bind:open={importModal} size="xs" autoclose>
+			<div class="text-center">
+				<ExclamationCircleOutline class="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200" />
+				<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+					{$_('settings.are-you-sure-import')}
+				</h3>
+				<Button color="red" class="me-2" on:click={importDataBtn}>{$_('general.yes-sure')}</Button>
+				<Button color="alternative">{$_('general.no-cancel')}</Button>
+			</div>
+		</Modal>
 	{/if}
 </section>

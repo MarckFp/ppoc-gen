@@ -23,9 +23,27 @@
       }
     }
   ],
+  "shortcuts": [
+    {
+      "name": "Publishers",
+      "url": "/publishers"
+    },
+    {
+      "name": "Schedules",
+      "url": "/schedules"
+    },
+    {
+      "name": "Turns",
+      "url": "/turns"
+    },
+    {
+      "name": "Incidences",
+      "url": "/incidences"
+    }
+  ],
   "categories": ["utilities", "productivity"],
   "handle_links": "preferred",
-  "orientation": "landscape-primary",
+  "orientation": "any",
   "description": "Web application in charge of generating dynamic public preaching turns",
   "theme_color": "#eb4034",
   "icons": [
