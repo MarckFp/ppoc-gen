@@ -13,8 +13,7 @@
 		TableHeadCell,
 		TableSearch,
 		TableHead,
-		Modal,
-		P
+		Modal
 	} from 'flowbite-svelte'
 	import {ExclamationCircleOutline, ArrowLeftOutline, ArrowRightOutline, FilePdfSolid} from 'flowbite-svelte-icons'
 	import AlertToast from '$lib/components/AlertToast.svelte'
@@ -594,7 +593,13 @@
 	</Card>
 	{#if $turns && $schedules && $assignments && $showUsers}
 		<Card size="xl" class="mt-2">
-			<div class="mb-2 mt-2 flex flex-row justify-around print:hidden">
+			{#if mobile}
+				<Badge border color="red" class="text-lg print:hidden">
+					{$_('general.' + date.toLocaleString('en', {month: 'long'}).toLowerCase())}
+					{date.getFullYear()}
+				</Badge>
+			{/if}
+			<div class="my-2 grid {mobile ? 'grid-cols-4' : 'grid-cols-5'} gap-4 print:hidden">
 				<Button
 					class="w-2/12"
 					aria-label="Previous Month"
@@ -627,14 +632,13 @@
 						)
 					}}>{$_('turns.today')}</Button
 				>
-				<Badge border color="red" class="w-5/12"
-					><P size="lg"
-						>{$_('general.' + date.toLocaleString('en', {month: 'long'}).toLowerCase())} {date.getFullYear()}</P
-					></Badge
-				>
-				<Button class="ml-2 mr-2 w-1/12" on:click={exportToPDF} aria-label="Export to PDF"
-					><FilePdfSolid></FilePdfSolid></Button
-				>
+				{#if !mobile}
+					<Badge border color="red" class="text-lg">
+						{$_('general.' + date.toLocaleString('en', {month: 'long'}).toLowerCase())}
+						{date.getFullYear()}
+					</Badge>
+				{/if}
+				<Button on:click={exportToPDF} aria-label="Export to PDF"><FilePdfSolid></FilePdfSolid></Button>
 				<Button
 					class="w-2/12"
 					aria-label="Next Month"

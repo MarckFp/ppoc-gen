@@ -18,7 +18,7 @@
 		Badge,
 		Tooltip
 	} from 'flowbite-svelte'
-	import {ExclamationCircleOutline, InfoCircleSolid} from 'flowbite-svelte-icons'
+	import {DotsHorizontalOutline, ExclamationCircleOutline, InfoCircleSolid} from 'flowbite-svelte-icons'
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {db} from '$lib/db'
 	import {liveQuery} from 'dexie'
