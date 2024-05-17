@@ -35,6 +35,7 @@
 		searchTerm: string = '',
 		name_order = 'firstname',
 		query_name_order = 'firstname+lastname',
+		modalTitle = $_('general.create-btn'),
 		selectedId: number,
 		turnDate: string,
 		turnStartTime: string,
@@ -594,6 +595,7 @@
 					turnDate = ''
 					turnStartTime = ''
 					turnEndTime = ''
+					modalTitle = $_('general.create-btn')
 				}}
 			>
 				{$_('turns.create-btn')}
@@ -738,6 +740,7 @@
 											turnStartTime = turn.start_time
 											turnEndTime = turn.end_time
 											selectedId = turn.id
+											modalTitle = $_('general.edit-btn')
 											await getAssignees(turn.id)
 										}}>{$_('general.edit-btn')}</Button
 									>
@@ -769,7 +772,7 @@
 			</div>
 		</Modal>
 
-		<Modal bind:open={createModal} size="xs" autoclose outsideclose>
+		<Modal title={modalTitle} bind:open={createModal} size="xs" autoclose outsideclose>
 			<Label>
 				{$_('turns.day')}:
 				<Input type="date" bind:value={turnDate} required />
