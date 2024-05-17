@@ -11,9 +11,12 @@
 		TableBodyRow,
 		TableHeadCell,
 		TableSearch,
-		TableHead
+		TableHead,
+		Search,
+		Dropdown,
+		DropdownItem
 	} from 'flowbite-svelte'
-	import {ExclamationCircleOutline} from 'flowbite-svelte-icons'
+	import {DotsHorizontalOutline, ExclamationCircleOutline} from 'flowbite-svelte-icons'
 	import {db} from '$lib/db'
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {liveQuery} from 'dexie'
@@ -23,10 +26,12 @@
 	let createModal: boolean = false,
 		deleteModal: boolean = false,
 		edit: boolean = false,
+		mobile: boolean = false,
 		searchTerm: string = '',
 		selected_weekday: string = 'monday',
 		start_time: string = '00:00',
 		end_time: string = '00:00',
+		modalTitle: string = $_('general.create-btn'),
 		location: string = '',
 		n_brothers: number = 1,
 		n_sisters: number = 1,
@@ -166,30 +171,100 @@
 		n_sisters = 1
 		edit = false
 	}
+
+	//Media Queries for Calendar View
+	const mediaQuery = window.matchMedia('(width <= 640px)')
+	mediaQuery.addEventListener('change', ({matches}) => {
+		if (matches) {
+			mobile = true
+		} else {
+			mobile = false
+		}
+	})
+	if (mediaQuery.matches) {
+		mobile = true
+	} else {
+		mobile = false
+	}
 </script>
 
 <section class="mx-auto flex flex-col items-center justify-center px-6 py-8">
 	<Card size="xl">
-		<Button
-			color="blue"
-			class="mb-4 mt-1"
-			data-testid="schedules-create-btn"
-			on:click={() => {
-				createModal = true
-				selected_weekday = 'monday'
-				start_time = '00:00'
-				end_time = '00:00'
-				location = ''
-				n_brothers = 1
-				n_sisters = 1
-				edit = false
-			}}>{$_('schedule.create-btn')}</Button
-		>
+		<div class="grid grid-cols-1 gap-3">
+			{#if mobile}
+				<div class="mt-1">
+					<Search size="md" bind:value={searchTerm} placeholder={$_('schedule.search-inp')} />
+				</div>
+			{/if}
+			<Button
+				color="blue"
+				class="mb-4 mt-1"
+				data-testid="schedules-create-btn"
+				on:click={() => {
+					createModal = true
+					selected_weekday = 'monday'
+					start_time = '00:00'
+					end_time = '00:00'
+					location = ''
+					n_brothers = 1
+					n_sisters = 1
+					modalTitle = $_('general.create-btn')
+					edit = false
+				}}>{$_('schedule.create-btn')}</Button
+			>
+		</div>
 		{#if $schedules}
 			{#if $schedules.length == 0}
 				<Card size="xl" class="mt-5">
 					<h1 class="text-center dark:text-white">{$_('schedule.no-schedules')}</h1>
 				</Card>
+			{:else if mobile}
+				<div class="grid grid-cols-1 gap-2 sm:grid-cols-4">
+					{#each filteredItems as schedule}
+						<Card padding="none" class="p-2" size="xl">
+							<div class="flex justify-end">
+								<DotsHorizontalOutline />
+								<Dropdown class="p-1">
+									<DropdownItem
+										id="edit-{schedule.id}"
+										on:click={() => {
+											createModal = true
+											selectedId = schedule.id
+											edit = true
+											selected_weekday = schedule.weekday
+											n_brothers = schedule.n_brothers
+											n_sisters = schedule.n_sisters
+											location = schedule.location
+											start_time = schedule.start_time
+											end_time = schedule.end_time
+											modalTitle = $_('general.edit-btn')
+										}}
+									>
+										{$_('general.edit-btn')}
+									</DropdownItem>
+									<DropdownItem
+										id="delete-{schedule.id}"
+										on:click={() => {
+											deleteModal = true
+											selectedId = schedule.id
+										}}
+										>{$_('general.delete-btn')}
+									</DropdownItem>
+								</Dropdown>
+							</div>
+							<div class="my-4 grid w-full grid-cols-2 gap-2 text-center text-gray-900 dark:text-white">
+								<div>🗓️ {$_('general.' + schedule.weekday)}</div>
+								<div>🕑 {schedule.start_time} - {schedule.end_time}</div>
+							</div>
+							<hr />
+							<div class="my-4 grid grid-cols-3 gap-2 text-center text-gray-900 dark:text-white">
+								<div>📍 {schedule.location}</div>
+								<div>👔 {schedule.n_brothers}</div>
+								<div>👗 {schedule.n_sisters}</div>
+							</div>
+						</Card>
+					{/each}
+				</div>
 			{:else}
 				<TableSearch
 					placeholder={$_('schedule.search-inp')}
@@ -232,6 +307,7 @@
 											location = schedule.location
 											start_time = schedule.start_time
 											end_time = schedule.end_time
+											modalTitle = $_('general.edit-btn')
 										}}>{$_('general.edit-btn')}</Button
 									>
 									<Button
@@ -252,7 +328,7 @@
 		{/if}
 	</Card>
 
-	<Modal bind:open={createModal} size="xs" autoclose outsideclose>
+	<Modal title={modalTitle} bind:open={createModal} size="xs" autoclose outsideclose>
 		<Label>
 			{$_('schedule.weekday')}:
 			<Select
@@ -275,7 +351,7 @@
 			{$_('schedule.location')}:
 			<Input type="text" id="location" bind:value={location} required data-testid="schedules-create-location" />
 		</Label>
-		<div class="mb-6 grid gap-6 md:grid-cols-2">
+		<div class="mb-6 grid gap-6 sm:grid-cols-2">
 			<div>
 				<Label for="n_brothers" class="mb-2">{$_('schedule.n-bro')}:</Label>
 				<Input
