@@ -3,9 +3,29 @@
   "short_name": "PPOC Gen",
   "start_url": "/",
   "scope": "/",
+  "id": "/ppoc-gen/",
   "display": "standalone",
+  "display_override": ["standalone", "fullscreen", "minimal-ui", "window-controls-overlay", "browser"],
   "background_color": "#ffffff",
   "lang": "en",
+  "dir": "auto",
+  "launch_handler": {
+    "client_mode": ["auto", "navigate-existing"]
+  },
+  "edge_side_panel": {
+    "preferred_width": 500
+  },
+  "file_handlers": [
+    {
+      "action": "/settings",
+      "accept": {
+        "text/plain": [".pgen"]
+      }
+    }
+  ],
+  "categories": ["utilities", "productivity"],
+  "handle_links": "preferred",
+  "orientation": "landscape-primary",
   "description": "Web application in charge of generating dynamic public preaching turns",
   "theme_color": "#eb4034",
   "icons": [
@@ -43,5 +63,35 @@
       "type": "image/png",
       "purpose": "any"
     }
-  ]
+  ],
+  "screenshots" : [
+    {
+      "src": "HomeScreenDesktop.png",
+      "sizes": "2559x1233",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Homescreen Desktop of PPOC Gen App"
+    },
+    {
+      "src": "SettingsScreemDesktop.png",
+      "sizes": "2559x1224",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Settings Desktop of PPOC Gen App"
+    },
+    {
+      "src": "HomeScreenMobile.png",
+      "sizes": "850x1990",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Homescreen Mobile of PPOC Gen App"
+    },
+    {
+      "src": "SettingsScreemMobile.png",
+      "sizes": "850x1990",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Settings Mobile of PPOC Gen App"
+    }
+  ]  
 }
