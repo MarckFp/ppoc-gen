@@ -6,17 +6,20 @@
 		Modal,
 		Label,
 		Select,
-		TableSearch,
-		TableBody,
-		TableBodyRow,
-		TableBodyCell,
-		TableHead,
 		MultiSelect,
-		TableHeadCell,
 		Checkbox,
 		Radio,
 		Badge,
-		Tooltip
+		Tooltip,
+		Dropdown,
+		Search,
+		DropdownItem,
+		TableSearch,
+		TableHead,
+		TableHeadCell,
+		TableBody,
+		TableBodyRow,
+		TableBodyCell
 	} from 'flowbite-svelte'
 	import {DotsHorizontalOutline, ExclamationCircleOutline, InfoCircleSolid} from 'flowbite-svelte-icons'
 	import AlertToast from '$lib/components/AlertToast.svelte'
@@ -29,6 +32,7 @@
 		deleteModal: boolean = false,
 		advanced: boolean = false,
 		edit: boolean = false,
+		mobile: boolean = false,
 		selectedId: number,
 		searchTerm: string = '',
 		firstname: string = '',
@@ -42,6 +46,7 @@
 		availabilities: boolean[] = [],
 		sorter = {},
 		affinityList: {value: number; name: string; color: string}[] = [],
+		modalTitle: string = $_('general.create-btn'),
 		genders: {value: string; name: string}[] = [
 			{value: 'male', name: $_('general.male')},
 			{value: 'female', name: $_('general.female')}
@@ -382,29 +387,125 @@
 			}
 		}
 	}
+
+	//Media Queries for Calendar View
+	const mediaQuery = window.matchMedia('(width <= 640px)')
+	mediaQuery.addEventListener('change', ({matches}) => {
+		if (matches) {
+			mobile = true
+		} else {
+			mobile = false
+		}
+	})
+	if (mediaQuery.matches) {
+		mobile = true
+	} else {
+		mobile = false
+	}
 </script>
 
 <section class="mx-auto flex flex-col items-center justify-center px-6 py-8">
 	<Card size="xl">
-		<Button
-			color="blue"
-			class="mb-4 mt-1"
-			data-testid="publishers-create-btn"
-			on:click={() => {
-				createModal = true
-				edit = false
-				firstname = ''
-				lastname = ''
-				gender = 'male'
-				availabilities = []
-				weight = 1
-			}}>{$_('publishers.create-btn')}</Button
-		>
+		<div class="grid grid-cols-1 gap-3">
+			{#if mobile}
+				<div class="mt-1">
+					<Search size="md" bind:value={searchTerm} placeholder={$_('publishers.search-inp')} />
+				</div>
+			{/if}
+			<Button
+				color="blue"
+				class="mb-4 mt-1"
+				data-testid="publishers-create-btn"
+				on:click={() => {
+					createModal = true
+					edit = false
+					firstname = ''
+					lastname = ''
+					gender = 'male'
+					availabilities = []
+					weight = 1
+					modalTitle = $_('general.create-btn')
+				}}>{$_('publishers.create-btn')}</Button
+			>
+		</div>
 		{#if $users}
 			{#if $users.length == 0}
 				<Card size="xl" class="mt-5">
 					<h1 class="text-center dark:text-white">{$_('publishers.no-publishers')}</h1>
 				</Card>
+			{:else if mobile}
+				<div class="grid grid-cols-1 gap-2 sm:grid-cols-4">
+					{#each filteredItems as user}
+						<Card padding="none" class="p-2" size="xl">
+							<div class="flex justify-end">
+								<DotsHorizontalOutline />
+								<Dropdown class="p-1">
+									<DropdownItem
+										id="edit-{user.id}"
+										data-testid="publishers-edit-btn"
+										on:click={() => {
+											createModal = true
+											advanced = false
+											advanced_radio = 'no'
+											selectedId = user.id
+											firstname = user.firstname
+											lastname = user.lastname
+											gender = user.gender
+											weight = user.weight
+											modalTitle = $_('general.edit-btn')
+											if (![1, 2, 3].includes(weight)) {
+												advanced = true
+												advanced_radio = 'yes'
+											}
+											getAffinities(user.id)
+											retrieveAvailabilities(user.id)
+											edit = true
+										}}
+									>
+										{$_('general.edit-btn')}
+									</DropdownItem>
+									<DropdownItem
+										id="delete-{user.id}"
+										on:click={() => {
+											deleteModal = true
+											selectedId = user.id
+										}}
+										>{$_('general.delete-btn')}
+									</DropdownItem>
+								</Dropdown>
+							</div>
+							<div class="flex flex-col items-center text-center">
+								{#if name_order == 'lastname'}
+									<h5 class="w-full text-xl font-medium text-gray-900 dark:text-white">
+										{user.lastname + ' ' + user.firstname}
+									</h5>
+								{:else}
+									<h5 class="w-full text-xl font-medium text-gray-900 dark:text-white">
+										{user.firstname + ' ' + user.lastname}
+									</h5>
+								{/if}
+								<div class="mt-2 w-full">
+									<div class="grid h-fit grid-cols-2 gap-4">
+										{#if user.gender == 'male'}
+											<Badge large color="blue">{$_('general.' + user.gender)}</Badge>
+										{:else}
+											<Badge large color="pink">{$_('general.' + user.gender)}</Badge>
+										{/if}
+										{#if user.weight == 1}
+											<Badge large color="yellow">{$_('publishers.high')}</Badge>
+										{:else if user.weight == 2}
+											<Badge large color="indigo">{$_('publishers.medium')}</Badge>
+										{:else if user.weight == 3}
+											<Badge large color="green">{$_('publishers.low')}</Badge>
+										{:else}
+											<Badge large color="red">{$_('publishers.advanced')}: {user.weight}</Badge>
+										{/if}
+									</div>
+								</div>
+							</div>
+						</Card>
+					{/each}
+				</div>
 			{:else}
 				<TableSearch
 					placeholder={name_order == 'firstname' ? $_('publishers.search-inp') : $_('publishers.search-inp-lastname')}
@@ -465,6 +566,7 @@
 											lastname = user.lastname
 											gender = user.gender
 											weight = user.weight
+											modalTitle = $_('general.edit-btn')
 											if (![1, 2, 3].includes(weight)) {
 												advanced = true
 												advanced_radio = 'yes'
@@ -492,7 +594,7 @@
 		{/if}
 	</Card>
 
-	<Modal bind:open={createModal} size="xs" autoclose outsideclose>
+	<Modal title={modalTitle} bind:open={createModal} size="lg" autoclose outsideclose>
 		<Label>
 			{$_('publishers.firstname')}:
 			<Input type="text" id="firstname" bind:value={firstname} data-testid="publishers-firstname" required />
@@ -557,7 +659,7 @@
 				<InfoCircleSolid id="info-affinity" class="mr-2" />
 				{$_('publishers.affinity')}:
 			</div>
-			<MultiSelect items={affinityList} bind:value={pubAffinities} size="sm" let:item let:clear>
+			<MultiSelect items={affinityList} bind:value={pubAffinities} size="sm" let:item let:clear class="mt-1">
 				<Badge color={item.color} dismissable params={{duration: 100}} on:close={clear}>
 					{item.name}
 				</Badge>
@@ -567,16 +669,20 @@
 			{$_('publishers.availability')}:
 			{#if $schedules}
 				{#if $schedules.length == 0}
-					<p class="text-center">{$_('publishers.no-schedules')}</p>
+					<p class="m-1 text-center">{$_('publishers.no-schedules')}</p>
 				{:else}
-					<ul class="grid w-full grid-cols-1 items-center rounded-lg" data-testid="publishers-availability">
+					<ul
+						class="m-1 grid w-full grid-cols-1 items-center gap-2 rounded-lg sm:grid-cols-2"
+						data-testid="publishers-availability"
+					>
 						{#each $schedules as schedule}
 							{#if schedule.id}
-								<li class="w-full border">
+								<li class="w-full rounded border">
 									<Checkbox class="p-3" id="availability-{schedule.id}" bind:checked={availabilities[schedule.id]}
-										><Badge color="red" class="m-1">{$_('general.' + schedule.weekday)}</Badge><Badge color="indigo"
-											>{schedule.start_time + '-' + schedule.end_time}</Badge
-										><Badge class="m-1" color="pink">{schedule.location}</Badge></Checkbox
+										><Badge rounded color="red" class="m-1">{$_('general.' + schedule.weekday)}</Badge><Badge
+											rounded
+											color="indigo">{schedule.start_time + '-' + schedule.end_time}</Badge
+										><Badge rounded class="m-1" color="pink">{schedule.location}</Badge></Checkbox
 									>
 								</li>
 							{/if}

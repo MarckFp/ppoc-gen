@@ -29,6 +29,7 @@
 		deleteModal: boolean = false,
 		createModal: boolean = false,
 		creationDisabled: boolean = false,
+		mobile: boolean = false,
 		edit: boolean = false,
 		userList: number[] = [],
 		searchTerm: string = '',
@@ -546,26 +547,35 @@
 			}
 		}
 	}
+
+	//Media Queries for Calendar View
+	const mediaQuery = window.matchMedia('(width <= 640px)')
+	mediaQuery.addEventListener('change', ({matches}) => {
+		if (matches) {
+			mobile = true
+		} else {
+			mobile = false
+		}
+	})
+	if (mediaQuery.matches) {
+		mobile = true
+	} else {
+		mobile = false
+	}
 </script>
 
 <section class="mx-auto flex flex-col items-center justify-center px-6 py-8">
 	<Card size="xl" class="mb-2 print:hidden">
-		<div class="mb-4 mt-1 flex flex-row justify-between">
-			<Label class="w-2/12">
+		<div class="mb-4 mt-1 grid grid-cols-2 gap-2 sm:grid-cols-4">
+			<Label>
 				{$_('turns.from')}:
-				<Input type="date" bind:value={fromDate} data-testid="turns-date-from" />
+				<Input type="date" bind:value={fromDate} data-testid="turns-date-from" class="mt-2" />
 			</Label>
-			<Label class="ml-1 mr-1 w-2/12">
+			<Label>
 				{$_('turns.to')}:
-				<Input type="date" bind:value={toDate} data-testid="turns-date-to" />
+				<Input type="date" bind:value={toDate} data-testid="turns-date-to" class="mt-2" />
 			</Label>
-			<Button
-				color="green"
-				class="ml-1 mr-1 w-4/12"
-				on:click={generateTurns}
-				disabled={creationDisabled}
-				data-testid="turns-generate-btn"
-			>
+			<Button color="green" on:click={generateTurns} disabled={creationDisabled} data-testid="turns-generate-btn">
 				{#if loading}
 					<Spinner class="me-3" size="4" color="white" />
 					{$_('turns.creating')}
@@ -575,7 +585,6 @@
 			</Button>
 			<Button
 				color="blue"
-				class="w-4/12"
 				data-testid="turns-create-btn"
 				on:click={() => {
 					createModal = true
@@ -601,7 +610,6 @@
 			{/if}
 			<div class="my-2 grid {mobile ? 'grid-cols-4' : 'grid-cols-5'} gap-4 print:hidden">
 				<Button
-					class="w-2/12"
 					aria-label="Previous Month"
 					on:click={() => {
 						date = new Date(date.setMonth(date.getMonth() - 1))
@@ -617,7 +625,6 @@
 					}}><ArrowLeftOutline></ArrowLeftOutline></Button
 				>
 				<Button
-					class="ml-2 mr-2 w-2/12"
 					color="blue"
 					on:click={() => {
 						date = new Date()
@@ -640,7 +647,6 @@
 				{/if}
 				<Button on:click={exportToPDF} aria-label="Export to PDF"><FilePdfSolid></FilePdfSolid></Button>
 				<Button
-					class="w-2/12"
 					aria-label="Next Month"
 					on:click={() => {
 						date = new Date(date.setMonth(date.getMonth() + 1))
