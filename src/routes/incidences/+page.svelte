@@ -151,7 +151,7 @@
 	}
 
 	//Media Queries for Calendar View
-	const mediaQuery = window.matchMedia('(width <= 600px)')
+	const mediaQuery = window.matchMedia('(width <= 640px)')
 	mediaQuery.addEventListener('change', ({matches}) => {
 		if (matches) {
 			mobile = true
@@ -194,7 +194,7 @@
 					<h1 class="text-center dark:text-white">{$_('incidences.no-incidences')}</h1>
 				</Card>
 			{:else if mobile}
-				<div class="grid grid-cols-1 gap-2 md:grid-cols-4">
+				<div class="grid grid-cols-1 gap-2 sm:grid-cols-4">
 					{#each filteredItems as incidence}
 						<Card padding="none" class="p-2" size="xl">
 							<div class="flex justify-end">

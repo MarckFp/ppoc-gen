@@ -390,7 +390,7 @@
 	}
 
 	//Media Queries for Calendar View
-	const mediaQuery = window.matchMedia('(width <= 600px)')
+	const mediaQuery = window.matchMedia('(width <= 640px)')
 	mediaQuery.addEventListener('change', ({matches}) => {
 		if (matches) {
 			mobile = true
@@ -435,7 +435,7 @@
 					<h1 class="text-center dark:text-white">{$_('publishers.no-publishers')}</h1>
 				</Card>
 			{:else if mobile}
-				<div class="grid grid-cols-1 gap-2 md:grid-cols-4">
+				<div class="grid grid-cols-1 gap-2 sm:grid-cols-4">
 					{#each filteredItems as user}
 						<Card padding="none" class="p-2" size="xl">
 							<div class="flex justify-end">
@@ -673,7 +673,7 @@
 					<p class="m-1 text-center">{$_('publishers.no-schedules')}</p>
 				{:else}
 					<ul
-						class="m-1 grid w-full grid-cols-1 items-center gap-2 rounded-lg md:grid-cols-2"
+						class="m-1 grid w-full grid-cols-1 items-center gap-2 rounded-lg sm:grid-cols-2"
 						data-testid="publishers-availability"
 					>
 						{#each $schedules as schedule}

@@ -173,7 +173,7 @@
 	}
 
 	//Media Queries for Calendar View
-	const mediaQuery = window.matchMedia('(width <= 600px)')
+	const mediaQuery = window.matchMedia('(width <= 640px)')
 	mediaQuery.addEventListener('change', ({matches}) => {
 		if (matches) {
 			mobile = true
@@ -219,7 +219,7 @@
 					<h1 class="text-center dark:text-white">{$_('schedule.no-schedules')}</h1>
 				</Card>
 			{:else if mobile}
-				<div class="grid grid-cols-1 gap-2 md:grid-cols-4">
+				<div class="grid grid-cols-1 gap-2 sm:grid-cols-4">
 					{#each filteredItems as schedule}
 						<Card padding="none" class="p-2" size="xl">
 							<div class="flex justify-end">
@@ -351,7 +351,7 @@
 			{$_('schedule.location')}:
 			<Input type="text" id="location" bind:value={location} required data-testid="schedules-create-location" />
 		</Label>
-		<div class="mb-6 grid gap-6 md:grid-cols-2">
+		<div class="mb-6 grid gap-6 sm:grid-cols-2">
 			<div>
 				<Label for="n_brothers" class="mb-2">{$_('schedule.n-bro')}:</Label>
 				<Input
