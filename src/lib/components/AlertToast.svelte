@@ -6,8 +6,9 @@
 	export let alertStatus: string
 	export let alertMessage: string
 	export let fadeDelay: number = 5000
-	let color: string = 'green'
-	let alertVisible: boolean = true
+	let color: string = 'green',
+		alertVisible: boolean = true,
+		mobile: boolean = false
 	setTimeout(() => {
 		alertVisible = false
 	}, fadeDelay)
@@ -18,10 +19,25 @@
 	} else if (alertStatus.toLowerCase() == 'error' || alertStatus.toLowerCase() == 'err') {
 		color = 'red'
 	}
+
+	//Media Queries for Calendar View
+	const mediaQuery = window.matchMedia('(width <= 640px)')
+	mediaQuery.addEventListener('change', ({matches}) => {
+		if (matches) {
+			mobile = true
+		} else {
+			mobile = false
+		}
+	})
+	if (mediaQuery.matches) {
+		mobile = true
+	} else {
+		mobile = false
+	}
 </script>
 
 {#if alertVisible}
-	<Toast {color} class="m-3 print:hidden" transition={slide}>
+	<Toast {color} class="m-2 print:hidden {mobile ? 'mb-20' : ''}" transition={slide}>
 		<svelte:fragment slot="icon">
 			{#if alertStatus.toLowerCase() == 'success' || alertStatus.toLowerCase() == 'ok'}
 				<CheckCircleSolid class="h-5 w-5" />

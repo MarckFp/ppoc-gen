@@ -91,7 +91,7 @@
       "label": "Homescreen Desktop of PPOC Gen App"
     },
     {
-      "src": "SettingsScreemDesktop.png",
+      "src": "SettingsScreenDesktop.png",
       "sizes": "2559x1224",
       "type": "image/png",
       "form_factor": "wide",
@@ -105,7 +105,7 @@
       "label": "Homescreen Mobile of PPOC Gen App"
     },
     {
-      "src": "SettingsScreemMobile.png",
+      "src": "SettingsScreenMobile.png",
       "sizes": "850x1990",
       "type": "image/png",
       "form_factor": "narrow",

@@ -9,6 +9,8 @@
 	import {page} from '$app/stores'
 	import {base} from '$app/paths'
 
+	let mobile: boolean = false
+
 	// eslint-disable-next-line
 	const version = PKG.version ?? 'unknown'
 	const congregation = liveQuery(() => db.congregation.orderBy('id').toArray())
@@ -24,6 +26,21 @@
 				}
 			}
 		})
+
+	//Media Queries for Calendar View
+	const mediaQuery = window.matchMedia('(width <= 640px)')
+	mediaQuery.addEventListener('change', ({matches}) => {
+		if (matches) {
+			mobile = true
+		} else {
+			mobile = false
+		}
+	})
+	if (mediaQuery.matches) {
+		mobile = true
+	} else {
+		mobile = false
+	}
 </script>
 
 {#if $congregation}
@@ -42,7 +59,7 @@
 	{#if $congregation.length > 0}
 		{#if [`${base}/`, `${base}/settings`, `${base}/publishers`, `${base}/schedules`, `${base}/turns`, `${base}/incidences`].includes($page.url.pathname)}
 			<Footer class="flex flex-row justify-center print:hidden">
-				<Card class="mx-5 my-1 text-center dark:text-white" size="xl">
+				<Card class="mx-5 my-1 text-center dark:text-white {mobile ? 'mb-20' : ''}" size="xl">
 					PPOC Gen version {version}
 				</Card>
 			</Footer>
