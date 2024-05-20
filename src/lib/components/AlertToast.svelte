@@ -19,25 +19,10 @@
 	} else if (alertStatus.toLowerCase() == 'error' || alertStatus.toLowerCase() == 'err') {
 		color = 'red'
 	}
-
-	//Media Queries for Calendar View
-	const mediaQuery = window.matchMedia('(width <= 640px)')
-	mediaQuery.addEventListener('change', ({matches}) => {
-		if (matches) {
-			mobile = true
-		} else {
-			mobile = false
-		}
-	})
-	if (mediaQuery.matches) {
-		mobile = true
-	} else {
-		mobile = false
-	}
 </script>
 
 {#if alertVisible}
-	<Toast {color} class="m-2 print:hidden {mobile ? 'mb-20' : ''}" transition={slide}>
+	<Toast {color} class="m-2 print:hidden" transition={slide}>
 		<svelte:fragment slot="icon">
 			{#if alertStatus.toLowerCase() == 'success' || alertStatus.toLowerCase() == 'ok'}
 				<CheckCircleSolid class="h-5 w-5" />

@@ -29,6 +29,7 @@
 		mobile: boolean = false,
 		searchTerm: string = '',
 		selected_weekday: string = 'monday',
+		default_weekday: string = 'monday',
 		start_time: string = '00:00',
 		end_time: string = '00:00',
 		modalTitle: string = $_('general.create-btn'),
@@ -54,9 +55,20 @@
 		if (cong && cong.week_order) {
 			if (cong.week_order == 'monday') {
 				sunday = 7
+				default_weekday = 'monday'
 			}
 			if (cong.week_order == 'sunday') {
 				sunday = 0
+				default_weekday = 'sunday'
+				weekdays = [
+					{value: 'sunday', name: $_('general.sunday')},
+					{value: 'monday', name: $_('general.monday')},
+					{value: 'tuesday', name: $_('general.tuesday')},
+					{value: 'wednesday', name: $_('general.wednesday')},
+					{value: 'thursday', name: $_('general.thursday')},
+					{value: 'friday', name: $_('general.friday')},
+					{value: 'saturday', name: $_('general.saturday')}
+				]
 			}
 		}
 
@@ -94,7 +106,7 @@
 
 	async function createSchedule() {
 		if (location == '' || n_brothers < 1 || n_sisters < 1) {
-			selected_weekday = 'monday'
+			selected_weekday = default_weekday
 			start_time = '00:00'
 			end_time = '00:00'
 			location = ''
@@ -130,7 +142,7 @@
 				props: {alertStatus: 'error', alertMessage: $_('schedule.failed') + error}
 			})
 		} finally {
-			selected_weekday = 'monday'
+			selected_weekday = default_weekday
 			start_time = '00:00'
 			end_time = '00:00'
 			location = ''
@@ -163,7 +175,7 @@
 			target: document.querySelector('#toast-container'),
 			props: {alertStatus: 'success', alertMessage: $_('schedule.modified')}
 		})
-		selected_weekday = 'monday'
+		selected_weekday = default_weekday
 		start_time = '00:00'
 		end_time = '00:00'
 		location = ''
@@ -202,7 +214,7 @@
 				data-testid="schedules-create-btn"
 				on:click={() => {
 					createModal = true
-					selected_weekday = 'monday'
+					selected_weekday = default_weekday
 					start_time = '00:00'
 					end_time = '00:00'
 					location = ''
