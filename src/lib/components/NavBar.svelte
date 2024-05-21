@@ -35,19 +35,19 @@
 		<BottomNavItem href="{base}/">
 			<img src="favicon.ico" class="me-3 h-6 rounded-lg sm:h-9" alt="PPOC Gen Logo" />
 		</BottomNavItem>
-		<BottomNavItem href="{base}/publishers">
+		<BottomNavItem href="{base}/publishers" data-testid="navbar-publishers">
 			<UsersGroupOutline size="lg" color="red" class="dark:text-primary-400" />
 		</BottomNavItem>
-		<BottomNavItem href="{base}/schedules">
+		<BottomNavItem href="{base}/schedules" data-testid="navbar-schedules">
 			<CalendarMonthOutline size="lg" color="red" class="dark:text-primary-400" />
 		</BottomNavItem>
-		<BottomNavItem href="{base}/turns">
+		<BottomNavItem href="{base}/turns" data-testid="navbar-turns">
 			<EditOutline size="lg" color="red" class="dark:text-primary-400" />
 		</BottomNavItem>
-		<BottomNavItem href="{base}/incidences">
+		<BottomNavItem href="{base}/incidences" data-testid="navbar-incidences">
 			<BellRingOutline size="lg" color="red" class="dark:text-primary-400" />
 		</BottomNavItem>
-		<BottomNavItem href="{base}/settings">
+		<BottomNavItem href="{base}/settings" data-testid="navbar-settings">
 			<CogOutline size="lg" color="red" class="dark:text-primary-400" />
 		</BottomNavItem>
 	</BottomNav>
