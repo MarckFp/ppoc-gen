@@ -41,7 +41,6 @@
 		printFromDate: string,
 		printToDate: string,
 		printType: string,
-		printFormat: string,
 		icsOption: string,
 		icsPublisher: number,
 		userSelect: {value: number; name: string}[] = [],
@@ -549,12 +548,11 @@
 		}
 	}
 
-	async function exportToPDF() {
+	async function exportTurns() {
 		if (printFromDate == undefined || printToDate == undefined || printFromDate == '' || printToDate == '') {
 			printFromDate = ''
 			printToDate = ''
 			printType = ''
-			printFormat = ''
 			icsOption = ''
 			icsPublisher = 0
 
@@ -571,7 +569,6 @@
 			printFromDate = ''
 			printToDate = ''
 			printType = ''
-			printFormat = ''
 			icsOption = ''
 			icsPublisher = 0
 
@@ -585,14 +582,12 @@
 		if (
 			printType == '' ||
 			printType == undefined ||
-			(printType == 'pdf' && (printFormat == '' || printFormat == undefined)) ||
 			(printType == 'ics' && (icsOption == '' || icsOption == undefined)) ||
 			(printType == 'ics' && icsOption == 'specific' && (icsPublisher == 0 || icsPublisher == undefined))
 		) {
 			printFromDate = ''
 			printToDate = ''
 			printType = ''
-			printFormat = ''
 			icsOption = ''
 			icsPublisher = 0
 
@@ -603,58 +598,63 @@
 			return
 		}
 		if (printType == 'pdf') {
-			if (printFormat == 'table') {
-				const doc = new jsPDF({orientation: 'landscape', format: 'a4'})
-				let pageWidth = doc.internal.pageSize.width,
-					wantedTableWidth = pageWidth - 15,
-					margin = (pageWidth - wantedTableWidth) / 2,
-					body = [],
-					printAssignees = [],
-					printAssignments = [],
-					printUser
+			const doc = new jsPDF({orientation: 'landscape', format: 'a4'})
+			let pageWidth = doc.internal.pageSize.width,
+				wantedTableWidth = pageWidth - 15,
+				margin = (pageWidth - wantedTableWidth) / 2,
+				body = [],
+				printAssignees = [],
+				printAssignments = [],
+				printUser
 
-				doc.text(`${from.toISOString().split('T')[0]} - ${to.toISOString().split('T')[0]}`, 20, 20)
-				const printTurns = await db.turn
-					.where('date')
-					.between(
-						new Date(date.getFullYear(), date.getMonth(), 2).toISOString().split('T')[0],
-						new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0]
-					)
-					.toArray()
-				for (let turn of printTurns) {
-					printAssignees = []
-					printAssignments = await db.assignment.where('turn_id').equals(turn.id).toArray()
-					for (let assignment of printAssignments) {
-						printUser = await db.user.where('id').equals(assignment.user_id).first()
-						if (name_order == 'firstname') {
-							printAssignees.push(printUser?.firstname + ' ' + printUser?.lastname)
-						} else {
-							printAssignees.push(printUser?.lastname + ' ' + printUser?.firstname)
-						}
+			const printTurns = await db.turn
+				.where('date')
+				.between(
+					new Date(date.getFullYear(), date.getMonth(), 2).toISOString().split('T')[0],
+					new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0]
+				)
+				.toArray()
+			for (let turn of printTurns) {
+				printAssignees = []
+				printAssignments = await db.assignment.where('turn_id').equals(turn.id).toArray()
+				for (let assignment of printAssignments) {
+					printUser = await db.user.where('id').equals(assignment.user_id).first()
+					if (name_order == 'firstname') {
+						printAssignees.push(printUser?.firstname + ' ' + printUser?.lastname)
+					} else {
+						printAssignees.push(printUser?.lastname + ' ' + printUser?.firstname)
 					}
-					body.push([
-						$_(
-							'general.' +
-								['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][
-									new Date(turn.date).getDay()
-								]
-						) +
-							' ' +
-							new Date(turn.date).getDate(),
-						turn.start_time + ' - ' + turn.end_time,
-						turn.location,
-						printAssignees.join(' | ')
-					])
 				}
-
-				autoTable(doc, {
-					startY: 25,
-					head: [[$_('turns.day'), $_('turns.time'), $_('schedule.location'), $_('turns.assignees')]],
-					body: body,
-					margin: {left: margin, right: margin}
-				})
-				doc.save('test.pdf')
+				body.push([
+					$_(
+						'general.' +
+							['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][
+								new Date(turn.date).getDay()
+							]
+					) +
+						' ' +
+						new Date(turn.date).getDate(),
+					turn.start_time + ' - ' + turn.end_time,
+					turn.location,
+					printAssignees.join(' | ')
+				])
 			}
+
+			doc.text(
+				`${from.getDate()} ${$_('general.' + from.toLocaleString('en', {month: 'long'}).toLowerCase())} - ${to.getDate()} ${$_('general.' + from.toLocaleString('en', {month: 'long'}).toLowerCase())}`,
+				20,
+				20
+			)
+			autoTable(doc, {
+				theme: 'grid',
+				startY: 25,
+				head: [[$_('turns.day'), $_('turns.time'), $_('schedule.location'), $_('turns.assignees')]],
+				body: body,
+				margin: {left: margin, right: margin}
+			})
+			doc.save('ppocgen.pdf')
+		} else if (printType == 'ics') {
+			return
 		}
 	}
 
@@ -1000,7 +1000,7 @@
 							<ArrowRightOutline class="ms-3 h-10 w-10" />
 						</div>
 					</Radio>
-					<Radio name="custom" custom value="ics" bind:group={printType}>
+					<Radio name="custom" custom value="ics" bind:group={printType} disabled>
 						<div
 							class="inline-flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-white p-5 text-gray-500 hover:bg-gray-100 hover:text-gray-600 peer-checked:border-primary-600 peer-checked:text-primary-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-primary-500"
 						>
@@ -1012,23 +1012,7 @@
 						</div>
 					</Radio>
 				</div>
-				{#if printType == 'pdf'}
-					<hr />
-					<p class="mb-4 mt-4 font-semibold text-gray-900 dark:text-white">Format:</p>
-					<ul
-						class="mb-6 w-full items-center divide-x divide-gray-200 rounded-lg border border-gray-200 dark:divide-gray-600 dark:border-gray-600 dark:bg-gray-800 sm:flex rtl:divide-x-reverse"
-					>
-						<li class="w-full">
-							<Radio name="pdf-format" class="p-3" bind:group={printFormat} value="list">List</Radio>
-						</li>
-						<li class="w-full">
-							<Radio name="pdf-format" class="p-3" bind:group={printFormat} value="table">Table</Radio>
-						</li>
-						<li class="w-full">
-							<Radio name="pdf-format" class="p-3" bind:group={printFormat} value="calendar">Calendar</Radio>
-						</li>
-					</ul>
-				{:else if printType == 'ics'}
+				{#if printType == 'ics'}
 					<hr />
 					<p class="mb-4 mt-4 font-semibold text-gray-900 dark:text-white">Choose:</p>
 					<ul
@@ -1051,7 +1035,7 @@
 						</Label>
 					{/if}
 				{/if}
-				<Button color="red" class="me-2" on:click={exportToPDF}>{$_('general.yes-sure')}</Button>
+				<Button color="red" class="me-2" on:click={exportTurns}>{$_('general.yes-sure')}</Button>
 				<Button color="alternative">{$_('general.no-cancel')}</Button>
 			</div>
 		</Modal>
