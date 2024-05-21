@@ -149,7 +149,11 @@
 		"mod-error": "Fallo al modificar el turno, error: ",
 		"not-enough-sis": "No hay suficientes hermanas para la fecha: ",
 		"not-enough-bro": "No hay suficientes hermanos para la fecha: ",
-		"cong-inc": "Ignorado porque la congregación entera tiene una incidencia"
+		"cong-inc": "Ignorado porque la congregación entera tiene una incidencia",
+		"export": "Exportar",
+		"type": "Tipo",
+		"pdf-desc": "Recomendable para enviar reportes a los publicadores",
+		"ics-desc": "Recomendable para importar en apps de calendario"
 	},
 	"incidences": {
 		"create-btn": "Crear nueva Incidencia",

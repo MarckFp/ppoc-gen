@@ -17,14 +17,13 @@
 		Dropdown,
 		DropdownItem,
 		Search,
-		Radio,
-		Select
+		Radio
 	} from 'flowbite-svelte'
 	import {
 		ExclamationCircleOutline,
 		ArrowLeftOutline,
 		ArrowRightOutline,
-		FilePdfSolid,
+		FileExportSolid,
 		DotsHorizontalOutline
 	} from 'flowbite-svelte-icons'
 	import AlertToast from '$lib/components/AlertToast.svelte'
@@ -807,7 +806,9 @@
 						{date.getFullYear()}
 					</Badge>
 				{/if}
-				<Button on:click={() => (printModal = true)} aria-label="Export to PDF"><FilePdfSolid></FilePdfSolid></Button>
+				<Button on:click={() => (printModal = true)} aria-label="Export to PDF"
+					><FileExportSolid></FileExportSolid></Button
+				>
 				<Button
 					aria-label="Next Month"
 					on:click={() => {
@@ -1004,7 +1005,7 @@
 			{/if}
 		</Card>
 
-		<Modal title="Print" bind:open={printModal} size="lg" autoclose outsideclose>
+		<Modal title={$_('turns.export')} bind:open={printModal} size="lg" autoclose outsideclose>
 			<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 				<Label>
 					{$_('turns.from')}:
@@ -1016,7 +1017,7 @@
 				</Label>
 			</div>
 			<div class="text-center">
-				<p class="mb-5 text-lg font-medium text-gray-900 dark:text-white">Type:</p>
+				<p class="mb-5 text-lg font-medium text-gray-900 dark:text-white">{$_('turns.type')}:</p>
 				<div class="my-4 grid w-full grid-cols-1 gap-4 md:grid-cols-2">
 					<Radio name="custom" custom value="pdf" bind:group={printType}>
 						<div
@@ -1024,7 +1025,7 @@
 						>
 							<div>
 								<div class="w-full text-lg font-semibold">PDF</div>
-								<div class="w-full">Good for sending reports to publishers</div>
+								<div class="w-full">{$_('turns.pdf-desc')}</div>
 							</div>
 							<ArrowRightOutline class="ms-3 h-10 w-10" />
 						</div>
@@ -1035,7 +1036,7 @@
 						>
 							<div class="block">
 								<div class="w-full text-lg font-semibold">ICS</div>
-								<div class="w-full">Good for importing into calendar apps</div>
+								<div class="w-full">{$_('turns.ics-desc')}</div>
 							</div>
 							<ArrowRightOutline class="ms-3 h-10 w-10" />
 						</div>
