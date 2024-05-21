@@ -34,6 +34,7 @@
 	import {onMount} from 'svelte'
 	import {jsPDF} from 'jspdf'
 	import autoTable from 'jspdf-autotable'
+	import ical from 'ical-generator'
 
 	var date: Date = new Date()
 	let fromDate: string,
@@ -41,7 +42,6 @@
 		printFromDate: string,
 		printToDate: string,
 		printType: string,
-		icsOption: string,
 		icsPublisher: number,
 		userSelect: {value: number; name: string}[] = [],
 		loading: boolean = false,
@@ -553,7 +553,6 @@
 			printFromDate = ''
 			printToDate = ''
 			printType = ''
-			icsOption = ''
 			icsPublisher = 0
 
 			new AlertToast({
@@ -563,13 +562,15 @@
 			return
 		}
 		let from: Date = new Date(printFromDate),
-			to: Date = new Date(printToDate)
+			to: Date = new Date(printToDate),
+			printAssignees = [],
+			printAssignments = [],
+			printUser
 
 		if (from > to) {
 			printFromDate = ''
 			printToDate = ''
 			printType = ''
-			icsOption = ''
 			icsPublisher = 0
 
 			new AlertToast({
@@ -579,16 +580,10 @@
 			return
 		}
 
-		if (
-			printType == '' ||
-			printType == undefined ||
-			(printType == 'ics' && (icsOption == '' || icsOption == undefined)) ||
-			(printType == 'ics' && icsOption == 'specific' && (icsPublisher == 0 || icsPublisher == undefined))
-		) {
+		if (printType == '' || printType == undefined) {
 			printFromDate = ''
 			printToDate = ''
 			printType = ''
-			icsOption = ''
 			icsPublisher = 0
 
 			new AlertToast({
@@ -602,10 +597,7 @@
 			let pageWidth = doc.internal.pageSize.width,
 				wantedTableWidth = pageWidth - 15,
 				margin = (pageWidth - wantedTableWidth) / 2,
-				body = [],
-				printAssignees = [],
-				printAssignments = [],
-				printUser
+				body = []
 
 			const printTurns = await db.turn
 				.where('date')
@@ -652,9 +644,46 @@
 				body: body,
 				margin: {left: margin, right: margin}
 			})
-			doc.save('ppocgen.pdf')
+			doc.save('ppoc-gen.pdf')
 		} else if (printType == 'ics') {
-			return
+			const iCal = ical({name: 'PPOC Gen'})
+
+			const printTurns = await db.turn
+				.where('date')
+				.between(
+					new Date(date.getFullYear(), date.getMonth(), 2).toISOString().split('T')[0],
+					new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0]
+				)
+				.toArray()
+			for (let turn of printTurns) {
+				printAssignees = []
+				printAssignments = await db.assignment.where('turn_id').equals(turn.id).toArray()
+				for (let assignment of printAssignments) {
+					printUser = await db.user.where('id').equals(assignment.user_id).first()
+					if (name_order == 'firstname') {
+						printAssignees.push(printUser?.firstname + ' ' + printUser?.lastname)
+					} else {
+						printAssignees.push(printUser?.lastname + ' ' + printUser?.firstname)
+					}
+				}
+
+				iCal.createEvent({
+					start: new Date(turn.date + ' ' + turn.start_time),
+					end: new Date(turn.date + ' ' + turn.end_time),
+					summary: turn.location + ' ' + turn.start_time + '-' + turn.end_time,
+					description: printAssignees.join('\n'),
+					location: turn.location
+				})
+			}
+			const icsFile = new Blob([iCal.toString()], {
+				type: 'text/calendar'
+			})
+			var url = window.URL || window.webkitURL
+			let link: string = url.createObjectURL(icsFile),
+				a: HTMLAnchorElement = document.createElement('a')
+			a.setAttribute('download', `ppoc-gen.ics`)
+			a.setAttribute('href', link)
+			a.click()
 		}
 	}
 
@@ -1000,7 +1029,7 @@
 							<ArrowRightOutline class="ms-3 h-10 w-10" />
 						</div>
 					</Radio>
-					<Radio name="custom" custom value="ics" bind:group={printType} disabled>
+					<Radio name="custom" custom value="ics" bind:group={printType}>
 						<div
 							class="inline-flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-white p-5 text-gray-500 hover:bg-gray-100 hover:text-gray-600 peer-checked:border-primary-600 peer-checked:text-primary-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-primary-500"
 						>
@@ -1012,29 +1041,6 @@
 						</div>
 					</Radio>
 				</div>
-				{#if printType == 'ics'}
-					<hr />
-					<p class="mb-4 mt-4 font-semibold text-gray-900 dark:text-white">Choose:</p>
-					<ul
-						class="mb-6 w-full items-center divide-x divide-gray-200 rounded-lg border border-gray-200 dark:divide-gray-600 dark:border-gray-600 dark:bg-gray-800 sm:flex rtl:divide-x-reverse"
-					>
-						<li class="w-full">
-							<Radio name="ics-format" class="p-3" bind:group={icsOption} value="all-turns">All Turns</Radio>
-						</li>
-						<li class="w-full">
-							<Radio name="ics-format" class="p-3" bind:group={icsOption} value="all-pub">All Publishers</Radio>
-						</li>
-						<li class="w-full">
-							<Radio name="ics-format" class="p-3" bind:group={icsOption} value="specific">Specific Publisher</Radio>
-						</li>
-					</ul>
-					{#if icsOption == 'specific'}
-						<Label>
-							{$_('incidences.publisher')}:
-							<Select class="mb-6 mt-2" id="publisher" bind:value={icsPublisher} items={userSelect} required />
-						</Label>
-					{/if}
-				{/if}
 				<Button color="red" class="me-2" on:click={exportTurns}>{$_('general.yes-sure')}</Button>
 				<Button color="alternative">{$_('general.no-cancel')}</Button>
 			</div>
