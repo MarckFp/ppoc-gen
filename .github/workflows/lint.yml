@@ -12,5 +12,9 @@ jobs:
     - uses: oven-sh/setup-bun@v1
       with:
         bun-version: latest
+    - uses: actions/cache@v4
+      with:
+        key: bun-cache
+        path: ~/.bun/install/cache
     - run: bun install
     - run: bun run lint
