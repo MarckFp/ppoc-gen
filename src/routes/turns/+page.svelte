@@ -32,6 +32,8 @@
 	import {liveQuery} from 'dexie'
 	import {_} from 'svelte-i18n'
 	import {onMount} from 'svelte'
+	import {jsPDF} from 'jspdf'
+	import autoTable from 'jspdf-autotable'
 
 	var date: Date = new Date()
 	let fromDate: string,
@@ -600,7 +602,60 @@
 			})
 			return
 		}
-		window.print()
+		if (printType == 'pdf') {
+			if (printFormat == 'table') {
+				const doc = new jsPDF({orientation: 'landscape', format: 'a4'})
+				let pageWidth = doc.internal.pageSize.width,
+					wantedTableWidth = pageWidth - 15,
+					margin = (pageWidth - wantedTableWidth) / 2,
+					body = [],
+					printAssignees = [],
+					printAssignments = [],
+					printUser
+
+				doc.text(`${from.toISOString().split('T')[0]} - ${to.toISOString().split('T')[0]}`, 20, 20)
+				const printTurns = await db.turn
+					.where('date')
+					.between(
+						new Date(date.getFullYear(), date.getMonth(), 2).toISOString().split('T')[0],
+						new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0]
+					)
+					.toArray()
+				for (let turn of printTurns) {
+					printAssignees = []
+					printAssignments = await db.assignment.where('turn_id').equals(turn.id).toArray()
+					for (let assignment of printAssignments) {
+						printUser = await db.user.where('id').equals(assignment.user_id).first()
+						if (name_order == 'firstname') {
+							printAssignees.push(printUser?.firstname + ' ' + printUser?.lastname)
+						} else {
+							printAssignees.push(printUser?.lastname + ' ' + printUser?.firstname)
+						}
+					}
+					body.push([
+						$_(
+							'general.' +
+								['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][
+									new Date(turn.date).getDay()
+								]
+						) +
+							' ' +
+							new Date(turn.date).getDate(),
+						turn.start_time + ' - ' + turn.end_time,
+						turn.location,
+						printAssignees.join(' | ')
+					])
+				}
+
+				autoTable(doc, {
+					startY: 25,
+					head: [[$_('turns.day'), $_('turns.time'), $_('schedule.location'), $_('turns.assignees')]],
+					body: body,
+					margin: {left: margin, right: margin}
+				})
+				doc.save('test.pdf')
+			}
+		}
 	}
 
 	async function getAssignees(turn_id: number) {
