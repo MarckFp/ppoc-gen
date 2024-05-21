@@ -16,7 +16,9 @@
 		Modal,
 		Dropdown,
 		DropdownItem,
-		Search
+		Search,
+		Radio,
+		Select
 	} from 'flowbite-svelte'
 	import {
 		ExclamationCircleOutline,
@@ -34,9 +36,17 @@
 	var date: Date = new Date()
 	let fromDate: string,
 		toDate: string,
+		printFromDate: string,
+		printToDate: string,
+		printType: string,
+		printFormat: string,
+		icsOption: string,
+		icsPublisher: number,
+		userSelect: {value: number; name: string}[] = [],
 		loading: boolean = false,
 		deleteModal: boolean = false,
 		createModal: boolean = false,
+		printModal: boolean = false,
 		creationDisabled: boolean = false,
 		mobile: boolean = false,
 		edit: boolean = false,
@@ -101,6 +111,11 @@
 				}
 			}
 		}
+	})
+
+	db.user.orderBy('firstname').each(user => {
+		userSelect.push({value: user.id, name: user.firstname + ' ' + user.lastname})
+		userList[user.id] = user.firstname + ' ' + user.lastname
 	})
 
 	$: filteredItems = $turns?.filter(
@@ -656,9 +671,7 @@
 						{date.getFullYear()}
 					</Badge>
 				{/if}
-				<Button on:click={exportToPDF} aria-label="Export to PDF" disabled={mobile ? true : false}
-					><FilePdfSolid></FilePdfSolid></Button
-				>
+				<Button on:click={() => (printModal = true)} aria-label="Export to PDF"><FilePdfSolid></FilePdfSolid></Button>
 				<Button
 					aria-label="Next Month"
 					on:click={() => {
@@ -854,6 +867,87 @@
 				</TableSearch>
 			{/if}
 		</Card>
+
+		<Modal title="Print" bind:open={printModal} size="lg" autoclose outsideclose>
+			<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+				<Label>
+					{$_('turns.from')}:
+					<Input type="date" bind:value={printFromDate} data-testid="turns-date-from" class="mt-2" />
+				</Label>
+				<Label>
+					{$_('turns.to')}:
+					<Input type="date" bind:value={printToDate} data-testid="turns-date-to" class="mt-2" />
+				</Label>
+			</div>
+			<div class="text-center">
+				<p class="mb-5 text-lg font-medium text-gray-900 dark:text-white">Type:</p>
+				<div class="my-4 grid w-full grid-cols-1 gap-4 md:grid-cols-2">
+					<Radio name="custom" custom value="pdf" bind:group={printType}>
+						<div
+							class="inline-flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-white p-5 text-gray-500 hover:bg-gray-100 hover:text-gray-600 peer-checked:border-primary-600 peer-checked:text-primary-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-primary-500"
+						>
+							<div>
+								<div class="w-full text-lg font-semibold">PDF</div>
+								<div class="w-full">Good for sending reports to publishers</div>
+							</div>
+							<ArrowRightOutline class="ms-3 h-10 w-10" />
+						</div>
+					</Radio>
+					<Radio name="custom" custom value="ics" bind:group={printType}>
+						<div
+							class="inline-flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-white p-5 text-gray-500 hover:bg-gray-100 hover:text-gray-600 peer-checked:border-primary-600 peer-checked:text-primary-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-primary-500"
+						>
+							<div class="block">
+								<div class="w-full text-lg font-semibold">ICS</div>
+								<div class="w-full">Good for importing into Google Calendar, Outlook...</div>
+							</div>
+							<ArrowRightOutline class="ms-3 h-10 w-10" />
+						</div>
+					</Radio>
+				</div>
+				{#if printType == 'pdf'}
+					<hr />
+					<p class="mb-4 mt-4 font-semibold text-gray-900 dark:text-white">Format:</p>
+					<ul
+						class="mb-4 w-full items-center divide-x divide-gray-200 rounded-lg border border-gray-200 dark:divide-gray-600 dark:border-gray-600 dark:bg-gray-800 sm:flex rtl:divide-x-reverse"
+					>
+						<li class="w-full">
+							<Radio name="pdf-format" class="p-3" bind:group={printFormat} value="list">List</Radio>
+						</li>
+						<li class="w-full">
+							<Radio name="pdf-format" class="p-3" bind:group={printFormat} value="table">Table</Radio>
+						</li>
+						<li class="w-full">
+							<Radio name="pdf-format" class="p-3" bind:group={printFormat} value="calendar">Calendar</Radio>
+						</li>
+					</ul>
+				{:else if printType == 'ics'}
+					<hr />
+					<p class="mb-4 mt-4 font-semibold text-gray-900 dark:text-white">Choose:</p>
+					<ul
+						class="mb-4 w-full items-center divide-x divide-gray-200 rounded-lg border border-gray-200 dark:divide-gray-600 dark:border-gray-600 dark:bg-gray-800 sm:flex rtl:divide-x-reverse"
+					>
+						<li class="w-full">
+							<Radio name="ics-format" class="p-3" bind:group={icsOption} value="all-turns">All Turns</Radio>
+						</li>
+						<li class="w-full">
+							<Radio name="ics-format" class="p-3" bind:group={icsOption} value="all-pub">All Publishers</Radio>
+						</li>
+						<li class="w-full">
+							<Radio name="ics-format" class="p-3" bind:group={icsOption} value="specific">Specific Publisher</Radio>
+						</li>
+					</ul>
+					{#if icsOption == 'specific'}
+						<Label>
+							{$_('incidences.publisher')}:
+							<Select class="mb-4 mt-2" id="publisher" bind:value={icsPublisher} items={userSelect} required />
+						</Label>
+					{/if}
+				{/if}
+				<Button color="red" class="me-2" on:click={exportToPDF}>{$_('general.yes-sure')}</Button>
+				<Button color="alternative">{$_('general.no-cancel')}</Button>
+			</div>
+		</Modal>
 
 		<Modal bind:open={deleteModal} size="xs" autoclose outsideclose>
 			<div class="text-center">
