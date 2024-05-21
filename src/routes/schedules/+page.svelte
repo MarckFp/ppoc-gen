@@ -269,10 +269,12 @@
 								<div>🕑 {schedule.start_time} - {schedule.end_time}</div>
 							</div>
 							<hr />
-							<div class="my-4 grid grid-cols-3 gap-2 text-center text-gray-900 dark:text-white">
+							<div class="my-4 grid grid-cols-2 gap-2 text-center text-gray-900 dark:text-white">
 								<div>📍 {schedule.location}</div>
-								<div>👔 {schedule.n_brothers}</div>
-								<div>👗 {schedule.n_sisters}</div>
+								<div class="grid grid-cols-2">
+									<div>👔 {schedule.n_brothers}</div>
+									<div>👗 {schedule.n_sisters}</div>
+								</div>
 							</div>
 						</Card>
 					{/each}
