@@ -216,17 +216,18 @@
 					>{$_('settings.update-cong')}</Button
 				>
 				<Button color="red" on:click={() => (deleteModal = true)}>{$_('settings.delete-cong')}</Button>
+				<hr class="my-2" />
 				<input bind:files id="import" name="import" type="file" accept=".pgen" class="hidden" on:change={importData} />
-				<ButtonGroup class="flex justify-center">
-					<Button on:click={() => (importModal = true)}>
+				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+					<Button on:click={() => (importModal = true)} color="alternative">
 						<CloudArrowUpSolid class="me-3 h-6 w-6" />
 						{$_('settings.import')}
 					</Button>
-					<Button on:click={exportData}>
+					<Button on:click={exportData} color="alternative">
 						<DownloadSolid class="me-3 h-6 w-6" />
 						{$_('settings.export')}
 					</Button>
-				</ButtonGroup>
+				</div>
 			</div>
 		</Card>
 
