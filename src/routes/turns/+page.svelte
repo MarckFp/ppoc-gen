@@ -548,6 +548,58 @@
 	}
 
 	async function exportToPDF() {
+		if (printFromDate == undefined || printToDate == undefined || printFromDate == '' || printToDate == '') {
+			printFromDate = ''
+			printToDate = ''
+			printType = ''
+			printFormat = ''
+			icsOption = ''
+			icsPublisher = 0
+
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: $_('turns.date-invalid')}
+			})
+			return
+		}
+		let from: Date = new Date(printFromDate),
+			to: Date = new Date(printToDate)
+
+		if (from > to) {
+			printFromDate = ''
+			printToDate = ''
+			printType = ''
+			printFormat = ''
+			icsOption = ''
+			icsPublisher = 0
+
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: $_('turns.from-bigger-to')}
+			})
+			return
+		}
+
+		if (
+			printType == '' ||
+			printType == undefined ||
+			(printType == 'pdf' && (printFormat == '' || printFormat == undefined)) ||
+			(printType == 'ics' && (icsOption == '' || icsOption == undefined)) ||
+			(printType == 'ics' && icsOption == 'specific' && (icsPublisher == 0 || icsPublisher == undefined))
+		) {
+			printFromDate = ''
+			printToDate = ''
+			printType = ''
+			printFormat = ''
+			icsOption = ''
+			icsPublisher = 0
+
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: 'Select valid options'}
+			})
+			return
+		}
 		window.print()
 	}
 
@@ -899,7 +951,7 @@
 						>
 							<div class="block">
 								<div class="w-full text-lg font-semibold">ICS</div>
-								<div class="w-full">Good for importing into Google Calendar, Outlook...</div>
+								<div class="w-full">Good for importing into calendar apps</div>
 							</div>
 							<ArrowRightOutline class="ms-3 h-10 w-10" />
 						</div>
@@ -909,7 +961,7 @@
 					<hr />
 					<p class="mb-4 mt-4 font-semibold text-gray-900 dark:text-white">Format:</p>
 					<ul
-						class="mb-4 w-full items-center divide-x divide-gray-200 rounded-lg border border-gray-200 dark:divide-gray-600 dark:border-gray-600 dark:bg-gray-800 sm:flex rtl:divide-x-reverse"
+						class="mb-6 w-full items-center divide-x divide-gray-200 rounded-lg border border-gray-200 dark:divide-gray-600 dark:border-gray-600 dark:bg-gray-800 sm:flex rtl:divide-x-reverse"
 					>
 						<li class="w-full">
 							<Radio name="pdf-format" class="p-3" bind:group={printFormat} value="list">List</Radio>
@@ -925,7 +977,7 @@
 					<hr />
 					<p class="mb-4 mt-4 font-semibold text-gray-900 dark:text-white">Choose:</p>
 					<ul
-						class="mb-4 w-full items-center divide-x divide-gray-200 rounded-lg border border-gray-200 dark:divide-gray-600 dark:border-gray-600 dark:bg-gray-800 sm:flex rtl:divide-x-reverse"
+						class="mb-6 w-full items-center divide-x divide-gray-200 rounded-lg border border-gray-200 dark:divide-gray-600 dark:border-gray-600 dark:bg-gray-800 sm:flex rtl:divide-x-reverse"
 					>
 						<li class="w-full">
 							<Radio name="ics-format" class="p-3" bind:group={icsOption} value="all-turns">All Turns</Radio>
@@ -940,7 +992,7 @@
 					{#if icsOption == 'specific'}
 						<Label>
 							{$_('incidences.publisher')}:
-							<Select class="mb-4 mt-2" id="publisher" bind:value={icsPublisher} items={userSelect} required />
+							<Select class="mb-6 mt-2" id="publisher" bind:value={icsPublisher} items={userSelect} required />
 						</Label>
 					{/if}
 				{/if}
