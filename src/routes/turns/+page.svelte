@@ -16,13 +16,14 @@
 		Modal,
 		Dropdown,
 		DropdownItem,
-		Search
+		Search,
+		Radio
 	} from 'flowbite-svelte'
 	import {
 		ExclamationCircleOutline,
 		ArrowLeftOutline,
 		ArrowRightOutline,
-		FilePdfSolid,
+		FileExportSolid,
 		DotsHorizontalOutline
 	} from 'flowbite-svelte-icons'
 	import AlertToast from '$lib/components/AlertToast.svelte'
@@ -30,13 +31,22 @@
 	import {liveQuery} from 'dexie'
 	import {_} from 'svelte-i18n'
 	import {onMount} from 'svelte'
+	import {jsPDF} from 'jspdf'
+	import autoTable from 'jspdf-autotable'
+	import ical from 'ical-generator'
 
 	var date: Date = new Date()
 	let fromDate: string,
 		toDate: string,
+		printFromDate: string,
+		printToDate: string,
+		printType: string,
+		icsPublisher: number,
+		userSelect: {value: number; name: string}[] = [],
 		loading: boolean = false,
 		deleteModal: boolean = false,
 		createModal: boolean = false,
+		printModal: boolean = false,
 		creationDisabled: boolean = false,
 		mobile: boolean = false,
 		edit: boolean = false,
@@ -101,6 +111,11 @@
 				}
 			}
 		}
+	})
+
+	db.user.orderBy('firstname').each(user => {
+		userSelect.push({value: user.id, name: user.firstname + ' ' + user.lastname})
+		userList[user.id] = user.firstname + ' ' + user.lastname
 	})
 
 	$: filteredItems = $turns?.filter(
@@ -532,8 +547,143 @@
 		}
 	}
 
-	async function exportToPDF() {
-		window.print()
+	async function exportTurns() {
+		if (printFromDate == undefined || printToDate == undefined || printFromDate == '' || printToDate == '') {
+			printFromDate = ''
+			printToDate = ''
+			printType = ''
+			icsPublisher = 0
+
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: $_('turns.date-invalid')}
+			})
+			return
+		}
+		let from: Date = new Date(printFromDate),
+			to: Date = new Date(printToDate),
+			printAssignees = [],
+			printAssignments = [],
+			printUser
+
+		if (from > to) {
+			printFromDate = ''
+			printToDate = ''
+			printType = ''
+			icsPublisher = 0
+
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: $_('turns.from-bigger-to')}
+			})
+			return
+		}
+
+		if (printType == '' || printType == undefined) {
+			printFromDate = ''
+			printToDate = ''
+			printType = ''
+			icsPublisher = 0
+
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: 'Select valid options'}
+			})
+			return
+		}
+		if (printType == 'pdf') {
+			const doc = new jsPDF({orientation: 'landscape', format: 'a4'})
+			let pageWidth = doc.internal.pageSize.width,
+				wantedTableWidth = pageWidth - 15,
+				margin = (pageWidth - wantedTableWidth) / 2,
+				body = []
+
+			const printTurns = await db.turn
+				.where('date')
+				.between(
+					new Date(date.getFullYear(), date.getMonth(), 2).toISOString().split('T')[0],
+					new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0]
+				)
+				.toArray()
+			for (let turn of printTurns) {
+				printAssignees = []
+				printAssignments = await db.assignment.where('turn_id').equals(turn.id).toArray()
+				for (let assignment of printAssignments) {
+					printUser = await db.user.where('id').equals(assignment.user_id).first()
+					if (name_order == 'firstname') {
+						printAssignees.push(printUser?.firstname + ' ' + printUser?.lastname)
+					} else {
+						printAssignees.push(printUser?.lastname + ' ' + printUser?.firstname)
+					}
+				}
+				body.push([
+					$_(
+						'general.' +
+							['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][
+								new Date(turn.date).getDay()
+							]
+					) +
+						' ' +
+						new Date(turn.date).getDate(),
+					turn.start_time + ' - ' + turn.end_time,
+					turn.location,
+					printAssignees.join(' | ')
+				])
+			}
+
+			doc.text(
+				`${from.getDate()} ${$_('general.' + from.toLocaleString('en', {month: 'long'}).toLowerCase())} - ${to.getDate()} ${$_('general.' + from.toLocaleString('en', {month: 'long'}).toLowerCase())}`,
+				20,
+				20
+			)
+			autoTable(doc, {
+				theme: 'grid',
+				startY: 25,
+				head: [[$_('turns.day'), $_('turns.time'), $_('schedule.location'), $_('turns.assignees')]],
+				body: body,
+				margin: {left: margin, right: margin}
+			})
+			doc.save('ppoc-gen.pdf')
+		} else if (printType == 'ics') {
+			const iCal = ical({name: 'PPOC Gen'})
+
+			const printTurns = await db.turn
+				.where('date')
+				.between(
+					new Date(date.getFullYear(), date.getMonth(), 2).toISOString().split('T')[0],
+					new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0]
+				)
+				.toArray()
+			for (let turn of printTurns) {
+				printAssignees = []
+				printAssignments = await db.assignment.where('turn_id').equals(turn.id).toArray()
+				for (let assignment of printAssignments) {
+					printUser = await db.user.where('id').equals(assignment.user_id).first()
+					if (name_order == 'firstname') {
+						printAssignees.push(printUser?.firstname + ' ' + printUser?.lastname)
+					} else {
+						printAssignees.push(printUser?.lastname + ' ' + printUser?.firstname)
+					}
+				}
+
+				iCal.createEvent({
+					start: new Date(turn.date + ' ' + turn.start_time),
+					end: new Date(turn.date + ' ' + turn.end_time),
+					summary: turn.location + ' ' + turn.start_time + '-' + turn.end_time,
+					description: printAssignees.join('\n'),
+					location: turn.location
+				})
+			}
+			const icsFile = new Blob([iCal.toString()], {
+				type: 'text/calendar'
+			})
+			var url = window.URL || window.webkitURL
+			let link: string = url.createObjectURL(icsFile),
+				a: HTMLAnchorElement = document.createElement('a')
+			a.setAttribute('download', `ppoc-gen.ics`)
+			a.setAttribute('href', link)
+			a.click()
+		}
 	}
 
 	async function getAssignees(turn_id: number) {
@@ -656,8 +806,8 @@
 						{date.getFullYear()}
 					</Badge>
 				{/if}
-				<Button on:click={exportToPDF} aria-label="Export to PDF" disabled={mobile ? true : false}
-					><FilePdfSolid></FilePdfSolid></Button
+				<Button on:click={() => (printModal = true)} aria-label="Export to PDF"
+					><FileExportSolid></FileExportSolid></Button
 				>
 				<Button
 					aria-label="Next Month"
@@ -854,6 +1004,48 @@
 				</TableSearch>
 			{/if}
 		</Card>
+
+		<Modal title={$_('turns.export')} bind:open={printModal} size="lg" autoclose outsideclose>
+			<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+				<Label>
+					{$_('turns.from')}:
+					<Input type="date" bind:value={printFromDate} data-testid="turns-date-from" class="mt-2" />
+				</Label>
+				<Label>
+					{$_('turns.to')}:
+					<Input type="date" bind:value={printToDate} data-testid="turns-date-to" class="mt-2" />
+				</Label>
+			</div>
+			<div class="text-center">
+				<p class="mb-5 text-lg font-medium text-gray-900 dark:text-white">{$_('turns.type')}:</p>
+				<div class="my-4 grid w-full grid-cols-1 gap-4 md:grid-cols-2">
+					<Radio name="custom" custom value="pdf" bind:group={printType}>
+						<div
+							class="inline-flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-white p-5 text-gray-500 hover:bg-gray-100 hover:text-gray-600 peer-checked:border-primary-600 peer-checked:text-primary-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-primary-500"
+						>
+							<div>
+								<div class="w-full text-lg font-semibold">PDF</div>
+								<div class="w-full">{$_('turns.pdf-desc')}</div>
+							</div>
+							<ArrowRightOutline class="ms-3 h-10 w-10" />
+						</div>
+					</Radio>
+					<Radio name="custom" custom value="ics" bind:group={printType}>
+						<div
+							class="inline-flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-white p-5 text-gray-500 hover:bg-gray-100 hover:text-gray-600 peer-checked:border-primary-600 peer-checked:text-primary-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-primary-500"
+						>
+							<div class="block">
+								<div class="w-full text-lg font-semibold">ICS</div>
+								<div class="w-full">{$_('turns.ics-desc')}</div>
+							</div>
+							<ArrowRightOutline class="ms-3 h-10 w-10" />
+						</div>
+					</Radio>
+				</div>
+				<Button color="red" class="me-2" on:click={exportTurns}>{$_('general.yes-sure')}</Button>
+				<Button color="alternative">{$_('general.no-cancel')}</Button>
+			</div>
+		</Modal>
 
 		<Modal bind:open={deleteModal} size="xs" autoclose outsideclose>
 			<div class="text-center">

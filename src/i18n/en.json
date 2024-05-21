@@ -149,7 +149,11 @@
 		"mod-error": "Failed to modify the turn, error: ",
 		"not-enough-sis": "Not enough sisters for date: ",
 		"not-enough-bro": "Not enough brothers for date: ",
-		"cong-inc": "Ignored because the whole congregation has an incidence"
+		"cong-inc": "Ignored because the whole congregation has an incidence",
+		"export": "Export",
+		"type": "Type",
+		"pdf-desc": "Good for sending reports to publishers",
+		"ics-desc": "Good for importing into calendar apps"
 	},
 	"incidences": {
 		"create-btn": "Create new Incidence",

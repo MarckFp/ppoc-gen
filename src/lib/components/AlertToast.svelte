@@ -7,8 +7,8 @@
 	export let alertMessage: string
 	export let fadeDelay: number = 5000
 	let color: string = 'green',
-		alertVisible: boolean = true,
-		mobile: boolean = false
+		alertVisible: boolean = true
+
 	setTimeout(() => {
 		alertVisible = false
 	}, fadeDelay)

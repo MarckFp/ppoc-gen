@@ -38,7 +38,6 @@
 			)
 			if (res.ok) {
 				const json = await res.json()
-				console.log(json)
 				if (json.address.town) {
 					location = json.address.town
 				} else {
