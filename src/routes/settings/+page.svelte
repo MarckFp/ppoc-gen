@@ -148,11 +148,12 @@
 			})
 			const importedCong = await db.congregation.orderBy('id').first()
 			if (importedCong) {
-				langs = []
 				$locale = importedCong.lang
+				langs = []
 				$locales.forEach(lang => {
 					langs.push({value: lang, name: $_('general.' + lang)})
 				})
+				window.location.reload()
 			}
 		})
 	}
