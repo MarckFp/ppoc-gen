@@ -52,8 +52,10 @@
 	"general": {
 		"edit-btn": "Edit",
 		"create-btn": "Create",
+		"update-btn": "Update",
 		"delete-btn": "Delete",
 		"cancel-btn": "Cancel",
+		"close-btn": "Close",
 		"monday": "Monday",
 		"tuesday": "Tuesday",
 		"wednesday": "Wednesday",
@@ -81,7 +83,9 @@
 		"en": "English",
 		"spanish": "Spanish",
 		"es": "Spanish",
-		"invalid-data": "Filled data is invalid or incomplete"
+		"invalid-data": "Filled data is invalid or incomplete",
+		"app-offline": "App ready to work offline",
+		"new-version": "New version available, click on reload button to update"
 	},
 	"publishers": {
 		"create-btn": "Create new Publisher",
