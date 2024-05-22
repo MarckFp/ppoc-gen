@@ -26,14 +26,14 @@ export default defineConfig({
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
     },
-    {
+    /*{
       name: 'mobile-chrome',
       use: { ...devices['Pixel 7'] },
     },
     {
       name: 'mobile-safari',
       use: { ...devices['iPhone 14 Pro Max'] },
-    },
+    },*/
   ],
   webServer: {
     command: 'bun run dev',

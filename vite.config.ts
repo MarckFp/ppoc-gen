@@ -20,7 +20,7 @@ export default defineConfig({
 		sveltekit(),
 		SvelteKitPWA({
 			devOptions: {
-				enabled: true,
+				enabled: false,
 				type: 'module',
 				navigateFallback: process.env.BASE_PATH ? process.env.BASE_PATH : '/',
 				suppressWarnings: true

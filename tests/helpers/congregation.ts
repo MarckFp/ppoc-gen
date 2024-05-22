@@ -4,7 +4,7 @@ import { faker } from '@faker-js/faker/locale/en'
 export async function createCongregation(page: Page, lang: string = 'en', weekday: string = 'monday', name_order: string = 'firstname') {
     await page.goto('/')
     await page.getByTestId('create-name').waitFor()
-    await page.getByTestId('create-name').fill('Congregation ' + faker.location.city)
+    await page.getByTestId('create-name').fill('Congregation ' + faker.location.city())
     await page.getByTestId('create-lang').selectOption(lang)
     await page.getByTestId('create-weekday').selectOption(weekday)
     await page.getByTestId('create-name-order').selectOption(name_order)
