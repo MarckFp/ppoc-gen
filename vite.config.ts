@@ -77,19 +77,47 @@ export default defineConfig({
 				shortcuts: [
 					{
 					  name: "Publishers",
-					  url: (process.env.BASE_PATH ? process.env.BASE_PATH + '/' : '/') + "publishers"
+					  url: (process.env.BASE_PATH ? process.env.BASE_PATH + '/' : '/') + "publishers",
+					  icons: [
+						{
+							src: "publisher-icon.svg",
+							sizes: "96x96",
+							type: "image/svg+xml"
+						}
+					  ]
 					},
 					{
 					  name: "Schedules",
-					  url: (process.env.BASE_PATH ? process.env.BASE_PATH + '/' : '/') + "schedules"
+					  url: (process.env.BASE_PATH ? process.env.BASE_PATH + '/' : '/') + "schedules",
+					  icons: [
+						{
+							src: "schedule-icon.svg",
+							sizes: "96x96",
+							type: "image/svg+xml"
+						}
+					  ]
 					},
 					{
 					  name: "Turns",
-					  url: (process.env.BASE_PATH ? process.env.BASE_PATH + '/' : '/') +  "turns"
+					  url: (process.env.BASE_PATH ? process.env.BASE_PATH + '/' : '/') +  "turns",
+					  icons: [
+						{
+							src: "turn-icon.svg",
+							sizes: "96x96",
+							type: "image/svg+xml"
+						}
+					  ]
 					},
 					{
 					  name: "Incidences",
-					  url: (process.env.BASE_PATH ? process.env.BASE_PATH + '/' : '/') + "incidences"
+					  url: (process.env.BASE_PATH ? process.env.BASE_PATH + '/' : '/') + "incidences",
+					  icons: [
+						{
+							src: "incidence-icon.svg",
+							sizes: "96x96",
+							type: "image/svg+xml"
+						}
+					  ]
 					}
 				],
 				icons: [
