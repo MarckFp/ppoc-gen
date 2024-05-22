@@ -7,7 +7,7 @@
 	import Calendar from '$lib/components/Calendar.svelte'
 
 	let congregation = liveQuery(() => db.congregation.orderBy('id').first())
-	const announcement = `Dear users, we've disabled temporaly printing on mobile devices to work on a better printing feature. For now try to print on Desktop. Sorry for the inconviniences.`
+	const announcement = ``
 </script>
 
 <section class="m-5 flex flex-col items-center">
