@@ -32,8 +32,8 @@
 
 {#if mobile}
 	<BottomNav {activeUrl} position="fixed" classInner="grid-cols-6">
-		<BottomNavItem href="{base}/">
-			<img src="favicon.ico" class="me-3 h-6 rounded-lg sm:h-9" alt="PPOC Gen Logo" />
+		<BottomNavItem href="{base}/" activeClass="w-full px-3">
+			<img src="favicon.ico" class="h-6 w-6 shrink-0" alt="PPOC Gen Logo" />
 		</BottomNavItem>
 		<BottomNavItem href="{base}/publishers" data-testid="navbar-publishers">
 			<UsersGroupOutline size="lg" color="red" class="dark:text-primary-400" />

@@ -157,7 +157,8 @@
 		"export": "Export",
 		"type": "Type",
 		"pdf-desc": "Good for sending reports to publishers",
-		"ics-desc": "Good for importing into calendar apps"
+		"ics-desc": "Good for importing into calendar apps",
+		"valid-options-err": "Select a valid option"
 	},
 	"incidences": {
 		"create-btn": "Create new Incidence",

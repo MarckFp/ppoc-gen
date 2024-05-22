@@ -583,7 +583,7 @@
 
 			new AlertToast({
 				target: document.querySelector('#toast-container'),
-				props: {alertStatus: 'error', alertMessage: 'Select valid options'}
+				props: {alertStatus: 'error', alertMessage: $_('turns.valid-options-err')}
 			})
 			return
 		}

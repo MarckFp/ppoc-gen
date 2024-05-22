@@ -594,7 +594,7 @@
 		{/if}
 	</Card>
 
-	<Modal title={modalTitle} bind:open={createModal} size="lg" autoclose outsideclose>
+	<Modal title={modalTitle} bind:open={createModal} size="lg" autoclose outsideclose class="mb-6">
 		<Label>
 			{$_('publishers.firstname')}:
 			<Input type="text" id="firstname" bind:value={firstname} data-testid="publishers-firstname" required />

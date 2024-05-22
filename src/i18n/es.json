@@ -157,7 +157,8 @@
 		"export": "Exportar",
 		"type": "Tipo",
 		"pdf-desc": "Recomendable para enviar reportes a los publicadores",
-		"ics-desc": "Recomendable para importar en apps de calendario"
+		"ics-desc": "Recomendable para importar en apps de calendario",
+		"valid-options-err": "Seleccione una opción válida"
 	},
 	"incidences": {
 		"create-btn": "Crear nueva Incidencia",

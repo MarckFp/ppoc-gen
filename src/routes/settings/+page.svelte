@@ -141,11 +141,19 @@
 	}
 
 	async function importData() {
-		await importInto(db, files[0], {clearTablesBeforeImport: true, overwriteValues: true}).then(() => {
+		await importInto(db, files[0], {clearTablesBeforeImport: true, overwriteValues: true}).then(async () => {
 			new AlertToast({
 				target: document.querySelector('#toast-container'),
 				props: {alertStatus: 'success', alertMessage: $_('settings.imported-successfully')}
 			})
+			const importedCong = await db.congregation.orderBy('id').first()
+			if (importedCong) {
+				langs = []
+				$locale = importedCong.lang
+				$locales.forEach(lang => {
+					langs.push({value: lang, name: $_('general.' + lang)})
+				})
+			}
 		})
 	}
 
