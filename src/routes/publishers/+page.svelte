@@ -83,8 +83,7 @@
 				if (cong.name_order == 'firstname') {
 					name_order = 'firstname'
 					query_name_order = 'firstname+lastname'
-				}
-				if (cong.name_order == 'lastname') {
+				} else if (cong.name_order == 'lastname') {
 					name_order = 'lastname'
 					query_name_order = 'lastname+firstname'
 				}
@@ -99,8 +98,7 @@
 					} else {
 						affinityList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'pink'})
 					}
-				}
-				if (name_order == 'lastname') {
+				} else if (name_order == 'lastname') {
 					if (user.gender == 'male') {
 						affinityList.push({value: user.id, name: user.lastname + ' ' + user.firstname, color: 'blue'})
 					} else {
@@ -138,8 +136,7 @@
 							.replace(/\p{Diacritic}/gu, '')
 					) !== -1
 			)
-		}
-		if (name_order == 'lastname') {
+		} else if (name_order == 'lastname') {
 			return (
 				user.lastname
 					.toLowerCase()
@@ -225,8 +222,7 @@
 				} else {
 					affinityList.push({value: id, name: firstname + ' ' + lastname, color: 'pink'})
 				}
-			}
-			if (name_order == 'lastname') {
+			} else if (name_order == 'lastname') {
 				if (gender == 'male') {
 					affinityList.push({value: id, name: lastname + ' ' + firstname, color: 'blue'})
 				} else {
@@ -305,14 +301,12 @@
 			if (item.value == selectedId) {
 				if (name_order == 'firstname') {
 					item.name = firstname + ' ' + lastname
-				}
-				if (name_order == 'lastname') {
+				} else if (name_order == 'lastname') {
 					item.name = lastname + ' ' + firstname
 				}
 				if (gender == 'male') {
 					item.color = 'blue'
-				}
-				if (gender == 'female') {
+				} else if (gender == 'female') {
 					item.color = 'pink'
 				}
 			}

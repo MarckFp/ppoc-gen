@@ -22,6 +22,7 @@
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {liveQuery} from 'dexie'
 	import {_} from 'svelte-i18n'
+	import {onMount} from 'svelte'
 
 	let createModal: boolean = false,
 		deleteModal: boolean = false,
@@ -29,6 +30,7 @@
 		mobile: boolean = false,
 		selectedId: number,
 		searchTerm: string = '',
+		name_order: string = 'firstname',
 		modalTitle: string = $_('general.create-btn'),
 		user_id: number = 0,
 		userSelect: {value: number; name: string}[] = [],
@@ -38,10 +40,28 @@
 
 	let incidences = liveQuery(() => db.incidence.orderBy('start_date').toArray())
 
-	userSelect.push({value: -1, name: $_('incidences.all-cong')})
-	db.user.orderBy('firstname').each(user => {
-		userSelect.push({value: user.id, name: user.firstname + ' ' + user.lastname})
-		userList[user.id] = user.firstname + ' ' + user.lastname
+	onMount(async () => {
+		let cong = await db.congregation.orderBy('id').first()
+
+		if (cong) {
+			if (cong.name_order) {
+				if (cong.name_order == 'firstname') {
+					name_order = 'firstname'
+				} else if (cong.name_order == 'lastname') {
+					name_order = 'lastname'
+				}
+			}
+		}
+		userSelect.push({value: -1, name: $_('incidences.all-cong')})
+		db.user.orderBy(name_order).each(user => {
+			if (name_order == 'firstname') {
+				userSelect.push({value: user.id, name: user.firstname + ' ' + user.lastname})
+				userList[user.id] = user.firstname + ' ' + user.lastname
+			} else if (name_order == 'lastname') {
+				userSelect.push({value: user.id, name: user.lastname + ' ' + user.firstname})
+				userList[user.id] = user.lastname + ' ' + user.firstname
+			}
+		})
 	})
 
 	$: filteredItems = $incidences?.filter(

@@ -49,7 +49,7 @@
 		creationDisabled: boolean = false,
 		mobile: boolean = false,
 		edit: boolean = false,
-		userList: number[] = [],
+		userList: string[] = [],
 		searchTerm: string = '',
 		name_order = 'firstname',
 		query_name_order = 'firstname+lastname',
@@ -70,13 +70,33 @@
 				if (cong.name_order == 'firstname') {
 					name_order = 'firstname'
 					query_name_order = 'firstname+lastname'
-				}
-				if (cong.name_order == 'lastname') {
+				} else if (cong.name_order == 'lastname') {
 					name_order = 'lastname'
 					query_name_order = 'lastname+firstname'
 				}
 			}
 		}
+		db.user.orderBy(`[${query_name_order}]`).each(user => {
+			if (user.id != undefined) {
+				if (name_order == 'firstname') {
+					if (user.gender == 'male') {
+						turnAssigneesList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'blue'})
+					} else {
+						turnAssigneesList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'pink'})
+					}
+					userSelect.push({value: user.id, name: user.firstname + ' ' + user.lastname})
+					userList[user.id] = user.firstname + ' ' + user.lastname
+				} else if (name_order == 'lastname') {
+					if (user.gender == 'male') {
+						turnAssigneesList.push({value: user.id, name: user.lastname + ' ' + user.firstname, color: 'blue'})
+					} else {
+						turnAssigneesList.push({value: user.id, name: user.lastname + ' ' + user.firstname, color: 'pink'})
+					}
+					userSelect.push({value: user.id, name: user.lastname + ' ' + user.firstname})
+					userList[user.id] = user.lastname + ' ' + user.firstname
+				}
+			}
+		})
 		await deleteYearlyTurns()
 	})
 
@@ -92,30 +112,6 @@
 	let assignments = liveQuery(() => db.assignment.toArray())
 	let showUsers = liveQuery(() => db.user.toArray())
 	let schedules = liveQuery(() => db.schedule.toArray())
-
-	db.user.orderBy(`[${query_name_order}]`).each(user => {
-		if (user.id != undefined) {
-			if (name_order == 'firstname') {
-				if (user.gender == 'male') {
-					turnAssigneesList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'blue'})
-				} else {
-					turnAssigneesList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'pink'})
-				}
-			}
-			if (name_order == 'lastname') {
-				if (user.gender == 'male') {
-					turnAssigneesList.push({value: user.id, name: user.lastname + ' ' + user.firstname, color: 'blue'})
-				} else {
-					turnAssigneesList.push({value: user.id, name: user.lastname + ' ' + user.firstname, color: 'pink'})
-				}
-			}
-		}
-	})
-
-	db.user.orderBy('firstname').each(user => {
-		userSelect.push({value: user.id, name: user.firstname + ' ' + user.lastname})
-		userList[user.id] = user.firstname + ' ' + user.lastname
-	})
 
 	$: filteredItems = $turns?.filter(
 		turn =>
@@ -608,7 +604,7 @@
 					printUser = await db.user.where('id').equals(assignment.user_id).first()
 					if (name_order == 'firstname') {
 						printAssignees.push(printUser?.firstname + ' ' + printUser?.lastname)
-					} else {
+					} else if (name_order == 'lastname') {
 						printAssignees.push(printUser?.lastname + ' ' + printUser?.firstname)
 					}
 				}
@@ -657,7 +653,7 @@
 					printUser = await db.user.where('id').equals(assignment.user_id).first()
 					if (name_order == 'firstname') {
 						printAssignees.push(printUser?.firstname + ' ' + printUser?.lastname)
-					} else {
+					} else if (name_order == 'lastname') {
 						printAssignees.push(printUser?.lastname + ' ' + printUser?.firstname)
 					}
 				}
@@ -892,8 +888,7 @@
 													{:else}
 														<Badge color="pink" class="order-2 m-1">{user.firstname + ' ' + user.lastname}</Badge>
 													{/if}
-												{/if}
-												{#if name_order == 'lastname'}
+												{:else if name_order == 'lastname'}
 													{#if user.gender == 'male'}
 														<Badge color="blue" class="order-1 m-1">{user.lastname + ' ' + user.firstname}</Badge>
 													{:else}
@@ -954,8 +949,7 @@
 														{:else}
 															<Badge color="pink" class="order-2 m-1">{user.firstname + ' ' + user.lastname}</Badge>
 														{/if}
-													{/if}
-													{#if name_order == 'lastname'}
+													{:else if name_order == 'lastname'}
 														{#if user.gender == 'male'}
 															<Badge color="blue" class="order-1 m-1">{user.lastname + ' ' + user.firstname}</Badge>
 														{:else}

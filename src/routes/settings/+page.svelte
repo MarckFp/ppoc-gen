@@ -101,19 +101,22 @@
 			$locales.forEach(lang => {
 				langs.push({value: lang, name: $_('general.' + lang)})
 			})
-			const showRes = await fetch(
+
+			fetch(
 				`https://nominatim.openstreetmap.org/reverse.php?lat=${lat}&lon=${lon}&format=jsonv2&zoom=16&accept-language=${$locale}`
-			)
-			if (showRes.ok) {
-				const json = await showRes.json()
-				if (json.address.town) {
-					location = json.address.town
-				} else {
-					location = json.address.city
+			).then(async showRes => {
+				if (showRes.ok) {
+					const json = await showRes.json()
+					if (json.address.town) {
+						location = json.address.town
+					} else {
+						location = json.address.city
+					}
+					country = json.address.country
+					zipcode = json.address.postcode
 				}
-				country = json.address.country
-				zipcode = json.address.postcode
-			}
+			})
+
 			new AlertToast({
 				target: document.querySelector('#toast-container'),
 				props: {alertStatus: 'success', alertMessage: $_('settings.updated-successfully')}
