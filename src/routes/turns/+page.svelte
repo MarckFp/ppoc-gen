@@ -41,7 +41,6 @@
 		printFromDate: string,
 		printToDate: string,
 		printType: string,
-		icsPublisher: number,
 		userSelect: {value: number; name: string}[] = [],
 		loading: boolean = false,
 		deleteModal: boolean = false,
@@ -552,7 +551,6 @@
 			printFromDate = ''
 			printToDate = ''
 			printType = ''
-			icsPublisher = 0
 
 			new AlertToast({
 				target: document.querySelector('#toast-container'),
@@ -570,7 +568,6 @@
 			printFromDate = ''
 			printToDate = ''
 			printType = ''
-			icsPublisher = 0
 
 			new AlertToast({
 				target: document.querySelector('#toast-container'),
@@ -583,7 +580,6 @@
 			printFromDate = ''
 			printToDate = ''
 			printType = ''
-			icsPublisher = 0
 
 			new AlertToast({
 				target: document.querySelector('#toast-container'),
