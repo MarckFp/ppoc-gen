@@ -42,9 +42,24 @@ export default defineConfig({
 				scope: process.env.BASE_PATH ? process.env.BASE_PATH + '/' : '/',
 				id: process.env.BASE_PATH ? process.env.BASE_PATH + '/' : '/',
 				lang: "en",
+				dir: "ltr",
 				categories: ["utilities", "productivity"],
 				handle_links: "preferred",
 				orientation: "any",
+				scope_extensions: [
+					{origin: "marckfp.github.io"}
+				],
+				related_applications: [
+					{
+						"platform": "windows",
+						"url": "https://github.com/MarckFp/ppoc-gen/releases/latest"
+					},
+					{
+						"platform": "macOS",
+						"url": "https://github.com/MarckFp/ppoc-gen/releases/latest"
+					}
+				],
+				prefer_related_applications: true,
 				launch_handler: {
 					client_mode: ["auto", "navigate-existing"]
 				},
@@ -81,17 +96,20 @@ export default defineConfig({
 					{
 						src: "pwa-64x64.png",
 						sizes: "64x64",
-						type: "image/png"
+						type: "image/png",
+						purpose: "any"
 					},
 					{
 						src: "pwa-192x192.png",
 						sizes: "192x192",
-						type: "image/png"
+						type: "image/png",
+						purpose: "any"
 					},
 					{
 						src: "pwa-512x512.png",
 						sizes: "512x512",
-						type: "image/png"
+						type: "image/png",
+						purpose: "any"
 					},
 					{
 						src: "maskable-icon-512x512.png",
