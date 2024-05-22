@@ -8,6 +8,8 @@
 	import {Footer, Card} from 'flowbite-svelte'
 	import {page} from '$app/stores'
 	import {base} from '$app/paths'
+	import {pwaInfo} from 'virtual:pwa-info'
+	import {onMount} from 'svelte'
 
 	let mobile: boolean = false
 
@@ -27,6 +29,26 @@
 			}
 		})
 
+	onMount(async () => {
+		if (pwaInfo) {
+			const {registerSW} = await import('virtual:pwa-register')
+			registerSW({
+				immediate: true,
+				onRegistered(r) {
+					r &&
+						setInterval(() => {
+							r.update()
+						}, 10000 /* 10s for testing purposes */)
+				},
+				onRegisterError(error) {
+					console.log('SW registration error', error)
+				}
+			})
+		}
+	})
+
+	$: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : ''
+
 	//Media Queries for Calendar View
 	const mediaQuery = window.matchMedia('(width <= 640px)')
 	mediaQuery.addEventListener('change', ({matches}) => {
@@ -43,9 +65,18 @@
 	}
 </script>
 
+<svelte:head>
+	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+	{@html webManifestLink}
+</svelte:head>
+
 {#if $congregation}
 	<main>
-		<div id="toast-container" class="fixed bottom-0 right-0 z-50 {mobile ? 'mb-20' : ''}"></div>
+		<div id="toast-container" class="fixed bottom-0 right-0 z-50 {mobile ? 'mb-20' : ''}">
+			{#await import('$lib/components/PWAPrompt.svelte') then { default: PWAPrompt }}
+				<PWAPrompt />
+			{/await}
+		</div>
 		{#if $congregation.length == 0}
 			<New />
 		{:else}

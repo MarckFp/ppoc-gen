@@ -52,11 +52,13 @@
 	"general": {
 		"edit-btn": "Editar",
 		"create-btn": "Crear",
+		"update-btn": "Actualizar",
 		"delete-btn": "Eliminar",
 		"cancel-btn": "Cancelar",
+		"close-btn": "Cerrar",
 		"monday": "Lunes",
 		"tuesday": "Martes",
-		"wednesday": "Miercoles",
+		"wednesday": "Miércoles",
 		"thursday": "Jueves",
 		"friday": "Viernes",
 		"saturday": "Sábado",
@@ -81,7 +83,9 @@
 		"en": "Inglés",
 		"spanish": "Español",
 		"es": "Español",
-		"invalid-data": "Los datos introducidos son incorrectos o incompletos"
+		"invalid-data": "Los datos introducidos son incorrectos o incompletos",
+		"app-offline": "La app está lista para funcionar offline",
+		"new-version": "Nueva versión disponible, clicke en el botón para actualizar"
 	},
 	"publishers": {
 		"create-btn": "Crear nuevo Publicador",
