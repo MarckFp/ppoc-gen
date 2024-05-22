@@ -51,12 +51,12 @@ export default defineConfig({
 				],
 				related_applications: [
 					{
-						"platform": "windows",
-						"url": "https://github.com/MarckFp/ppoc-gen/releases/latest"
+						platform: "windows",
+						url: "https://github.com/MarckFp/ppoc-gen/releases/latest"
 					},
 					{
-						"platform": "macOS",
-						"url": "https://github.com/MarckFp/ppoc-gen/releases/latest"
+						platform: "macOS",
+						url: "https://github.com/MarckFp/ppoc-gen/releases/latest"
 					}
 				],
 				prefer_related_applications: true,
