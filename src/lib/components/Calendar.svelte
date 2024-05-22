@@ -45,6 +45,30 @@
 	}
 
 	onMount(async () => {
+		//Media Queries for Calendar View
+		const mediaQuery = window.matchMedia('(width <= 860px)')
+		let viewMode = 'listWeek'
+		mediaQuery.addEventListener('change', ({matches}) => {
+			if (matches) {
+				disabledMobile = true
+				cal?.setOption('view', 'listWeek')
+				viewMode = 'listWeek'
+			} else {
+				disabledMobile = false
+				cal?.setOption('view', 'dayGridMonth')
+				viewMode = 'dayGridMonth'
+			}
+		})
+		if (mediaQuery.matches) {
+			disabledMobile = true
+			cal?.setOption('view', 'listWeek')
+			viewMode = 'listWeek'
+		} else {
+			disabledMobile = false
+			cal?.setOption('view', 'dayGridMonth')
+			viewMode = 'dayGridMonth'
+		}
+
 		let weatherData
 		let cong = await db.congregation.orderBy('id').first()
 		if (cong?.lat && cong?.lon) {
@@ -139,7 +163,7 @@
 		}
 
 		let options = {
-			view: 'dayGridMonth',
+			view: viewMode,
 			locale: $locale,
 			buttonText: {today: $_('turns.today'), next: 'Next', prev: 'Previous'},
 			firstDay: week_order,
@@ -177,25 +201,6 @@
 				options: options
 			}
 		})
-
-		//Media Queries for Calendar View
-		const mediaQuery = window.matchMedia('(width <= 860px)')
-		mediaQuery.addEventListener('change', ({matches}) => {
-			if (matches) {
-				disabledMobile = true
-				cal?.setOption('view', 'listWeek')
-			} else {
-				disabledMobile = false
-				cal?.setOption('view', 'dayGridMonth')
-			}
-		})
-		if (mediaQuery.matches) {
-			disabledMobile = true
-			cal?.setOption('view', 'listWeek')
-		} else {
-			disabledMobile = false
-			cal?.setOption('view', 'dayGridMonth')
-		}
 	})
 </script>
 
