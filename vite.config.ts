@@ -112,32 +112,74 @@ export default defineConfig({
 				],
 				screenshots : [
 					{
-					  src: "HomeScreenDesktop.png",
-					  sizes: "2559x1233",
-					  type: "image/png",
-					  form_factor: "wide",
-					  label: "Homescreen Desktop of PPOC Gen App"
+						src: "screenshots/desktop/home.png",
+						sizes: "2560x1440",
+						type: "image/png",
+						form_factor: "wide",
+						label: "Desktop Homescreen of PPOC Gen App"
 					},
 					{
-					  src: "SettingsScreenDesktop.png",
-					  sizes: "2559x1224",
-					  type: "image/png",
-					  form_factor: "wide",
-					  label: "Settings Desktop of PPOC Gen App"
+						src: "screenshots/desktop/export.png",
+						sizes: "2560x1440",
+						type: "image/png",
+						form_factor: "wide",
+						label: "Desktop Export to PDF or ICS"
 					},
 					{
-					  src: "HomeScreenMobile.png",
-					  sizes: "850x1990",
-					  type: "image/png",
-					  form_factor: "narrow",
-					  label: "Homescreen Mobile of PPOC Gen App"
+						src: "screenshots/desktop/publishers.png",
+						sizes: "2560x1440",
+						type: "image/png",
+						form_factor: "wide",
+						label: "Desktop Create, list and Edit publishers"
 					},
 					{
-					  src: "SettingsScreenMobile.png",
-					  sizes: "850x1990",
-					  type: "image/png",
-					  form_factor: "narrow",
-					  label: "Settings Mobile of PPOC Gen App"
+						src: "screenshots/desktop/schedules.png",
+						sizes: "2560x1440",
+						type: "image/png",
+						form_factor: "wide",
+						label: "Desktop Create, list and Edit schedules"
+					},
+					{
+						src: "screenshots/desktop/turns.png",
+						sizes: "2560x1440",
+						type: "image/png",
+						form_factor: "wide",
+						label: "Desktop Generate automatically turns with only one click"
+					},
+					{
+						src: "screenshots/smartphone/home.jpg",
+						sizes: "1080x2316",
+						type: "image/png",
+						form_factor: "narrow",
+						label: "Mobile Homescreen of PPOC Gen App"
+					},
+					{
+						src: "screenshots/smartphone/export.jpg",
+						sizes: "1080x2316",
+						type: "image/png",
+						form_factor: "narrow",
+						label: "Mobile Export to PDF or ICS"
+					},
+					{
+						src: "screenshots/smartphone/publishers.jpg",
+						sizes: "1080x2316",
+						type: "image/png",
+						form_factor: "narrow",
+						label: "Mobile Create, list and Edit publishers"
+					},
+					{
+						src: "screenshots/smartphone/schedules.jpg",
+						sizes: "1080x2316",
+						type: "image/png",
+						form_factor: "narrow",
+						label: "Mobile Create, list and Edit schedules"
+					},
+					{
+						src: "screenshots/smartphone/turns.jpg",
+						sizes: "1080x2316",
+						type: "image/png",
+						form_factor: "narrow",
+						label: "Mobile Generate automatically turns with only one click"
 					}
 				]
 			}
