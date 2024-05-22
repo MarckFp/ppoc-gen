@@ -21,7 +21,9 @@
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "prettier --check src/. && eslint src/.",
     "format": "prettier --write src/.",
-    "prepare": "husky"
+    "prepare": "husky",
+    "pwa-assets": "pwa-assets-generator",
+    "desktop-assets": "tauri icon"
   },
   "devDependencies": {
     "@eslint/js": "^9.1.1",
@@ -38,6 +40,7 @@
     "@tauri-apps/cli": "^1.5.12",
     "@types/eslint": "^8.56.0",
     "@types/node": "^20.12.7",
+    "@vite-pwa/assets-generator": "^0.2.4",
     "@vite-pwa/sveltekit": "^0.5.0",
     "autoprefixer": "^10.4.19",
     "cssnano": "^7.0.0",
