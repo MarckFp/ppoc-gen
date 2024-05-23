@@ -47,13 +47,16 @@
 		"heavy_snow_shower": "🌨️",
 		"thunderstorm": "🌩️",
 		"thunderstorm_slight_hail": "🌩️",
-		"thunderstorm_heavy_hail": "🌩️"
+		"thunderstorm_heavy_hail": "🌩️",
+		"announcement": "Announcement"
 	},
 	"general": {
 		"edit-btn": "Edit",
 		"create-btn": "Create",
+		"update-btn": "Update",
 		"delete-btn": "Delete",
 		"cancel-btn": "Cancel",
+		"close-btn": "Close",
 		"monday": "Monday",
 		"tuesday": "Tuesday",
 		"wednesday": "Wednesday",
@@ -81,7 +84,9 @@
 		"en": "English",
 		"spanish": "Spanish",
 		"es": "Spanish",
-		"invalid-data": "Filled data is invalid or incomplete"
+		"invalid-data": "Filled data is invalid or incomplete",
+		"app-offline": "App ready to work offline",
+		"new-version": "New version available, click on reload button to update"
 	},
 	"publishers": {
 		"create-btn": "Create new Publisher",
@@ -149,7 +154,12 @@
 		"mod-error": "Failed to modify the turn, error: ",
 		"not-enough-sis": "Not enough sisters for date: ",
 		"not-enough-bro": "Not enough brothers for date: ",
-		"cong-inc": "Ignored because the whole congregation has an incidence"
+		"cong-inc": "Ignored because the whole congregation has an incidence",
+		"export": "Export",
+		"type": "Type",
+		"pdf-desc": "Good for sending reports to publishers",
+		"ics-desc": "Good for importing into calendar apps",
+		"valid-options-err": "Select a valid option"
 	},
 	"incidences": {
 		"create-btn": "Create new Incidence",

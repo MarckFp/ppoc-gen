@@ -1,5 +1,4 @@
 import { expect, type Page } from '@playwright/test'
-import { faker } from '@faker-js/faker/locale/en'
 
 export async function generateTurns(page: Page, startDate: Date, endDate: Date) {
     await page.goto('/turns')

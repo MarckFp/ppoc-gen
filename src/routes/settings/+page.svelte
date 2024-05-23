@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {Card, Button, Label, Input, ButtonGroup, Modal, Select, Tooltip} from 'flowbite-svelte'
+	import {Card, Button, Label, Input, Modal, Select, Tooltip, DarkMode} from 'flowbite-svelte'
 	import {CloudArrowUpSolid, DownloadSolid, ExclamationCircleOutline, InfoCircleSolid} from 'flowbite-svelte-icons'
 	import {db} from '$lib/db'
 	import {liveQuery} from 'dexie'
@@ -11,6 +11,7 @@
 
 	let deleteModal: boolean = false,
 		importModal: boolean = false,
+		mobile: boolean = false,
 		files: FileList,
 		langs: {value: string; name: string}[] = [],
 		location: string = '',
@@ -33,7 +34,7 @@
 		const congregation = await db.congregation.orderBy('id').first()
 		if (congregation?.lat && congregation?.lon && congregation?.lat != 0.0 && congregation?.lon != 0.0) {
 			const res = await fetch(
-				`https://nominatim.openstreetmap.org/reverse.php?lat=${congregation.lat}&lon=${congregation.lon}&format=jsonv2&zoom=13&accept-language=${$locale}`
+				`https://nominatim.openstreetmap.org/reverse.php?lat=${congregation.lat}&lon=${congregation.lon}&format=jsonv2&zoom=16&accept-language=${$locale}`
 			)
 			if (res.ok) {
 				const json = await res.json()
@@ -100,19 +101,22 @@
 			$locales.forEach(lang => {
 				langs.push({value: lang, name: $_('general.' + lang)})
 			})
-			const showRes = await fetch(
-				`https://nominatim.openstreetmap.org/reverse.php?lat=${lat}&lon=${lon}&format=jsonv2&zoom=13&accept-language=${$locale}`
-			)
-			if (showRes.ok) {
-				const json = await showRes.json()
-				if (json.address.town) {
-					location = json.address.town
-				} else {
-					location = json.address.city
+
+			fetch(
+				`https://nominatim.openstreetmap.org/reverse.php?lat=${lat}&lon=${lon}&format=jsonv2&zoom=16&accept-language=${$locale}`
+			).then(async showRes => {
+				if (showRes.ok) {
+					const json = await showRes.json()
+					if (json.address.town) {
+						location = json.address.town
+					} else {
+						location = json.address.city
+					}
+					country = json.address.country
+					zipcode = json.address.postcode
 				}
-				country = json.address.country
-				zipcode = json.address.postcode
-			}
+			})
+
 			new AlertToast({
 				target: document.querySelector('#toast-container'),
 				props: {alertStatus: 'success', alertMessage: $_('settings.updated-successfully')}
@@ -140,104 +144,125 @@
 	}
 
 	async function importData() {
-		await importInto(db, files[0], {clearTablesBeforeImport: true, overwriteValues: true}).then(() => {
+		await importInto(db, files[0], {clearTablesBeforeImport: true, overwriteValues: true}).then(async () => {
 			new AlertToast({
 				target: document.querySelector('#toast-container'),
 				props: {alertStatus: 'success', alertMessage: $_('settings.imported-successfully')}
 			})
+			const importedCong = await db.congregation.orderBy('id').first()
+			if (importedCong) {
+				$locale = importedCong.lang
+				langs = []
+				$locales.forEach(lang => {
+					langs.push({value: lang, name: $_('general.' + lang)})
+				})
+				window.location.reload()
+			}
 		})
+	}
+
+	//Media Queries for Calendar View
+	const mediaQuery = window.matchMedia('(width <= 640px)')
+	mediaQuery.addEventListener('change', ({matches}) => {
+		if (matches) {
+			mobile = true
+		} else {
+			mobile = false
+		}
+	})
+	if (mediaQuery.matches) {
+		mobile = true
+	} else {
+		mobile = false
 	}
 </script>
 
-<section class="mx-auto px-6 py-8">
+<section class="m-5 flex flex-col items-center">
 	{#if $congregation}
-		<div class="mx-auto flex flex-col items-center justify-center px-6 py-8 md:h-5/6 lg:py-0">
-			<Card size="xl">
-				<h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-					{$_('settings.cong-settings')}
+		<Card size="xl">
+			<h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+				{$_('settings.cong-settings')}
+			</h3>
+			<div class="flex flex-col space-y-6">
+				<Label class="space-y-2">
+					<span>{$_('settings.cong-name')}:</span>
+					<Input type="text" name="name" bind:value={$congregation.name} required />
+				</Label>
+				<Label class="space-y-2">
+					<span>{$_('settings.language')}:</span>
+					<Select items={langs} bind:value={$congregation.lang} />
+				</Label>
+				<Label class="space-y-2">
+					<span>{$_('settings.week-start-at')}:</span>
+					<Select items={week_order} bind:value={$congregation.week_order} />
+				</Label>
+				<Label class="space-y-2">
+					<span>{$_('settings.name-order')}:</span>
+					<Select items={name_order} bind:value={$congregation.name_order} />
+				</Label>
+				<Tooltip triggeredBy="#info-latitude" placement="left">{$_('settings.info-latitude')}</Tooltip>
+				<div class="grid grid-cols-1 gap-1 md:grid-cols-3">
+					<Label class="space-y-2">
+						<div class="flex flex-row">
+							<InfoCircleSolid id="info-latitude" class="mr-2" />
+							<span>{$_('settings.city-or-town')}:</span>
+						</div>
+						<Input type="text" bind:value={location} />
+					</Label>
+					<Label class="space-y-2">
+						<span>{$_('settings.zipcode')}:</span>
+						<Input type="text" bind:value={zipcode} />
+					</Label>
+					<Label class="space-y-2">
+						<span>{$_('settings.country')}:</span>
+						<Input type="text" bind:value={country} />
+					</Label>
+					{#if mobile}
+						<Label class="space-y-2 text-center">
+							<span>Mode:</span>
+							<DarkMode class="black ml-2 border dark:border-gray-600 dark:text-primary-200" />
+						</Label>
+					{/if}
+				</div>
+				<Button color="blue" on:click={updateCongregation} data-testid="settings-update-btn"
+					>{$_('settings.update-cong')}</Button
+				>
+				<Button color="red" on:click={() => (deleteModal = true)}>{$_('settings.delete-cong')}</Button>
+				<hr class="my-2" />
+				<input bind:files id="import" name="import" type="file" accept=".pgen" class="hidden" on:change={importData} />
+				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+					<Button on:click={() => (importModal = true)} color="alternative">
+						<CloudArrowUpSolid class="me-3 h-6 w-6" />
+						{$_('settings.import')}
+					</Button>
+					<Button on:click={exportData} color="alternative">
+						<DownloadSolid class="me-3 h-6 w-6" />
+						{$_('settings.export')}
+					</Button>
+				</div>
+			</div>
+		</Card>
+
+		<Modal bind:open={deleteModal} size="xs" autoclose>
+			<div class="text-center">
+				<ExclamationCircleOutline class="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200" />
+				<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+					{$_('settings.are-you-sure')}
 				</h3>
-				<div class="flex flex-col space-y-6">
-					<Label class="space-y-2">
-						<span>{$_('settings.cong-name')}:</span>
-						<Input type="text" name="name" bind:value={$congregation.name} required />
-					</Label>
-					<Label class="space-y-2">
-						<span>{$_('settings.language')}:</span>
-						<Select items={langs} bind:value={$congregation.lang} />
-					</Label>
-					<Label class="space-y-2">
-						<span>{$_('settings.week-start-at')}:</span>
-						<Select items={week_order} bind:value={$congregation.week_order} />
-					</Label>
-					<Label class="space-y-2">
-						<span>{$_('settings.name-order')}:</span>
-						<Select items={name_order} bind:value={$congregation.name_order} />
-					</Label>
-					<Tooltip triggeredBy="#info-latitude" placement="left">{$_('settings.info-latitude')}</Tooltip>
-					<div class="grid grid-cols-1 gap-1 md:grid-cols-3">
-						<Label class="space-y-2">
-							<div class="flex flex-row">
-								<InfoCircleSolid id="info-latitude" class="mr-2" />
-								<span>{$_('settings.city-or-town')}:</span>
-							</div>
-							<Input type="text" bind:value={location} />
-						</Label>
-						<Label class="space-y-2">
-							<span>{$_('settings.zipcode')}:</span>
-							<Input type="text" bind:value={zipcode} />
-						</Label>
-						<Label class="space-y-2">
-							<span>{$_('settings.country')}:</span>
-							<Input type="text" bind:value={country} />
-						</Label>
-					</div>
-					<Button color="blue" on:click={updateCongregation} data-testid="settings-update-btn"
-						>{$_('settings.update-cong')}</Button
-					>
-					<Button color="red" on:click={() => (deleteModal = true)}>{$_('settings.delete-cong')}</Button>
-					<input
-						bind:files
-						id="import"
-						name="import"
-						type="file"
-						accept=".pgen"
-						class="hidden"
-						on:change={importData}
-					/>
-					<ButtonGroup class="flex justify-center">
-						<Button on:click={() => (importModal = true)}>
-							<CloudArrowUpSolid class="me-3 h-6 w-6" />
-							{$_('settings.import')}
-						</Button>
-						<Button on:click={exportData}>
-							<DownloadSolid class="me-3 h-6 w-6" />
-							{$_('settings.export')}
-						</Button>
-					</ButtonGroup>
-				</div>
-			</Card>
+				<Button color="red" class="me-2" on:click={deleteCongregation}>{$_('general.yes-sure')}</Button>
+				<Button color="alternative">{$_('general.no-cancel')}</Button>
+			</div>
+		</Modal>
 
-			<Modal bind:open={deleteModal} size="xs" autoclose>
-				<div class="text-center">
-					<ExclamationCircleOutline class="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200" />
-					<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-						{$_('settings.are-you-sure')}
-					</h3>
-					<Button color="red" class="me-2" on:click={deleteCongregation}>{$_('general.yes-sure')}</Button>
-					<Button color="alternative">{$_('general.no-cancel')}</Button>
-				</div>
-			</Modal>
-
-			<Modal bind:open={importModal} size="xs" autoclose>
-				<div class="text-center">
-					<ExclamationCircleOutline class="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200" />
-					<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-						{$_('settings.are-you-sure-import')}
-					</h3>
-					<Button color="red" class="me-2" on:click={importDataBtn}>{$_('general.yes-sure')}</Button>
-					<Button color="alternative">{$_('general.no-cancel')}</Button>
-				</div>
-			</Modal>
-		</div>
+		<Modal bind:open={importModal} size="xs" autoclose>
+			<div class="text-center">
+				<ExclamationCircleOutline class="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200" />
+				<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+					{$_('settings.are-you-sure-import')}
+				</h3>
+				<Button color="red" class="me-2" on:click={importDataBtn}>{$_('general.yes-sure')}</Button>
+				<Button color="alternative">{$_('general.no-cancel')}</Button>
+			</div>
+		</Modal>
 	{/if}
 </section>

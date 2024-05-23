@@ -6,8 +6,9 @@
 	export let alertStatus: string
 	export let alertMessage: string
 	export let fadeDelay: number = 5000
-	let color: string = 'green'
-	let alertVisible: boolean = true
+	let color: string = 'green',
+		alertVisible: boolean = true
+
 	setTimeout(() => {
 		alertVisible = false
 	}, fadeDelay)
@@ -21,7 +22,7 @@
 </script>
 
 {#if alertVisible}
-	<Toast {color} class="m-3 print:hidden" transition={slide}>
+	<Toast {color} class="m-2 print:hidden" transition={slide}>
 		<svelte:fragment slot="icon">
 			{#if alertStatus.toLowerCase() == 'success' || alertStatus.toLowerCase() == 'ok'}
 				<CheckCircleSolid class="h-5 w-5" />

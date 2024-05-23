@@ -47,16 +47,19 @@
 		"heavy_snow_shower": "🌨️",
 		"thunderstorm": "🌩️",
 		"thunderstorm_slight_hail": "🌩️",
-		"thunderstorm_heavy_hail": "🌩️"
+		"thunderstorm_heavy_hail": "🌩️",
+		"announcement": "Anuncio"
 	},
 	"general": {
 		"edit-btn": "Editar",
 		"create-btn": "Crear",
+		"update-btn": "Actualizar",
 		"delete-btn": "Eliminar",
 		"cancel-btn": "Cancelar",
+		"close-btn": "Cerrar",
 		"monday": "Lunes",
 		"tuesday": "Martes",
-		"wednesday": "Miercoles",
+		"wednesday": "Miércoles",
 		"thursday": "Jueves",
 		"friday": "Viernes",
 		"saturday": "Sábado",
@@ -81,7 +84,9 @@
 		"en": "Inglés",
 		"spanish": "Español",
 		"es": "Español",
-		"invalid-data": "Los datos introducidos son incorrectos o incompletos"
+		"invalid-data": "Los datos introducidos son incorrectos o incompletos",
+		"app-offline": "La app está lista para funcionar offline",
+		"new-version": "Nueva versión disponible, haga click en el botón para actualizar"
 	},
 	"publishers": {
 		"create-btn": "Crear nuevo Publicador",
@@ -149,7 +154,12 @@
 		"mod-error": "Fallo al modificar el turno, error: ",
 		"not-enough-sis": "No hay suficientes hermanas para la fecha: ",
 		"not-enough-bro": "No hay suficientes hermanos para la fecha: ",
-		"cong-inc": "Ignorado porque la congregación entera tiene una incidencia"
+		"cong-inc": "Ignorado porque la congregación entera tiene una incidencia",
+		"export": "Exportar",
+		"type": "Tipo",
+		"pdf-desc": "Recomendable para enviar reportes a los publicadores",
+		"ics-desc": "Recomendable para importar en apps de calendario",
+		"valid-options-err": "Seleccione una opción válida"
 	},
 	"incidences": {
 		"create-btn": "Crear nueva Incidencia",

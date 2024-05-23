@@ -14,27 +14,46 @@
 		TableSearch,
 		TableHead,
 		Modal,
-		P
+		Dropdown,
+		DropdownItem,
+		Search,
+		Radio
 	} from 'flowbite-svelte'
-	import {ExclamationCircleOutline, ArrowLeftOutline, ArrowRightOutline, FilePdfSolid} from 'flowbite-svelte-icons'
+	import {
+		ExclamationCircleOutline,
+		ArrowLeftOutline,
+		ArrowRightOutline,
+		FileExportSolid,
+		DotsHorizontalOutline
+	} from 'flowbite-svelte-icons'
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {db} from '$lib/db'
 	import {liveQuery} from 'dexie'
 	import {_} from 'svelte-i18n'
 	import {onMount} from 'svelte'
+	import {jsPDF} from 'jspdf'
+	import autoTable from 'jspdf-autotable'
+	import ical from 'ical-generator'
 
 	var date: Date = new Date()
 	let fromDate: string,
 		toDate: string,
+		printFromDate: string,
+		printToDate: string,
+		printType: string,
+		userSelect: {value: number; name: string}[] = [],
 		loading: boolean = false,
 		deleteModal: boolean = false,
 		createModal: boolean = false,
+		printModal: boolean = false,
 		creationDisabled: boolean = false,
+		mobile: boolean = false,
 		edit: boolean = false,
-		userList: number[] = [],
+		userList: string[] = [],
 		searchTerm: string = '',
 		name_order = 'firstname',
 		query_name_order = 'firstname+lastname',
+		modalTitle = $_('general.create-btn'),
 		selectedId: number,
 		turnDate: string,
 		turnStartTime: string,
@@ -51,13 +70,33 @@
 				if (cong.name_order == 'firstname') {
 					name_order = 'firstname'
 					query_name_order = 'firstname+lastname'
-				}
-				if (cong.name_order == 'lastname') {
+				} else if (cong.name_order == 'lastname') {
 					name_order = 'lastname'
 					query_name_order = 'lastname+firstname'
 				}
 			}
 		}
+		db.user.orderBy(`[${query_name_order}]`).each(user => {
+			if (user.id != undefined) {
+				if (name_order == 'firstname') {
+					if (user.gender == 'male') {
+						turnAssigneesList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'blue'})
+					} else {
+						turnAssigneesList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'pink'})
+					}
+					userSelect.push({value: user.id, name: user.firstname + ' ' + user.lastname})
+					userList[user.id] = user.firstname + ' ' + user.lastname
+				} else if (name_order == 'lastname') {
+					if (user.gender == 'male') {
+						turnAssigneesList.push({value: user.id, name: user.lastname + ' ' + user.firstname, color: 'blue'})
+					} else {
+						turnAssigneesList.push({value: user.id, name: user.lastname + ' ' + user.firstname, color: 'pink'})
+					}
+					userSelect.push({value: user.id, name: user.lastname + ' ' + user.firstname})
+					userList[user.id] = user.lastname + ' ' + user.firstname
+				}
+			}
+		})
 		await deleteYearlyTurns()
 	})
 
@@ -73,25 +112,6 @@
 	let assignments = liveQuery(() => db.assignment.toArray())
 	let showUsers = liveQuery(() => db.user.toArray())
 	let schedules = liveQuery(() => db.schedule.toArray())
-
-	db.user.orderBy(`[${query_name_order}]`).each(user => {
-		if (user.id != undefined) {
-			if (name_order == 'firstname') {
-				if (user.gender == 'male') {
-					turnAssigneesList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'blue'})
-				} else {
-					turnAssigneesList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'pink'})
-				}
-			}
-			if (name_order == 'lastname') {
-				if (user.gender == 'male') {
-					turnAssigneesList.push({value: user.id, name: user.lastname + ' ' + user.firstname, color: 'blue'})
-				} else {
-					turnAssigneesList.push({value: user.id, name: user.lastname + ' ' + user.firstname, color: 'pink'})
-				}
-			}
-		}
-	})
 
 	$: filteredItems = $turns?.filter(
 		turn =>
@@ -522,8 +542,140 @@
 		}
 	}
 
-	async function exportToPDF() {
-		window.print()
+	async function exportTurns() {
+		if (printFromDate == undefined || printToDate == undefined || printFromDate == '' || printToDate == '') {
+			printFromDate = ''
+			printToDate = ''
+			printType = ''
+
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: $_('turns.date-invalid')}
+			})
+			return
+		}
+		let from: Date = new Date(printFromDate),
+			to: Date = new Date(printToDate),
+			printAssignees = [],
+			printAssignments = [],
+			printUser
+
+		if (from > to) {
+			printFromDate = ''
+			printToDate = ''
+			printType = ''
+
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: $_('turns.from-bigger-to')}
+			})
+			return
+		}
+
+		if (printType == '' || printType == undefined) {
+			printFromDate = ''
+			printToDate = ''
+			printType = ''
+
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'error', alertMessage: $_('turns.valid-options-err')}
+			})
+			return
+		}
+		if (printType == 'pdf') {
+			const doc = new jsPDF({orientation: 'landscape', format: 'a4'})
+			let pageWidth = doc.internal.pageSize.width,
+				wantedTableWidth = pageWidth - 15,
+				margin = (pageWidth - wantedTableWidth) / 2,
+				body = []
+
+			const printTurns = await db.turn
+				.where('date')
+				.between(
+					new Date(date.getFullYear(), date.getMonth(), 2).toISOString().split('T')[0],
+					new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0]
+				)
+				.toArray()
+			for (let turn of printTurns) {
+				printAssignees = []
+				printAssignments = await db.assignment.where('turn_id').equals(turn.id).toArray()
+				for (let assignment of printAssignments) {
+					printUser = await db.user.where('id').equals(assignment.user_id).first()
+					if (name_order == 'firstname') {
+						printAssignees.push(printUser?.firstname + ' ' + printUser?.lastname)
+					} else if (name_order == 'lastname') {
+						printAssignees.push(printUser?.lastname + ' ' + printUser?.firstname)
+					}
+				}
+				body.push([
+					$_(
+						'general.' +
+							['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][
+								new Date(turn.date).getDay()
+							]
+					) +
+						' ' +
+						new Date(turn.date).getDate(),
+					turn.start_time + ' - ' + turn.end_time,
+					turn.location,
+					printAssignees.join(' | ')
+				])
+			}
+
+			doc.text(
+				`${from.getDate()} ${$_('general.' + from.toLocaleString('en', {month: 'long'}).toLowerCase())} - ${to.getDate()} ${$_('general.' + from.toLocaleString('en', {month: 'long'}).toLowerCase())}`,
+				20,
+				20
+			)
+			autoTable(doc, {
+				theme: 'grid',
+				startY: 25,
+				head: [[$_('turns.day'), $_('turns.time'), $_('schedule.location'), $_('turns.assignees')]],
+				body: body,
+				margin: {left: margin, right: margin}
+			})
+			doc.save('ppoc-gen.pdf')
+		} else if (printType == 'ics') {
+			const iCal = ical({name: 'PPOC Gen'})
+
+			const printTurns = await db.turn
+				.where('date')
+				.between(
+					new Date(date.getFullYear(), date.getMonth(), 2).toISOString().split('T')[0],
+					new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0]
+				)
+				.toArray()
+			for (let turn of printTurns) {
+				printAssignees = []
+				printAssignments = await db.assignment.where('turn_id').equals(turn.id).toArray()
+				for (let assignment of printAssignments) {
+					printUser = await db.user.where('id').equals(assignment.user_id).first()
+					if (name_order == 'firstname') {
+						printAssignees.push(printUser?.firstname + ' ' + printUser?.lastname)
+					} else if (name_order == 'lastname') {
+						printAssignees.push(printUser?.lastname + ' ' + printUser?.firstname)
+					}
+				}
+
+				iCal.createEvent({
+					start: new Date(turn.date + ' ' + turn.start_time),
+					end: new Date(turn.date + ' ' + turn.end_time),
+					summary: turn.location + ' ' + turn.start_time + '-' + turn.end_time,
+					description: printAssignees.join('\n'),
+					location: turn.location
+				})
+			}
+			const icsFile = new Blob([iCal.toString()], {
+				type: 'text/calendar'
+			})
+			var url = window.URL || window.webkitURL
+			let link: string = url.createObjectURL(icsFile),
+				a: HTMLAnchorElement = document.createElement('a')
+			a.setAttribute('download', `ppoc-gen.ics`)
+			a.setAttribute('href', link)
+			a.click()
+		}
 	}
 
 	async function getAssignees(turn_id: number) {
@@ -547,26 +699,35 @@
 			}
 		}
 	}
+
+	//Media Queries for Calendar View
+	const mediaQuery = window.matchMedia('(width <= 640px)')
+	mediaQuery.addEventListener('change', ({matches}) => {
+		if (matches) {
+			mobile = true
+		} else {
+			mobile = false
+		}
+	})
+	if (mediaQuery.matches) {
+		mobile = true
+	} else {
+		mobile = false
+	}
 </script>
 
 <section class="mx-auto flex flex-col items-center justify-center px-6 py-8">
 	<Card size="xl" class="mb-2 print:hidden">
-		<div class="mb-4 mt-1 flex flex-row justify-between">
-			<Label class="w-2/12">
+		<div class="mb-4 mt-1 grid grid-cols-2 gap-2 sm:grid-cols-4">
+			<Label>
 				{$_('turns.from')}:
-				<Input type="date" bind:value={fromDate} data-testid="turns-date-from" />
+				<Input type="date" bind:value={fromDate} data-testid="turns-date-from" class="mt-2" />
 			</Label>
-			<Label class="ml-1 mr-1 w-2/12">
+			<Label>
 				{$_('turns.to')}:
-				<Input type="date" bind:value={toDate} data-testid="turns-date-to" />
+				<Input type="date" bind:value={toDate} data-testid="turns-date-to" class="mt-2" />
 			</Label>
-			<Button
-				color="green"
-				class="ml-1 mr-1 w-4/12"
-				on:click={generateTurns}
-				disabled={creationDisabled}
-				data-testid="turns-generate-btn"
-			>
+			<Button color="green" on:click={generateTurns} disabled={creationDisabled} data-testid="turns-generate-btn">
 				{#if loading}
 					<Spinner class="me-3" size="4" color="white" />
 					{$_('turns.creating')}
@@ -576,7 +737,6 @@
 			</Button>
 			<Button
 				color="blue"
-				class="w-4/12"
 				data-testid="turns-create-btn"
 				on:click={() => {
 					createModal = true
@@ -586,6 +746,7 @@
 					turnDate = ''
 					turnStartTime = ''
 					turnEndTime = ''
+					modalTitle = $_('general.create-btn')
 				}}
 			>
 				{$_('turns.create-btn')}
@@ -594,9 +755,14 @@
 	</Card>
 	{#if $turns && $schedules && $assignments && $showUsers}
 		<Card size="xl" class="mt-2">
-			<div class="mb-2 mt-2 flex flex-row justify-around print:hidden">
+			{#if mobile}
+				<Badge border color="red" class="my-2 text-lg print:hidden">
+					{$_('general.' + date.toLocaleString('en', {month: 'long'}).toLowerCase())}
+					{date.getFullYear()}
+				</Badge>
+			{/if}
+			<div class="my-2 grid {mobile ? 'grid-cols-4' : 'grid-cols-5'} gap-4 print:hidden">
 				<Button
-					class="w-2/12"
 					aria-label="Previous Month"
 					on:click={() => {
 						date = new Date(date.setMonth(date.getMonth() - 1))
@@ -612,7 +778,6 @@
 					}}><ArrowLeftOutline></ArrowLeftOutline></Button
 				>
 				<Button
-					class="ml-2 mr-2 w-2/12"
 					color="blue"
 					on:click={() => {
 						date = new Date()
@@ -627,16 +792,16 @@
 						)
 					}}>{$_('turns.today')}</Button
 				>
-				<Badge border color="red" class="w-5/12"
-					><P size="lg"
-						>{$_('general.' + date.toLocaleString('en', {month: 'long'}).toLowerCase())} {date.getFullYear()}</P
-					></Badge
-				>
-				<Button class="ml-2 mr-2 w-1/12" on:click={exportToPDF} aria-label="Export to PDF"
-					><FilePdfSolid></FilePdfSolid></Button
+				{#if !mobile}
+					<Badge border color="red" class="text-lg">
+						{$_('general.' + date.toLocaleString('en', {month: 'long'}).toLowerCase())}
+						{date.getFullYear()}
+					</Badge>
+				{/if}
+				<Button on:click={() => (printModal = true)} aria-label="Export to PDF"
+					><FileExportSolid></FileExportSolid></Button
 				>
 				<Button
-					class="w-2/12"
 					aria-label="Next Month"
 					on:click={() => {
 						date = new Date(date.setMonth(date.getMonth() + 1))
@@ -652,10 +817,92 @@
 					}}><ArrowRightOutline></ArrowRightOutline></Button
 				>
 			</div>
+			{#if mobile}
+				<div class="my-2 print:hidden">
+					<Search size="md" bind:value={searchTerm} placeholder={$_('turns.search-by')} />
+				</div>
+			{/if}
 			{#if $turns.length == 0 || $schedules.length == 0}
 				<Card size="xl" class="mt-5">
 					<h1 class="text-center dark:text-white">{$_('turns.no-turns')}</h1>
 				</Card>
+			{:else if mobile}
+				<div class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-4">
+					{#each filteredItems as turn}
+						<Card padding="none" class="p-2 print:hidden" size="xl">
+							<div class="flex justify-end">
+								<DotsHorizontalOutline />
+								<Dropdown class="p-1">
+									<DropdownItem
+										id="edit-{turn.id}"
+										on:click={async () => {
+											createModal = true
+											edit = true
+											turnLocation = turn.location
+											turnDate = turn.date
+											turnStartTime = turn.start_time
+											turnEndTime = turn.end_time
+											selectedId = turn.id
+											modalTitle = $_('general.edit-btn')
+											await getAssignees(turn.id)
+										}}
+									>
+										{$_('general.edit-btn')}
+									</DropdownItem>
+									<DropdownItem
+										id="delete-{turn.id}"
+										on:click={() => {
+											deleteModal = true
+											selectedId = turn.id
+										}}
+										>{$_('general.delete-btn')}
+									</DropdownItem>
+								</Dropdown>
+							</div>
+							<div class="my-2 grid grid-cols-2 gap-2 text-center">
+								<div>
+									🗓️ {$_(
+										'general.' +
+											['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][
+												new Date(turn.date).getDay()
+											]
+									) +
+										' ' +
+										new Date(turn.date).getDate()}
+								</div>
+								<div>🕑 {turn.start_time + ' - ' + turn.end_time}</div>
+							</div>
+							<div class="my-2 text-center">📍 {turn.location}</div>
+							<hr />
+							<div class="my-2 grid grid-cols-2 text-center text-gray-900 dark:text-white sm:grid-cols-4">
+								{#each $assignments as assignment}
+									{#if assignment.turn_id == turn.id}
+										{#if assignment.user_id === -1}
+											<Badge color="yellow" class="m-1">{$_('turns.deleted-pub')}</Badge>
+										{/if}
+										{#each $showUsers as user}
+											{#if user.id == assignment.user_id}
+												{#if name_order == 'firstname'}
+													{#if user.gender == 'male'}
+														<Badge color="blue" class="order-1 m-1">{user.firstname + ' ' + user.lastname}</Badge>
+													{:else}
+														<Badge color="pink" class="order-2 m-1">{user.firstname + ' ' + user.lastname}</Badge>
+													{/if}
+												{:else if name_order == 'lastname'}
+													{#if user.gender == 'male'}
+														<Badge color="blue" class="order-1 m-1">{user.lastname + ' ' + user.firstname}</Badge>
+													{:else}
+														<Badge color="pink" class="order-2 m-1">{user.lastname + ' ' + user.firstname}</Badge>
+													{/if}
+												{/if}
+											{/if}
+										{/each}
+									{/if}
+								{/each}
+							</div>
+						</Card>
+					{/each}
+				</div>
 			{:else}
 				<TableSearch
 					placeholder={$_('turns.search-by')}
@@ -702,8 +949,7 @@
 														{:else}
 															<Badge color="pink" class="order-2 m-1">{user.firstname + ' ' + user.lastname}</Badge>
 														{/if}
-													{/if}
-													{#if name_order == 'lastname'}
+													{:else if name_order == 'lastname'}
 														{#if user.gender == 'male'}
 															<Badge color="blue" class="order-1 m-1">{user.lastname + ' ' + user.firstname}</Badge>
 														{:else}
@@ -728,6 +974,7 @@
 											turnStartTime = turn.start_time
 											turnEndTime = turn.end_time
 											selectedId = turn.id
+											modalTitle = $_('general.edit-btn')
 											await getAssignees(turn.id)
 										}}>{$_('general.edit-btn')}</Button
 									>
@@ -748,6 +995,48 @@
 			{/if}
 		</Card>
 
+		<Modal title={$_('turns.export')} bind:open={printModal} size="lg" autoclose outsideclose>
+			<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+				<Label>
+					{$_('turns.from')}:
+					<Input type="date" bind:value={printFromDate} data-testid="turns-date-from" class="mt-2" />
+				</Label>
+				<Label>
+					{$_('turns.to')}:
+					<Input type="date" bind:value={printToDate} data-testid="turns-date-to" class="mt-2" />
+				</Label>
+			</div>
+			<div class="text-center">
+				<p class="mb-5 text-lg font-medium text-gray-900 dark:text-white">{$_('turns.type')}:</p>
+				<div class="my-4 grid w-full grid-cols-1 gap-4 md:grid-cols-2">
+					<Radio name="custom" custom value="pdf" bind:group={printType}>
+						<div
+							class="inline-flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-white p-5 text-gray-500 hover:bg-gray-100 hover:text-gray-600 peer-checked:border-primary-600 peer-checked:text-primary-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-primary-500"
+						>
+							<div>
+								<div class="w-full text-lg font-semibold">PDF</div>
+								<div class="w-full">{$_('turns.pdf-desc')}</div>
+							</div>
+							<ArrowRightOutline class="ms-3 h-10 w-10" />
+						</div>
+					</Radio>
+					<Radio name="custom" custom value="ics" bind:group={printType}>
+						<div
+							class="inline-flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-white p-5 text-gray-500 hover:bg-gray-100 hover:text-gray-600 peer-checked:border-primary-600 peer-checked:text-primary-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-primary-500"
+						>
+							<div class="block">
+								<div class="w-full text-lg font-semibold">ICS</div>
+								<div class="w-full">{$_('turns.ics-desc')}</div>
+							</div>
+							<ArrowRightOutline class="ms-3 h-10 w-10" />
+						</div>
+					</Radio>
+				</div>
+				<Button color="red" class="me-2" on:click={exportTurns}>{$_('general.yes-sure')}</Button>
+				<Button color="alternative">{$_('general.no-cancel')}</Button>
+			</div>
+		</Modal>
+
 		<Modal bind:open={deleteModal} size="xs" autoclose outsideclose>
 			<div class="text-center">
 				<ExclamationCircleOutline class="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200" />
@@ -759,7 +1048,7 @@
 			</div>
 		</Modal>
 
-		<Modal bind:open={createModal} size="xs" autoclose outsideclose>
+		<Modal title={modalTitle} bind:open={createModal} size="xs" autoclose outsideclose>
 			<Label>
 				{$_('turns.day')}:
 				<Input type="date" bind:value={turnDate} required />

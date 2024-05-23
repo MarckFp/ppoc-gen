@@ -13,12 +13,9 @@ test('Import Congregation', async ({ page }) => {
   await importCongregation(page)
 })
 
-test('Navbar Menu', async ({ page, isMobile }) => {
+test('Navbar Menu', async ({ page }) => {
   await createCongregation(page)
-  if (isMobile) {
-    await page.getByTestId('navbar-hamburger').click()
-    await page.getByTestId('navbar-publishers').waitFor()
-  }
+
   await page.getByTestId('navbar-publishers').click()
   await page.getByTestId('publishers-create-btn').waitFor()
   await expect(page.getByTestId('publishers-create-btn')).toContainText('Create new Publisher')

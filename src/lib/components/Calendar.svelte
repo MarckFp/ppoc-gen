@@ -12,7 +12,8 @@
 	//Doesn't support typescript yet
 	// eslint-disable-next-line
 	var cal: any
-	let disabledMobile = false
+	let disabledMobile = false,
+		viewMode = 'dayGridMonth'
 	const WMO = {
 		0: 'clear_sky',
 		1: 'mainly_clear',
@@ -45,6 +46,29 @@
 	}
 
 	onMount(async () => {
+		//Media Queries for Calendar View
+		const mediaQuery = window.matchMedia('(width <= 860px)')
+		mediaQuery.addEventListener('change', ({matches}) => {
+			if (matches) {
+				disabledMobile = true
+				cal?.changeView('listWeek')
+				viewMode = 'listWeek'
+			} else {
+				disabledMobile = false
+				cal?.changeView('dayGridMonth')
+				viewMode = 'dayGridMonth'
+			}
+		})
+		if (mediaQuery.matches) {
+			disabledMobile = true
+			cal?.changeView('listWeek')
+			viewMode = 'listWeek'
+		} else {
+			disabledMobile = false
+			cal?.changeView('dayGridMonth')
+			viewMode = 'dayGridMonth'
+		}
+
 		let weatherData
 		let cong = await db.congregation.orderBy('id').first()
 		if (cong?.lat && cong?.lon) {
@@ -143,7 +167,7 @@
 		if (calDiv) {
 			cal = new Calendar(calDiv, {
 				plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
-				initialView: 'dayGridMonth',
+				initialView: viewMode,
 				locale: $locale?.toString(),
 				initialDate: date,
 				events: events,
@@ -155,6 +179,7 @@
 					list: $_('home.list-view')
 				},
 				firstDay: week_order,
+				aspectRatio: 0,
 				fixedWeekCount: false,
 				displayEventEnd: true,
 				eventContent: function (info) {
@@ -187,25 +212,7 @@
 				}
 			})
 			cal.render()
-		}
-
-		//Media Queries for Calendar View
-		const mediaQuery = window.matchMedia('(width <= 860px)')
-		mediaQuery.addEventListener('change', ({matches}) => {
-			if (matches) {
-				disabledMobile = true
-				cal?.changeView('listWeek')
-			} else {
-				disabledMobile = false
-				cal?.changeView('dayGridMonth')
-			}
-		})
-		if (mediaQuery.matches) {
-			disabledMobile = true
-			cal?.changeView('listWeek')
-		} else {
-			disabledMobile = false
-			cal?.changeView('dayGridMonth')
+			cal.updateSize()
 		}
 	})
 </script>

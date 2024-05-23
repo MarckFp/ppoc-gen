@@ -8,6 +8,11 @@
 	import {Footer, Card} from 'flowbite-svelte'
 	import {page} from '$app/stores'
 	import {base} from '$app/paths'
+	import {pwaInfo} from 'virtual:pwa-info'
+	import {onMount} from 'svelte'
+	import {pwaAssetsHead} from 'virtual:pwa-assets/head'
+
+	let mobile: boolean = false
 
 	// eslint-disable-next-line
 	const version = PKG.version ?? 'unknown'
@@ -24,11 +29,61 @@
 				}
 			}
 		})
+
+	onMount(async () => {
+		if (pwaInfo) {
+			const {registerSW} = await import('virtual:pwa-register')
+			registerSW({
+				immediate: true,
+				onRegistered(r) {
+					r &&
+						setInterval(() => {
+							r.update()
+						}, 10000 /* 10s for testing purposes */)
+				},
+				onRegisterError(error) {
+					console.log('SW registration error', error)
+				}
+			})
+		}
+	})
+
+	$: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : ''
+
+	//Media Queries for Calendar View
+	const mediaQuery = window.matchMedia('(width <= 640px)')
+	mediaQuery.addEventListener('change', ({matches}) => {
+		if (matches) {
+			mobile = true
+		} else {
+			mobile = false
+		}
+	})
+	if (mediaQuery.matches) {
+		mobile = true
+	} else {
+		mobile = false
+	}
 </script>
+
+<svelte:head>
+	{#if pwaAssetsHead.themeColor}
+		<meta name="theme-color" content={pwaAssetsHead.themeColor.content} />
+	{/if}
+	{#each pwaAssetsHead.links as link}
+		<link {...link} />
+	{/each}
+	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+	{@html webManifestLink}
+</svelte:head>
 
 {#if $congregation}
 	<main>
-		<div id="toast-container" class="fixed bottom-0 right-0 z-50"></div>
+		<div id="toast-container" class="fixed bottom-0 right-0 z-50 {mobile ? 'mb-20' : ''}">
+			{#await import('$lib/components/PWAPrompt.svelte') then { default: PWAPrompt }}
+				<PWAPrompt />
+			{/await}
+		</div>
 		{#if $congregation.length == 0}
 			<New />
 		{:else}
@@ -42,7 +97,7 @@
 	{#if $congregation.length > 0}
 		{#if [`${base}/`, `${base}/settings`, `${base}/publishers`, `${base}/schedules`, `${base}/turns`, `${base}/incidences`].includes($page.url.pathname)}
 			<Footer class="flex flex-row justify-center print:hidden">
-				<Card class="mx-5 my-1 text-center dark:text-white" size="xl">
+				<Card class="mx-5 my-1 text-center dark:text-white {mobile ? 'mb-20' : ''}" size="xl">
 					PPOC Gen version {version}
 				</Card>
 			</Footer>
