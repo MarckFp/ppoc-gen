@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.1.1",
-    "@event-calendar/core": "^2.6.1",
+    "@event-calendar/core": "^3.0.0",
     "@event-calendar/day-grid": "^3.0.0",
     "@event-calendar/list": "^2.6.1",
     "@event-calendar/time-grid": "^2.6.1",
