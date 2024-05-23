@@ -14,7 +14,7 @@ export default defineConfig({
 		'process.env.NODE_ENV': '"production"',
 	},
 	build: {
-		minify: 'esbuild'
+		minify: 'terser',
 	},
 	plugins: [
 		sveltekit(),
@@ -45,7 +45,7 @@ export default defineConfig({
 				dir: "ltr",
 				categories: ["utilities", "productivity"],
 				handle_links: "preferred",
-				orientation: "any",
+				orientation: "natural",
 				scope_extensions: [
 					{origin: "marckfp.github.io"}
 				],
@@ -55,7 +55,7 @@ export default defineConfig({
 						url: "https://github.com/MarckFp/ppoc-gen/releases/latest"
 					},
 					{
-						platform: "macOS",
+						platform: "itunes",
 						url: "https://github.com/MarckFp/ppoc-gen/releases/latest"
 					}
 				],
@@ -78,9 +78,10 @@ export default defineConfig({
 					{
 					  name: "Publishers",
 					  url: (process.env.BASE_PATH ? process.env.BASE_PATH + '/' : '/') + "publishers",
+					  description: "Opens publishers page",
 					  icons: [
 						{
-							src: "publisher-icon.svg",
+							src: "icons/publisher-icon.svg",
 							sizes: "96x96",
 							type: "image/svg+xml"
 						}
@@ -89,9 +90,10 @@ export default defineConfig({
 					{
 					  name: "Schedules",
 					  url: (process.env.BASE_PATH ? process.env.BASE_PATH + '/' : '/') + "schedules",
+					  description: "Opens schedule page",
 					  icons: [
 						{
-							src: "schedule-icon.svg",
+							src: "icons/schedule-icon.svg",
 							sizes: "96x96",
 							type: "image/svg+xml"
 						}
@@ -100,9 +102,10 @@ export default defineConfig({
 					{
 					  name: "Turns",
 					  url: (process.env.BASE_PATH ? process.env.BASE_PATH + '/' : '/') +  "turns",
+					  description: "Opens turns page",
 					  icons: [
 						{
-							src: "turn-icon.svg",
+							src: "icons/turn-icon.svg",
 							sizes: "96x96",
 							type: "image/svg+xml"
 						}
@@ -111,9 +114,10 @@ export default defineConfig({
 					{
 					  name: "Incidences",
 					  url: (process.env.BASE_PATH ? process.env.BASE_PATH + '/' : '/') + "incidences",
+					  description: "Opens incidence page",
 					  icons: [
 						{
-							src: "incidence-icon.svg",
+							src: "icons/incidence-icon.svg",
 							sizes: "96x96",
 							type: "image/svg+xml"
 						}

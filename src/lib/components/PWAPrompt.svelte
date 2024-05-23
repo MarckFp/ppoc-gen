@@ -8,7 +8,7 @@
 			r &&
 				setInterval(() => {
 					r.update()
-				}, 10000 /* 10s for testing purposes */)
+				}, 20000 /* 20s for testing purposes */)
 		},
 		onRegisterError(error) {
 			console.log('SW registration error', error)

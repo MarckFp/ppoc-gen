@@ -9,7 +9,6 @@
 	import {page} from '$app/stores'
 	import {base} from '$app/paths'
 	import {pwaInfo} from 'virtual:pwa-info'
-	import {onMount} from 'svelte'
 	import {pwaAssetsHead} from 'virtual:pwa-assets/head'
 
 	let mobile: boolean = false
@@ -29,24 +28,6 @@
 				}
 			}
 		})
-
-	onMount(async () => {
-		if (pwaInfo) {
-			const {registerSW} = await import('virtual:pwa-register')
-			registerSW({
-				immediate: true,
-				onRegistered(r) {
-					r &&
-						setInterval(() => {
-							r.update()
-						}, 10000 /* 10s for testing purposes */)
-				},
-				onRegisterError(error) {
-					console.log('SW registration error', error)
-				}
-			})
-		}
-	})
 
 	$: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : ''
 

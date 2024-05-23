@@ -1,7 +1,7 @@
 {
   "name": "ppoc-gen",
   "description": "Web application in charge of generating dynamic public preaching turns",
-  "version": "1.0.0-beta",
+  "version": "2.0.0-beta",
   "private": true,
   "type": "module",
   "author": {
@@ -59,6 +59,7 @@
     "svelte-check": "^3.6.0",
     "svelte-eslint-parser": "^0.36.0",
     "tailwindcss": "^3.4.3",
+    "terser": "^5.31.0",
     "tslib": "^2.4.1",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.8.0",
@@ -66,7 +67,6 @@
     "workbox-precaching": "^7.1.0"
   },
   "dependencies": {
-    "@popperjs/core": "^2.11.8",
     "@tauri-apps/api": "^1.5.3",
     "dexie": "^4.0.4",
     "dexie-export-import": "^4.1.2",
