@@ -30,7 +30,7 @@
     "@event-calendar/core": "^3.0.0",
     "@event-calendar/day-grid": "^3.0.0",
     "@event-calendar/list": "^3.0.0",
-    "@event-calendar/time-grid": "^2.6.1",
+    "@event-calendar/time-grid": "^3.0.0",
     "@faker-js/faker": "^8.4.1",
     "@playwright/test": "^1.43.1",
     "@sveltejs/adapter-static": "^3.0.1",
