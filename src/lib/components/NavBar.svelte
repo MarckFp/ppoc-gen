@@ -13,6 +13,7 @@
 
 	$: activeUrl = $page.url.pathname
 	let mobile: boolean = false
+	export let loading: boolean = false
 
 	//Media Queries for Calendar View
 	const mediaQuery = window.matchMedia('(width <= 640px)')
@@ -31,7 +32,14 @@
 </script>
 
 {#if mobile}
-	<BottomNav {activeUrl} position="fixed" classInner="grid-cols-6">
+	<BottomNav
+		{activeUrl}
+		position="fixed"
+		classInner="grid-cols-6"
+		outerClass="fixed w-full {loading
+			? 'z-0'
+			: 'z-50'} border-gray-200 dark:bg-gray-700 dark:border-gray-600 bottom-0 start-0 h-16 bg-white border-t"
+	>
 		<BottomNavItem href="{base}/" activeClass="w-full px-3">
 			<img src="favicon.svg" class="h-6 w-6 shrink-0" alt="PPOC Gen Logo" />
 		</BottomNavItem>

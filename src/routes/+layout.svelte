@@ -4,6 +4,7 @@
 	import {db} from '$lib/db'
 	import NavBar from '$lib/components/NavBar.svelte'
 	import New from '$lib/components/New.svelte'
+	import Loading from '$lib/components/Loading.svelte'
 	import {locale, locales} from 'svelte-i18n'
 	import {Footer, Card} from 'flowbite-svelte'
 	import {page} from '$app/stores'
@@ -60,6 +61,7 @@
 
 {#if $congregation}
 	<main>
+		<Loading />
 		<div id="toast-container" class="fixed bottom-0 right-0 z-50 {mobile ? 'mb-20' : ''}">
 			{#await import('$lib/components/PWAPrompt.svelte') then { default: PWAPrompt }}
 				<PWAPrompt />

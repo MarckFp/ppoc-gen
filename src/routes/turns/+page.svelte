@@ -34,6 +34,7 @@
 	import {jsPDF} from 'jspdf'
 	import autoTable from 'jspdf-autotable'
 	import ical from 'ical-generator'
+	import {writable} from 'svelte/store'
 
 	var date: Date = new Date()
 	let fromDate: string,
@@ -138,11 +139,13 @@
 		let brothers: number = 0,
 			sisters: number = 0
 		loading = true
+		const loadingScreen = writable(true)
 		creationDisabled = true
 		if (fromDate == undefined || toDate == undefined || fromDate == '' || toDate == '') {
 			fromDate = ''
 			toDate = ''
 			loading = false
+			loadingScreen.set(false)
 			creationDisabled = false
 
 			new AlertToast({
@@ -158,6 +161,7 @@
 			fromDate = ''
 			toDate = ''
 			loading = false
+			loadingScreen.set(false)
 			creationDisabled = false
 
 			new AlertToast({
@@ -382,6 +386,7 @@
 		fromDate = ''
 		toDate = ''
 		loading = false
+		loadingScreen.set(false)
 		creationDisabled = false
 	}
 
