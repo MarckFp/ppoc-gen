@@ -106,7 +106,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'corretto'
-          java-version: '21'
+          java-version: '11'
       - uses: android-actions/setup-android@v3
       - run: mkdir android && cd android
       - run: mkdir $HOME/.bubblewrap
@@ -114,6 +114,6 @@ jobs:
       - run: echo "${{ secrets.ANDROID_KEYSTORE }}" > android.keystore.asc
       - run: gpg -d --passphrase "${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}" --batch android.keystore.asc > android.keystore
       - run: yes '' | bubblewrap init --manifest $GHPAGES"manifest.webmanifest"
-      - run: ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | bubblewrap build --skipPwaValidation --skipSigning
+      - run: bubblewrap build
       - run: gh release upload ${{  github.ref_name }} app-release-signed.apk
       - run: gh release upload ${{  github.ref_name }} app-release-bundle.aab
