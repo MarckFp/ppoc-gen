@@ -113,7 +113,7 @@ jobs:
       - run: echo '{"jdkPath":"'$JAVA_HOME'","androidSdkPath":"'$ANDROID_HOME'"}' > $HOME/.bubblewrap/config.json
       - run: echo "${{ secrets.ANDROID_KEYSTORE }}" > android.keystore.asc
       - run: gpg -d --passphrase "${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}" --batch android.keystore.asc > android.keystore
-      - run: yes '' | bubblewrap init --manifest $GHPAGES
+      - run: yes '' | bubblewrap init --manifest "$GHPAGESmanifest.webmanifest"
       - run: bubblewrap build
       - run: gh release upload ${{  github.ref_name }} app-release-signed.apk
       - run: gh release upload ${{  github.ref_name }} app-release-bundle.aab
