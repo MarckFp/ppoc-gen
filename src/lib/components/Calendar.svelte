@@ -6,13 +6,16 @@
 	import {db} from '$lib/db'
 	import {locale, _} from 'svelte-i18n'
 	import {onMount} from 'svelte'
-	import {Button, ButtonGroup} from 'flowbite-svelte'
+	import {Badge, Button, ButtonGroup} from 'flowbite-svelte'
 	import {fetchWeatherApi} from 'openmeteo'
 
 	//Doesn't support typescript yet
 	// eslint-disable-next-line
 	var cal: any
-	let disabledMobile = false
+	let mobile = false,
+		date = new Date(),
+		shownDate: string = '',
+		week_order = 1
 	const WMO = {
 		0: 'clear_sky',
 		1: 'mainly_clear',
@@ -50,21 +53,21 @@
 		let viewMode = 'listWeek'
 		mediaQuery.addEventListener('change', ({matches}) => {
 			if (matches) {
-				disabledMobile = true
+				mobile = true
 				cal?.setOption('view', 'listWeek')
 				viewMode = 'listWeek'
 			} else {
-				disabledMobile = false
+				mobile = false
 				cal?.setOption('view', 'dayGridMonth')
 				viewMode = 'dayGridMonth'
 			}
 		})
 		if (mediaQuery.matches) {
-			disabledMobile = true
+			mobile = true
 			cal?.setOption('view', 'listWeek')
 			viewMode = 'listWeek'
 		} else {
-			disabledMobile = false
+			mobile = false
 			cal?.setOption('view', 'dayGridMonth')
 			viewMode = 'dayGridMonth'
 		}
@@ -150,9 +153,6 @@
 			weather = ''
 		}
 
-		let date = new Date()
-		let week_order = 1
-
 		if (cong && cong.week_order) {
 			if (cong.week_order == 'monday') {
 				week_order = 1
@@ -176,6 +176,21 @@
 			eventDurationEditable: false,
 			eventStartEditable: false,
 			noEventsContent: $_('turns.no-turns'),
+			datesSet: info => {
+				let startMonth = $_('general.' + info.start.toLocaleString('en', {month: 'long'}).toLowerCase())
+				let endMonth = $_('general.' + info.end.toLocaleString('en', {month: 'long'}).toLowerCase())
+				let startYear = info.start.getFullYear()
+				let endYear = info.end.getFullYear()
+				if (startMonth == endMonth) {
+					shownDate = startMonth
+				} else {
+					if (startYear == endYear) {
+						shownDate = startMonth + ' - ' + endMonth
+					} else {
+						shownDate = startMonth + ' ' + startYear + ' - ' + endMonth + ' ' + endYear
+					}
+				}
+			},
 			dayHeaderFormat: (day: Date) => {
 				return $_(
 					'general.' + ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][day.getDay()]
@@ -186,11 +201,18 @@
 					'general.' + ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][day.getDay()]
 				)
 			},
+			listDaySideFormat: {day: 'numeric'},
 			views: {
 				dayGridMonth: {
 					titleFormat: (day: Date) => {
 						return $_('general.' + day.toLocaleString('en', {month: 'long'}).toLowerCase()) + ' ' + day.getFullYear()
 					}
+				},
+				listWeek: {
+					titleFormat: () => {
+						return ''
+					},
+					headerToolbar: {start: '', center: 'prev today next', end: ''}
 				}
 			}
 		}
@@ -208,11 +230,17 @@
 	<ButtonGroup>
 		<Button outline color="dark" on:click={cal?.setOption('view', 'listDay')}>{$_('home.day-view')}</Button>
 		<Button outline color="dark" on:click={cal?.setOption('view', 'listWeek')}>{$_('home.week-view')}</Button>
-		{#if !disabledMobile}
+		{#if !mobile}
 			<Button outline color="dark" on:click={cal?.setOption('view', 'dayGridMonth')}>{$_('home.month-view')}</Button>
 		{/if}
 	</ButtonGroup>
 </div>
+
+{#if mobile && cal}
+	<Badge border color="red" class="my-2 w-full text-xl print:hidden">
+		{shownDate}
+	</Badge>
+{/if}
 <div
 	id="calendar-container"
 	class="mb-4 w-full items-center divide-gray-200 rounded-lg border border-gray-200 bg-white p-5 text-gray-900 shadow-md dark:divide-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
