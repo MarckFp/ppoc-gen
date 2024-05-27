@@ -109,7 +109,8 @@ jobs:
           java-version: '21'
       - uses: android-actions/setup-android@v3
       - run: mkdir android && cd android
-      - run: echo '{"jdkPath":"'$JAVA_HOME'","androidSdkPath":"'$ANDROID_SDK_ROOT'"}' > $HOME/.bubblewrap/config.json
+      - run: mkdir $HOME/.bubblewrap
+      - run: echo '{"jdkPath":"'$JAVA_HOME'","androidSdkPath":"'$ANDROID_HOME'"}' > $HOME/.bubblewrap/config.json
       - run: echo "${{ secrets.ANDROID_KEYSTORE }}" > android.keystore.asc
       - run: gpg -d --passphrase "${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}" --batch android.keystore.asc > android.keystore
       - run: yes '' | bubblewrap init --manifest $GHPAGES
