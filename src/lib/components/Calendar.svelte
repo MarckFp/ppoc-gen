@@ -15,7 +15,8 @@
 	let mobile = false,
 		date = new Date(),
 		shownDate: string = '',
-		week_order = 1
+		week_order = 1,
+		viewMode = 'listWeek'
 	const WMO = {
 		0: 'clear_sky',
 		1: 'mainly_clear',
@@ -50,7 +51,6 @@
 	onMount(async () => {
 		//Media Queries for Calendar View
 		const mediaQuery = window.matchMedia('(width <= 860px)')
-		let viewMode = 'listWeek'
 		mediaQuery.addEventListener('change', ({matches}) => {
 			if (matches) {
 				mobile = true
@@ -109,12 +109,13 @@
 		}
 
 		//Calendar
-		let events = []
-		let eventUsers = []
-		let plugins = [TimeGrid, List, DayGrid]
-		let backgroundColors = ['#ffee93', '#92dce5', '#ecbad3', '#f0e6ef', '#b8bedd']
-		let index = 0
-		let weather = ''
+		let events = [],
+			eventUsers = [],
+			plugins = [TimeGrid, List, DayGrid],
+			backgroundColors = ['#ffee93', '#92dce5', '#ecbad3', '#f0e6ef', '#b8bedd'],
+			index = 0,
+			weather = ''
+
 		const turns = await db.turn.toArray()
 		for (let turn of turns) {
 			const assiggnments = await db.assignment.where({turn_id: turn.id}).toArray()
@@ -177,18 +178,29 @@
 			eventStartEditable: false,
 			noEventsContent: $_('turns.no-turns'),
 			datesSet: info => {
-				let startMonth = $_('general.' + info.start.toLocaleString('en', {month: 'long'}).toLowerCase())
-				let endMonth = $_('general.' + info.end.toLocaleString('en', {month: 'long'}).toLowerCase())
-				let startYear = info.start.getFullYear()
-				let endYear = info.end.getFullYear()
-				if (startMonth == endMonth) {
-					shownDate = startMonth
+				let startMonth = $_('general.' + info.start.toLocaleString('en', {month: 'long'}).toLowerCase()),
+					endMonth = $_('general.' + info.end.toLocaleString('en', {month: 'long'}).toLowerCase()),
+					startYear = info.start.getFullYear(),
+					endYear = info.end.getFullYear(),
+					day = ''
+
+				if (startMonth == endMonth || info.view.type == 'listDay') {
+					if (info.view.type == 'listDay') {
+						day = info.start.getDate()
+						shownDate = day + ' ' + startMonth + ' ' + startYear
+					} else {
+						shownDate = startMonth
+					}
 				} else {
 					if (startYear == endYear) {
 						shownDate = startMonth + ' - ' + endMonth
 					} else {
 						shownDate = startMonth + ' ' + startYear + ' - ' + endMonth + ' ' + endYear
 					}
+				}
+
+				if (info.view.type == 'dayGridMonth') {
+					shownDate = ''
 				}
 			},
 			dayHeaderFormat: (day: Date) => {
@@ -212,7 +224,13 @@
 					titleFormat: () => {
 						return ''
 					},
-					headerToolbar: {start: '', center: 'prev today next', end: ''}
+					headerToolbar: {start: '', center: 'prev,today,next', end: ''}
+				},
+				listDay: {
+					titleFormat: () => {
+						return ''
+					},
+					headerToolbar: {start: '', center: 'prev,today,next', end: ''}
 				}
 			}
 		}
@@ -236,7 +254,7 @@
 	</ButtonGroup>
 </div>
 
-{#if mobile && cal}
+{#if cal && shownDate != ''}
 	<Badge border color="red" class="my-2 w-full text-xl print:hidden">
 		{shownDate}
 	</Badge>
