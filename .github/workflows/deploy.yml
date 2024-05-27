@@ -19,6 +19,8 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      GHPAGES: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
@@ -90,3 +92,21 @@ jobs:
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
+  deploy-android:
+    needs: deploy-web
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/googlechromelabs/bubblewrap:latest
+    env:
+      GHPAGES: ${{ needs.deploy-web.outputs.GHPAGES }}
+      BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}
+      BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir android && cd android
+      - run: echo "${{ secrets.ANDROID_KEYSTORE }}" > android.keystore.asc
+      - run: gpg -d --passphrase "${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}" --batch android.keystore.asc > android.keystore
+      - run: yes '' | bubblewrap init --manifest $GHPAGES
+      - run: bubblewrap build
+      - run: gh release upload ${{  github.ref_name }} app-release-signed.apk
+      - run: gh release upload ${{  github.ref_name }} app-release-bundle.aab
