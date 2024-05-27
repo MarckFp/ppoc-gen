@@ -14,9 +14,8 @@
 	"home": {
 		"welcome": "Bienvenido",
 		"thank-you": "Gracias por usar PPOC Gen",
-		"apps": "Puedes descargar las aplicaciones para Windows, MacOS y Linux descargando la última versión en: ",
-		"read-the-docs": "También puedes aprender a como usar la aplicación y como funciona por debajo leyendo la: ",
 		"docs": "Documentación Oficial",
+		"download-btn": "Descargar la App de Escritorio",
 		"month-view": "Vista del Mes",
 		"week-view": "Vista de la Semana",
 		"day-view": "Vista del Día",

@@ -14,9 +14,8 @@
 	"home": {
 		"welcome": "Welcome",
 		"thank-you": "Thank you for using PPOC Gen",
-		"apps": "Download the Windows, MacOS or Linux application looking for the latest release on: ",
-		"read-the-docs": "Also you can learn how to use and how the engine below this application works reading the: ",
 		"docs": "Official Documentation",
+		"download-btn": "Download Desktop App",
 		"month-view": "Month View",
 		"week-view": "Week View",
 		"day-view": "Day View",
