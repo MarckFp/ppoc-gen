@@ -110,10 +110,10 @@ jobs:
       - uses: android-actions/setup-android@v3
       - run: mkdir android && cd android
       - run: mkdir $HOME/.bubblewrap
-      - run: echo '{"jdkPath":"'$JAVA_HOME'","androidSdkPath":"'$ANDROID_HOME'"}' > $HOME/.bubblewrap/config.json
+      - run: bubblewrap updateConfig --jdkPath=$JAVA_HOME --androidSdkPath=$ANDROID_HOME
       - run: echo "${{ secrets.ANDROID_KEYSTORE }}" > android.keystore.asc
       - run: gpg -d --passphrase "${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}" --batch android.keystore.asc > android.keystore
       - run: yes '' | bubblewrap init --manifest $GHPAGES"manifest.webmanifest"
-      - run: bubblewrap build
+      - run: ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | bubblewrap build --skipPwaValidation --skipSigning
       - run: gh release upload ${{  github.ref_name }} app-release-signed.apk
       - run: gh release upload ${{  github.ref_name }} app-release-bundle.aab
