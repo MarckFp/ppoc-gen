@@ -95,25 +95,35 @@ jobs:
   deploy-android:
     needs: deploy-web
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/googlechromelabs/bubblewrap:latest
     env:
       GHPAGES: ${{ needs.deploy-web.outputs.GHPAGES }}
       BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}
       BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'latest'
       - uses: actions/setup-java@v4
         with:
-          distribution: 'corretto'
-          java-version: '11'
+          distribution: 'adopt'
+          java-version: '21'
       - uses: android-actions/setup-android@v3
-      - run: mkdir android && cd android
-      - run: mkdir $HOME/.bubblewrap
-      - run: echo '{"jdkPath":"'$JAVA_HOME'","androidSdkPath":"'$ANDROID_HOME'"}' > $HOME/.bubblewrap/config.json
-      - run: echo "${{ secrets.ANDROID_KEYSTORE }}" > android.keystore.asc
-      - run: gpg -d --passphrase "${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}" --batch android.keystore.asc > android.keystore
-      - run: yes '' | bubblewrap init --manifest $GHPAGES"manifest.webmanifest"
-      - run: bubblewrap build
-      - run: gh release upload ${{  github.ref_name }} app-release-signed.apk
-      - run: gh release upload ${{  github.ref_name }} app-release-bundle.aab
+      - run: |
+          npm i -g @bubblewrap/cli
+          mkdir android && cd android
+          mkdir $HOME/.bubblewrap
+          echo '{"jdkPath":"'$JAVA_HOME'","androidSdkPath":"'$ANDROID_HOME'"}' > $HOME/.bubblewrap/config.json
+          echo "${{ secrets.ANDROID_KEYSTORE }}" > android.keystore.asc
+          gpg -d --passphrase "${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}" --batch android.keystore.asc > android.keystore
+          yes '' | bubblewrap init --manifest $GHPAGES"manifest.webmanifest"
+          bubblewrap build
+          gh release upload ${{  github.ref_name }} app-release-signed.apk
+          gh release upload ${{  github.ref_name }} app-release-bundle.aab
+#      - uses: r0adkll/upload-google-play@v1
+#        with:
+#          serviceAccountJsonPlainText: ${{ SERVICE_ACCOUNT_JSON }}
+#          packageName: com.example.MyApp
+#          releaseFiles: app-release-bundle.aab
+#          track: production
+#          status: inProgress
