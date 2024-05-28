@@ -95,6 +95,8 @@ jobs:
   deploy-android:
     needs: deploy-web
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     env:
       GHPAGES: ${{ needs.deploy-web.outputs.GHPAGES }}
       BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}
