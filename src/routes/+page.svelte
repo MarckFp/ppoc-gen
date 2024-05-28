@@ -9,7 +9,8 @@
 		ChevronDownOutline,
 		WindowsSolid,
 		AppleSolid,
-		DesktopPcSolid
+		DesktopPcSolid,
+		MobilePhoneSolid
 	} from 'flowbite-svelte-icons'
 	import {_} from 'svelte-i18n'
 	import Calendar from '$lib/components/Calendar.svelte'
@@ -67,6 +68,10 @@
 						href="https://github.com/MarckFp/ppoc-gen/releases/download/{version}/ppoc-gen_{version}_amd64.deb"
 					>
 						<div class="flex flex-row gap-1"><span>Linux</span><DesktopPcSolid /></div>
+					</DropdownItem>
+					<DropdownDivider />
+					<DropdownItem href="https://github.com/MarckFp/ppoc-gen/releases/download/{version}/app-release-signed.apk">
+						<div class="flex flex-row gap-1"><span>Android</span><MobilePhoneSolid /></div>
 					</DropdownItem>
 				</Dropdown>
 			{/if}
