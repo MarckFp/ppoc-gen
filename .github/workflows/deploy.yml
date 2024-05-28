@@ -131,4 +131,4 @@ jobs:
           packageName: io.github.marckfp.twa
           releaseFiles: app-release-bundle.aab
           track: production
-          status: inProgress
+          status: completed
