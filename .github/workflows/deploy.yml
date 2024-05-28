@@ -107,8 +107,10 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'adopt'
-          java-version: '21'
+          java-version: '11'
       - uses: android-actions/setup-android@v3
+        with:
+          cmdline-tools-version: 9123335
       - run: |
           npm i -g @bubblewrap/cli
           mkdir android && cd android
