@@ -129,6 +129,6 @@ jobs:
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           packageName: io.github.marckfp.twa
-          releaseFiles: app-release-bundle.aab
+          releaseFiles: ./android/app-release-bundle.aab
           track: production
           status: completed
