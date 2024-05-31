@@ -18,9 +18,7 @@ jobs:
       discussions: write
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    outputs:
-      GHPAGES: ${{ steps.deployment.outputs.page_url }}
+      url: https://ppocgen.com
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
@@ -98,7 +96,7 @@ jobs:
     permissions:
       contents: write
     env:
-      GHPAGES: ${{ needs.deploy-web.outputs.GHPAGES }}
+      GHPAGES: https://ppocgen.com
       BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}
       BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}
       GH_TOKEN: ${{ github.token }}

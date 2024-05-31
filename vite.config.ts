@@ -38,9 +38,9 @@ export default defineConfig({
 				display_override: ["standalone", "fullscreen", "minimal-ui", "window-controls-overlay", "browser"],
 				theme_color: '#eb4034',
 				background_color: "#ffffff",
-				start_url: process.env.BASE_PATH ? process.env.BASE_PATH + '/' : '/',
-				scope: process.env.BASE_PATH ? process.env.BASE_PATH + '/' : '/',
-				id: process.env.BASE_PATH ? process.env.BASE_PATH + '/' : '/',
+				start_url: '/',
+				scope: '/',
+				id: '/',
 				lang: "en",
 				dir: "ltr",
 				categories: ["utilities", "productivity"],
@@ -68,7 +68,7 @@ export default defineConfig({
 				},
 				file_handlers: [
 					{
-					  action: (process.env.BASE_PATH ? process.env.BASE_PATH + '/' : '/') + "settings",
+					  action: "/settings",
 					  accept: {
 						"text/plain": [".pgen"]
 					  }
@@ -77,7 +77,7 @@ export default defineConfig({
 				shortcuts: [
 					{
 					  name: "Publishers",
-					  url: (process.env.BASE_PATH ? process.env.BASE_PATH + '/' : '/') + "publishers",
+					  url: "/publishers",
 					  description: "Opens publishers page",
 					  icons: [
 						{
@@ -89,7 +89,7 @@ export default defineConfig({
 					},
 					{
 					  name: "Schedules",
-					  url: (process.env.BASE_PATH ? process.env.BASE_PATH + '/' : '/') + "schedules",
+					  url: "/schedules",
 					  description: "Opens schedule page",
 					  icons: [
 						{
@@ -101,7 +101,7 @@ export default defineConfig({
 					},
 					{
 					  name: "Turns",
-					  url: (process.env.BASE_PATH ? process.env.BASE_PATH + '/' : '/') +  "turns",
+					  url: "/turns",
 					  description: "Opens turns page",
 					  icons: [
 						{
@@ -113,7 +113,7 @@ export default defineConfig({
 					},
 					{
 					  name: "Incidences",
-					  url: (process.env.BASE_PATH ? process.env.BASE_PATH + '/' : '/') + "incidences",
+					  url: "/incidences",
 					  description: "Opens incidence page",
 					  icons: [
 						{

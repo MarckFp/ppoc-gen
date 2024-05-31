@@ -11,13 +11,7 @@ const config = {
 		}),
 		serviceWorker: {
 			register: false,
-		},
-		paths: {
-			base: process.argv.includes('dev') ? '' : process.env.BASE_PATH
 		}
-	},
-	paths: {
-		base: process.argv.includes('dev') ? '' : process.env.BASE_PATH
 	}
 }
 
