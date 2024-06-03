@@ -1,5 +1,5 @@
 <script lang="ts">
-	import '../app.css'
+	import '../../app.css'
 	import {liveQuery} from 'dexie'
 	import {db} from '$lib/db'
 	import NavBar from '$lib/components/NavBar.svelte'
@@ -68,7 +68,7 @@
 		{#if $congregation.length == 0}
 			<New />
 		{:else}
-			{#if [`${base}/`, `${base}/settings`, `${base}/publishers`, `${base}/schedules`, `${base}/turns`, `${base}/incidences`].includes($page.url.pathname)}
+			{#if [`${base}/app`, `${base}/app/settings`, `${base}/app/publishers`, `${base}/app/schedules`, `${base}/app/turns`, `${base}/app/incidences`].includes($page.url.pathname)}
 				<NavBar />
 			{/if}
 			<slot />
@@ -76,7 +76,7 @@
 	</main>
 
 	{#if $congregation.length > 0}
-		{#if [`${base}/`, `${base}/settings`, `${base}/publishers`, `${base}/schedules`, `${base}/turns`, `${base}/incidences`].includes($page.url.pathname)}
+		{#if [`${base}/app`, `${base}/app/settings`, `${base}/app/publishers`, `${base}/app/schedules`, `${base}/app/turns`, `${base}/app/incidences`].includes($page.url.pathname)}
 			<Footer class="flex flex-row justify-center print:hidden">
 				<Card class="mx-5 my-1 text-center dark:text-white {mobile ? 'mb-20' : ''}" size="xl">
 					PPOC Gen version {version}
