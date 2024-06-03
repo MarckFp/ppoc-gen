@@ -3,7 +3,6 @@
 	import {liveQuery} from 'dexie'
 	import {db} from '$lib/db'
 	import NavBar from '$lib/components/NavBar.svelte'
-	import New from '$lib/components/New.svelte'
 	import {locale, locales} from 'svelte-i18n'
 	import {Footer, Card} from 'flowbite-svelte'
 	import {page} from '$app/stores'
@@ -20,6 +19,9 @@
 		.orderBy('id')
 		.first()
 		.then(cong => {
+			if (!cong) {
+				window.location.pathname = base + '/new'
+			}
 			if (cong?.lang) {
 				$locale = cong.lang
 			} else {
@@ -65,9 +67,7 @@
 				<PWAPrompt />
 			{/await}
 		</div>
-		{#if $congregation.length == 0}
-			<New />
-		{:else}
+		{#if $congregation.length > 0}
 			{#if [`${base}/app`, `${base}/app/settings`, `${base}/app/publishers`, `${base}/app/schedules`, `${base}/app/turns`, `${base}/app/incidences`].includes($page.url.pathname)}
 				<NavBar />
 			{/if}

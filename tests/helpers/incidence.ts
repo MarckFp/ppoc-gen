@@ -5,7 +5,7 @@ export async function createIncidence(page: Page, publisher_id: number) {
     const startDate = faker.date.future()
     const endDate = faker.date.future({refDate: startDate})
 
-    await page.goto('/incidences')
+    await page.goto('/app/incidences')
     await page.getByTestId('incidences-create-btn').waitFor()
     await page.getByTestId('incidences-create-btn').click()
     await page.getByTestId('incidences-create-publisher').waitFor()

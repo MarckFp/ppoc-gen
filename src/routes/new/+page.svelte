@@ -1,17 +1,29 @@
 <script lang="ts">
+	import '../../app.css'
 	import {db} from '$lib/db'
-	import AlertToast from './AlertToast.svelte'
+	import AlertToast from '../../lib/components/AlertToast.svelte'
 	import {Button, Input, Select, Label} from 'flowbite-svelte'
 	import {CloudArrowUpSolid} from 'flowbite-svelte-icons'
 	import {importInto} from 'dexie-export-import'
 	import {locale, locales, _} from 'svelte-i18n'
+	import {base} from '$app/paths'
 
 	let congregation_name: string,
 		files: FileList,
 		langs: {value: string; name: string}[] = [],
 		currentLang: string,
+		mobile: boolean = false,
 		week_order_cong = 'monday',
 		name_order_cong = 'firstname'
+
+	db.congregation
+		.orderBy('id')
+		.first()
+		.then(cong => {
+			if (cong) {
+				window.location.pathname = base + '/app'
+			}
+		})
 
 	$: week_order = [
 		{value: 'monday', name: $_('general.monday')},
@@ -54,10 +66,7 @@
 				name_order: name_order_cong
 			})
 
-			new AlertToast({
-				target: document.querySelector('#toast-container'),
-				props: {alertStatus: 'success', alertMessage: $_('settings.created-successfully')}
-			})
+			window.location.pathname = base + '/app'
 		} catch (error) {
 			new AlertToast({
 				target: document.querySelector('#toast-container'),
@@ -73,13 +82,27 @@
 
 	async function importData() {
 		await importInto(db, files[0], {clearTablesBeforeImport: true, overwriteValues: true}).then(() => {
-			new AlertToast({
-				target: document.querySelector('#toast-container'),
-				props: {alertStatus: 'success', alertMessage: $_('settings.imported-successfully')}
-			})
+			window.location.pathname = base + '/app'
 		})
 	}
+
+	//Media Queries for Calendar View
+	const mediaQuery = window.matchMedia('(width <= 640px)')
+	mediaQuery.addEventListener('change', ({matches}) => {
+		if (matches) {
+			mobile = true
+		} else {
+			mobile = false
+		}
+	})
+	if (mediaQuery.matches) {
+		mobile = true
+	} else {
+		mobile = false
+	}
 </script>
+
+<div id="toast-container" class="fixed bottom-0 right-0 z-50 {mobile ? 'mb-20' : ''}"></div>
 
 <section class="bg-gray-50 dark:bg-gray-900">
 	<div class="mx-auto flex flex-col items-center justify-center px-6 py-8 md:h-screen lg:py-0">

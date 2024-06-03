@@ -62,7 +62,7 @@
 		await db.turn.clear()
 		await db.assignment.clear()
 		await db.affinity.clear()
-		window.location.href = base
+		window.location.href = base + '/'
 	}
 
 	async function updateCongregation() {
