@@ -47,7 +47,7 @@ export default defineConfig({
 				handle_links: "preferred",
 				orientation: "natural",
 				scope_extensions: [
-					{origin: "marckfp.github.io"}
+					{origin: "ppocgen.com"}
 				],
 				related_applications: [
 					{
