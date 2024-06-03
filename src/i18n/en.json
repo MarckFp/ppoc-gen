@@ -34,7 +34,8 @@
 		"faq-support": "Is there any way we can support you?",
 		"faq-support-answer": "Even though it flatters me, I don't accept any type of payments. If you wish to support me donate that money instead to ",
 		"faq-maintenance": "Who is in charge of maintaining the app?",
-		"faq-maintenance-answer": "Currently, I'm the only developer working on this project. Even though I try to maintain the app as smooth as possible I cannot assure the app works 100% of the times"
+		"faq-maintenance-answer": "Currently, I'm the only developer working on this project. Even though I try to maintain the app as smooth as possible I cannot assure the app works 100% of the times",
+		"you-can-also": "You can also read the official documentation in: "
 	},
 	"errors": {
 		"404": "Something's missing",

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '../app.css'
-	import {DarkMode, Heading, Span} from 'flowbite-svelte'
+	import {DarkMode, GradientButton, Heading, Span} from 'flowbite-svelte'
 	import {Section, Cta, HeroHeader, FeatureDefault, FeatureItem, Faq, FaqItem} from 'flowbite-svelte-blocks'
 	import {
 		ChartPieSolid,
@@ -9,7 +9,8 @@
 		RocketSolid,
 		CogOutline,
 		ArrowRightOutline,
-		ArrowsRepeatOutline
+		ArrowsRepeatOutline,
+		BookSolid
 	} from 'flowbite-svelte-icons'
 	import {base} from '$app/paths'
 	import {db} from '$lib/db'
@@ -113,7 +114,7 @@
 
 	<Section name="faq">
 		<h2 class="mb-8 text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">
-			Frequently asked questions
+			{$_('landing.faq')}
 		</h2>
 		<Faq>
 			<div>
@@ -163,5 +164,11 @@
 				</FaqItem>
 			</div>
 		</Faq>
+		<h3 class="my-5 font-bold tracking-tight text-gray-900 dark:text-white">
+			{$_('landing.you-can-also')}
+			<GradientButton color="teal" class="ml-2" href="https://github.com/MarckFp/ppoc-gen/blob/main/docs/README.md"
+				>{$_('home.docs')} <BookSolid class="ms-1" /></GradientButton
+			>
+		</h3>
 	</Section>
 </div>

@@ -34,7 +34,8 @@
 		"faq-support": "¿Hay alguna manera que podamos ayudarle?",
 		"faq-support-answer": "Aunque me alaga, no acepto ningún tipo de pago. Si desea apoyarme siempre puede donar el dinero a ",
 		"faq-maintenance": "¿Quién está a cargo de mantener la app?",
-		"faq-maintenance-answer": "Actualmente, soy el único desarrollador trabajando en este proyecto. Y aunque trato de mantener la app para que funcione de la manera más fluida posible, no puedo asegurar que funcione en el 100% de las ocasiones"
+		"faq-maintenance-answer": "Actualmente, soy el único desarrollador trabajando en este proyecto. Y aunque trato de mantener la app para que funcione de la manera más fluida posible, no puedo asegurar que funcione en el 100% de las ocasiones",
+		"you-can-also": "También puedes ver la documentación online en: "
 	},
 	"errors": {
 		"404": "Página no encontrada",
