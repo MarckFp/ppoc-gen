@@ -9,7 +9,7 @@ export async function createSchedule(page: Page) {
     const n_brothers = faker.number.int({min: 1, max: 4}).toString()
     const n_sisters = faker.number.int({min: 1, max: 4}).toString()
 
-    await page.goto('/schedules')
+    await page.goto('/app/schedules')
     await page.getByTestId('schedules-create-btn').waitFor()
     await page.getByTestId('schedules-create-btn').click()
     await page.getByTestId('schedules-create-weekday').waitFor()

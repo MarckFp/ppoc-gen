@@ -9,7 +9,7 @@ export async function createPublisher(page: Page, name_order: string = 'firstnam
     let publisher_id,
         child: Locator
 
-    await page.goto('/publishers')
+    await page.goto('/app/publishers')
     await page.getByTestId('publishers-create-btn').waitFor()
     await page.getByTestId('publishers-create-btn').click()
     await page.getByTestId('publishers-firstname').waitFor()
