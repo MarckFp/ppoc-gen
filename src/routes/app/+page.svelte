@@ -31,9 +31,23 @@
 			</h1>
 		</Card>
 	{/if}
-	<Card size="xl" padding="xl" class="mt-5">
-		<h2 class="mb-2 text-2xl font-bold text-gray-900 dark:text-white">{$_('home.thank-you')}</h2>
-		<hr />
+
+	{#if announcement != ''}
+		<Toast color="orange" class="my-2 w-full max-w-screen-xl text-gray-900 dark:text-white">
+			<svelte:fragment slot="icon">
+				<ExclamationCircleSolid class="h-5 w-5" />
+				<span class="sr-only">Warning icon</span>
+			</svelte:fragment>
+			<h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{$_('home.announcement')}:</h5>
+			<p>{announcement}</p>
+		</Toast>
+	{/if}
+
+	<Card size="xl" padding="sm" class="dark:ec-auto-dark m-4 flex flex-col items-center">
+		<Calendar />
+	</Card>
+
+	<Card size="xl" padding="xl" class="my-2">
 		<div class="mt-2 grid text-gray-900 dark:text-white {version == 'unknown' ? '' : 'md:grid-cols-2'} gap-2">
 			<GradientButton color="teal" href="https://github.com/MarckFp/ppoc-gen/blob/main/docs/README.md"
 				>{$_('home.docs')} <BookSolid class="ms-1" /></GradientButton
@@ -76,18 +90,5 @@
 				</Dropdown>
 			{/if}
 		</div>
-	</Card>
-	{#if announcement != ''}
-		<Toast color="orange" class="my-2 w-full max-w-screen-xl text-gray-900 dark:text-white">
-			<svelte:fragment slot="icon">
-				<ExclamationCircleSolid class="h-5 w-5" />
-				<span class="sr-only">Warning icon</span>
-			</svelte:fragment>
-			<h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{$_('home.announcement')}:</h5>
-			<p>{announcement}</p>
-		</Toast>
-	{/if}
-	<Card size="xl" padding="sm" class="dark:ec-auto-dark m-4 flex flex-col items-center">
-		<Calendar />
 	</Card>
 </section>
