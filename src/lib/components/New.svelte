@@ -26,6 +26,13 @@
 	$locales.forEach(lang => {
 		langs.push({value: lang, name: $_('general.' + lang)})
 	})
+
+	langs.sort(function (a, b) {
+		let textA = a.name.toUpperCase(),
+			textB = b.name.toUpperCase()
+		return textA < textB ? -1 : textA > textB ? 1 : 0
+	})
+
 	currentLang = $locale?.split('-')[0]
 
 	function changeLang() {
@@ -81,7 +88,7 @@
 	}
 </script>
 
-<section class="bg-gray-50 dark:bg-gray-900">
+<section>
 	<div class="mx-auto flex flex-col items-center justify-center px-6 py-8 md:h-screen lg:py-0">
 		<a href="/" class="mb-6 flex items-center text-2xl font-semibold text-gray-900 dark:text-white">
 			<img class="mr-2 h-8 w-8" src="favicon.svg" alt="logo" />

@@ -53,6 +53,12 @@
 		langs.push({value: lang, name: $_('general.' + lang)})
 	})
 
+	langs.sort(function (a, b) {
+		let textA = a.name.toUpperCase(),
+			textB = b.name.toUpperCase()
+		return textA < textB ? -1 : textA > textB ? 1 : 0
+	})
+
 	async function deleteCongregation() {
 		await db.congregation.clear()
 		await db.user.clear()
