@@ -26,7 +26,7 @@
 		})
 
 	if (window.__TAURI__) {
-		window.location.pathname = base + '/new'
+		window.location.pathname = base + '/app/new'
 	}
 </script>
 
@@ -50,7 +50,7 @@
 			<svelte:fragment slot="h2">{$_('landing.title')}</svelte:fragment>
 			<p class="mb-6 font-light text-gray-500 dark:text-gray-400 md:text-lg">{$_('landing.title-desc')}</p>
 			<a
-				href="{base}/new"
+				href="{base}/app/new"
 				class="inline-flex items-center rounded-lg bg-primary-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
 			>
 				{$_('landing.get-started')}

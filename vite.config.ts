@@ -38,8 +38,8 @@ export default defineConfig({
 				display_override: ["standalone", "fullscreen", "minimal-ui", "window-controls-overlay", "browser"],
 				theme_color: '#eb4034',
 				background_color: "#ffffff",
-				start_url: '/app',
-				scope: '/app',
+				start_url: '/app/',
+				scope: '/app/',
 				id: '/app',
 				lang: "en",
 				dir: "ltr",
@@ -68,7 +68,7 @@ export default defineConfig({
 				},
 				file_handlers: [
 					{
-					  action: "/settings",
+					  action: "/app/settings",
 					  accept: {
 						"text/plain": [".pgen"]
 					  }
@@ -77,7 +77,7 @@ export default defineConfig({
 				shortcuts: [
 					{
 					  name: "Publishers",
-					  url: "/publishers",
+					  url: "/app/publishers",
 					  description: "Opens publishers page",
 					  icons: [
 						{
@@ -89,7 +89,7 @@ export default defineConfig({
 					},
 					{
 					  name: "Schedules",
-					  url: "/schedules",
+					  url: "/app/schedules",
 					  description: "Opens schedule page",
 					  icons: [
 						{
@@ -101,7 +101,7 @@ export default defineConfig({
 					},
 					{
 					  name: "Turns",
-					  url: "/turns",
+					  url: "/app/turns",
 					  description: "Opens turns page",
 					  icons: [
 						{
@@ -113,7 +113,7 @@ export default defineConfig({
 					},
 					{
 					  name: "Incidences",
-					  url: "/incidences",
+					  url: "/app/incidences",
 					  description: "Opens incidence page",
 					  icons: [
 						{

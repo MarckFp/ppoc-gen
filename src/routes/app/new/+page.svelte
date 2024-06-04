@@ -1,7 +1,6 @@
 <script lang="ts">
-	import '../../app.css'
 	import {db} from '$lib/db'
-	import AlertToast from '../../lib/components/AlertToast.svelte'
+	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {Button, Input, Select, Label} from 'flowbite-svelte'
 	import {CloudArrowUpSolid} from 'flowbite-svelte-icons'
 	import {importInto} from 'dexie-export-import'

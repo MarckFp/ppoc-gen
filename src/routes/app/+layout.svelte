@@ -19,8 +19,8 @@
 		.orderBy('id')
 		.first()
 		.then(cong => {
-			if (!cong) {
-				window.location.pathname = base + '/new'
+			if (!cong && window.location.pathname != '/app/new') {
+				window.location.pathname = base + '/app/new'
 			}
 			if (cong?.lang) {
 				$locale = cong.lang
@@ -68,15 +68,18 @@
 			{/await}
 		</div>
 		{#if $congregation.length > 0}
-			{#if [`${base}/app`, `${base}/app/settings`, `${base}/app/publishers`, `${base}/app/schedules`, `${base}/app/turns`, `${base}/app/incidences`].includes($page.url.pathname)}
+			{#if ![`${base}/app/new`].includes($page.url.pathname)}
 				<NavBar />
 			{/if}
+			<slot />
+		{/if}
+		{#if window.location.pathname == '/app/new'}
 			<slot />
 		{/if}
 	</main>
 
 	{#if $congregation.length > 0}
-		{#if [`${base}/app`, `${base}/app/settings`, `${base}/app/publishers`, `${base}/app/schedules`, `${base}/app/turns`, `${base}/app/incidences`].includes($page.url.pathname)}
+		{#if ![`${base}/app/new`].includes($page.url.pathname)}
 			<Footer class="flex flex-row justify-center print:hidden">
 				<Card class="mx-5 my-1 text-center dark:text-white {mobile ? 'mb-20' : ''}" size="xl">
 					PPOC Gen version {version}
