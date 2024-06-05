@@ -9,7 +9,7 @@ jobs:
   deploy-web:
     runs-on: ubuntu-latest
     concurrency:
-      group: deploy-web
+      group: deploy-web-staging
       cancel-in-progress: true
     permissions:
       contents: write
