@@ -5,7 +5,6 @@
 	import NavBar from '$lib/components/NavBar.svelte'
 	import {locale, locales} from 'svelte-i18n'
 	import {Footer, Card} from 'flowbite-svelte'
-	import {page} from '$app/stores'
 	import {base} from '$app/paths'
 	import {pwaInfo} from 'virtual:pwa-info'
 	import {pwaAssetsHead} from 'virtual:pwa-assets/head'
@@ -19,8 +18,8 @@
 		.orderBy('id')
 		.first()
 		.then(cong => {
-			if (!cong && window.location.pathname != '/app/new') {
-				window.location.pathname = base + '/app/new'
+			if (!cong && window.location.pathname != '/new') {
+				window.location.pathname = base + '/new'
 			}
 			if (cong?.lang) {
 				$locale = cong.lang
@@ -68,24 +67,17 @@
 			{/await}
 		</div>
 		{#if $congregation.length > 0}
-			{#if ![`${base}/app/new`].includes($page.url.pathname)}
-				<NavBar />
-			{/if}
-			<slot />
-		{/if}
-		{#if window.location.pathname == '/app/new'}
+			<NavBar />
 			<slot />
 		{/if}
 	</main>
 
 	{#if $congregation.length > 0}
-		{#if ![`${base}/app/new`].includes($page.url.pathname)}
-			<Footer class="flex flex-row justify-center print:hidden">
-				<Card class="mx-5 my-1 text-center dark:text-white {mobile ? 'mb-20' : ''}" size="xl">
-					PPOC Gen version {version}
-				</Card>
-			</Footer>
-		{/if}
+		<Footer class="flex flex-row justify-center print:hidden">
+			<Card class="mx-5 my-1 text-center dark:text-white {mobile ? 'mb-20' : ''}" size="xl">
+				PPOC Gen version {version}
+			</Card>
+		</Footer>
 	{/if}
 {/if}
 

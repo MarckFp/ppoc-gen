@@ -2,7 +2,6 @@
 	import {base} from '$app/paths'
 	import {DarkMode} from 'flowbite-svelte'
 	import {_} from 'svelte-i18n'
-	import '../app.css'
 </script>
 
 <DarkMode class="hidden" />

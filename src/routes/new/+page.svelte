@@ -20,7 +20,7 @@
 		.first()
 		.then(cong => {
 			if (cong) {
-				window.location.pathname = base + '/app/home'
+				window.location.pathname = base + '/app'
 			}
 		})
 
@@ -72,7 +72,7 @@
 				name_order: name_order_cong
 			})
 
-			window.location.pathname = base + '/app/home'
+			window.location.pathname = base + '/app'
 		} catch (error) {
 			new AlertToast({
 				target: document.querySelector('#toast-container'),
@@ -88,7 +88,7 @@
 
 	async function importData() {
 		await importInto(db, files[0], {clearTablesBeforeImport: true, overwriteValues: true}).then(() => {
-			window.location.pathname = base + '/app/home'
+			window.location.pathname = base + '/app'
 		})
 	}
 
