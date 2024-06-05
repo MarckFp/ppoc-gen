@@ -32,7 +32,6 @@ jobs:
       - run: npm --no-git-tag-version version ${{  github.ref_name }}
       - run: bun run build
         env:
-          BASE_PATH: '/${{ github.event.repository.name }}'
           NODE_ENV: 'production'
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

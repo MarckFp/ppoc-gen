@@ -21,12 +21,12 @@
 		.first()
 		.then(cong => {
 			if (cong) {
-				window.location.pathname = base + '/app'
+				window.location.pathname = base + '/app/'
 			}
 		})
 
 	if (window.__TAURI__) {
-		window.location.pathname = base + '/app/new'
+		window.location.pathname = base + '/app/new/'
 	}
 </script>
 
