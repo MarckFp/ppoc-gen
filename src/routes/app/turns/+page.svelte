@@ -201,8 +201,6 @@
 	)
 
 	async function generateTurns() {
-		let brothers: number = 0,
-			sisters: number = 0
 		loading = true
 		creationDisabled = true
 		if (fromDate == undefined || toDate == undefined || fromDate == '' || toDate == '') {

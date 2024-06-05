@@ -12,7 +12,7 @@ addEventListener('message', async e => {
 
 		//Check if user has an incidence
 		const incidences = await db.incidence.where({user_id: user_id}).toArray()
-		for (let incidence of incidences) {
+		for (const incidence of incidences) {
 			if (
 				incidence.start_date <= d.toISOString().split('T')[0] &&
 				incidence.end_date >= d.toISOString().split('T')[0]
@@ -23,7 +23,7 @@ addEventListener('message', async e => {
 
 		//Check if user already exist on turns at the same day
 		const sameDayTurns = await db.turn.where({date: d.toISOString().split('T')[0]}).toArray()
-		for (let sameDayTurn of sameDayTurns) {
+		for (const sameDayTurn of sameDayTurns) {
 			if ((await db.assignment.where({turn_id: sameDayTurn.id, user_id: user_id}).toArray()).length != 0) {
 				return true
 			}
@@ -33,7 +33,7 @@ addEventListener('message', async e => {
 		const previousDay = new Date(d.toISOString())
 		previousDay.setDate(previousDay.getDate() - 1)
 		const previousTurns = await db.turn.where({date: previousDay.toISOString().split('T')[0]}).toArray()
-		for (let previousDayTurn of previousTurns) {
+		for (const previousDayTurn of previousTurns) {
 			if ((await db.assignment.where({turn_id: previousDayTurn.id, user_id: user_id}).toArray()).length != 0) {
 				return true
 			}
@@ -52,11 +52,11 @@ addEventListener('message', async e => {
 
 	//Loop over weekdays
 	weekdayLoop: for (let d = from; d <= to; d.setDate(d.getDate() + 1)) {
-		let weekday = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d.getDay()]
+		const weekday = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d.getDay()]
 
 		//Check if the congregation has an incidence
 		const congIncidences = await db.incidence.where({user_id: -1}).toArray()
-		for (let incidence of congIncidences) {
+		for (const incidence of congIncidences) {
 			if (
 				incidence.start_date <= d.toISOString().split('T')[0] &&
 				incidence.end_date >= d.toISOString().split('T')[0]
@@ -69,7 +69,7 @@ addEventListener('message', async e => {
 			}
 		}
 		//Loop over schedules
-		for (let schedule of schedules) {
+		for (const schedule of schedules) {
 			if (schedule.weekday === weekday && schedule.id != undefined) {
 				//Check if Turn already exists
 				if (
@@ -85,19 +85,19 @@ addEventListener('message', async e => {
 					continue
 				}
 
-				let turn_id: number = await db.turn.add({
+				const turn_id: number = await db.turn.add({
 					date: d.toISOString().split('T')[0],
 					start_time: schedule.start_time,
 					end_time: schedule.end_time,
 					location: schedule.location
 				})
 
-				let availabilities = await db.availability.where({schedule_id: schedule.id}).toArray()
+				const availabilities = await db.availability.where({schedule_id: schedule.id}).toArray()
 				if (availabilities.length == 0) {
 					postMessage({type: 'warning', message: {type: 'turns.no-availability', payload: {weekday: weekday}}})
 				}
 				userList = availabilities.map(availability => availability.user_id)
-				let users = await db.user.where('id').anyOf(userList).sortBy('counter')
+				const users = await db.user.where('id').anyOf(userList).sortBy('counter')
 				if (users.length == 0) {
 					postMessage({
 						type: 'warning',
@@ -113,7 +113,7 @@ addEventListener('message', async e => {
 					})
 				}
 				//Loop over users with Affinities
-				userLoop: for (let user of users) {
+				userLoop: for (const user of users) {
 					if (user && user.id) {
 						if (
 							(await checkPublisherTurn(user.id, d)) ||
@@ -123,7 +123,7 @@ addEventListener('message', async e => {
 							continue userLoop
 						}
 
-						let affinities = await db.affinity.where({source_id: user.id}).toArray()
+						const affinities = await db.affinity.where({source_id: user.id}).toArray()
 						if (affinities.length > 0) {
 							await db.assignment.add({
 								user_id: user.id,
@@ -138,8 +138,8 @@ addEventListener('message', async e => {
 								sisters++
 							}
 							//Loop over affinities
-							affinitiesLoop: for (let affinity of affinities) {
-								let affinityUser = await db.user.where({id: affinity.destination_id}).first()
+							affinitiesLoop: for (const affinity of affinities) {
+								const affinityUser = await db.user.where({id: affinity.destination_id}).first()
 								if (affinityUser && affinityUser.id) {
 									if (await checkPublisherTurn(affinityUser.id, d)) {
 										continue affinitiesLoop
@@ -165,7 +165,7 @@ addEventListener('message', async e => {
 					}
 				}
 				//Loop over users without Affinities
-				userLoop: for (let user of users) {
+				userLoop: for (const user of users) {
 					if (user && user.id) {
 						if (
 							(await checkPublisherTurn(user.id, d)) ||
@@ -175,7 +175,7 @@ addEventListener('message', async e => {
 							continue userLoop
 						}
 
-						let affinities = await db.affinity.where({source_id: user.id}).toArray()
+						const affinities = await db.affinity.where({source_id: user.id}).toArray()
 						if (affinities.length <= 0) {
 							await db.assignment.add({
 								user_id: user.id,

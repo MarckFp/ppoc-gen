@@ -22,7 +22,7 @@ export default defineConfig({
 			devOptions: {
 				enabled: false,
 				type: 'module',
-				navigateFallback: process.env.BASE_PATH ? process.env.BASE_PATH : '/',
+				navigateFallback: '/',
 				suppressWarnings: true
 			},
 			strategies: 'generateSW', //This let vite-pwa plugin to generate the SW and the manifest
@@ -39,7 +39,7 @@ export default defineConfig({
 				theme_color: '#eb4034',
 				background_color: "#ffffff",
 				start_url: '/app/home',
-				scope: '/app/',
+				scope: '/',
 				id: '/app',
 				lang: "en",
 				dir: "ltr",
