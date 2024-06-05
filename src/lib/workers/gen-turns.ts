@@ -226,4 +226,5 @@ addEventListener('message', async e => {
 			sisters = 0
 		}
 	}
+	postMessage({type: 'success', message: {type: 'turns.created'}})
 })

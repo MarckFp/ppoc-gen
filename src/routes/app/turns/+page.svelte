@@ -123,6 +123,9 @@
 						' - ' +
 						message.payload.end_time
 					break
+				case 'turns.created':
+					toastMessage = $_('turns.created')
+					break
 			}
 
 			new AlertToast({
@@ -236,10 +239,6 @@
 			payload: {from: from, to: to, userList: userList, schedules: $schedules}
 		})
 
-		new AlertToast({
-			target: document.querySelector('#toast-container'),
-			props: {alertStatus: 'success', alertMessage: $_('turns.created')}
-		})
 		fromDate = ''
 		toDate = ''
 		loading = false
