@@ -19,8 +19,8 @@
 		.orderBy('id')
 		.first()
 		.then(cong => {
-			if (!cong && window.location.pathname != '/app/new/') {
-				window.location.pathname = base + '/app/new/'
+			if (!cong && window.location.pathname != '/app/new') {
+				window.location.pathname = base + '/app/new'
 			}
 			if (cong?.lang) {
 				$locale = cong.lang
@@ -68,12 +68,12 @@
 			{/await}
 		</div>
 		{#if $congregation.length > 0}
-			{#if ![`${base}/app/new/`].includes($page.url.pathname)}
+			{#if ![`${base}/app/new`].includes($page.url.pathname)}
 				<NavBar />
 			{/if}
 			<slot />
 		{/if}
-		{#if window.location.pathname == '/app/new/'}
+		{#if window.location.pathname == '/app/new'}
 			<slot />
 		{/if}
 	</main>

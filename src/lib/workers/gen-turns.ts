@@ -42,15 +42,16 @@ addEventListener('message', async e => {
 		return false
 	}
 
-	let from = payload.from,
+	const from = payload.from,
 		to = payload.to,
-		userList = payload.userList,
-		brothers: number = 0,
-		sisters: number = 0,
 		schedules = payload.schedules
 
+	let brothers: number = 0,
+		sisters: number = 0,
+		userList = payload.userList
+
 	//Loop over weekdays
-	weekdayLoop: for (var d = from; d <= to; d.setDate(d.getDate() + 1)) {
+	weekdayLoop: for (let d = from; d <= to; d.setDate(d.getDate() + 1)) {
 		let weekday = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d.getDay()]
 
 		//Check if the congregation has an incidence
