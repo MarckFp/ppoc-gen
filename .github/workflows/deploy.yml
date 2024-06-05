@@ -17,7 +17,7 @@ jobs:
       contents: write
       discussions: write
     environment:
-      name: github-pages
+      name: production
       url: https://ppocgen.com
     steps:
       - uses: actions/checkout@v4
@@ -27,6 +27,7 @@ jobs:
       - run: |
           git config --global user.email ${{ secrets.GH_EMAIL }}
           git config --global user.name GitHub_Runner
+          echo 'ppocgen.com' > ./static/CNAME
       - run: bun install
       - run: npm --no-git-tag-version version ${{  github.ref_name }}
       - run: bun run build
