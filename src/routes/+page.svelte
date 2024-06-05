@@ -1,5 +1,4 @@
 <script lang="ts">
-	import '../app.css'
 	import {DarkMode, GradientButton, Heading, Span} from 'flowbite-svelte'
 	import {Section, Cta, HeroHeader, FeatureDefault, FeatureItem, Faq, FaqItem} from 'flowbite-svelte-blocks'
 	import {

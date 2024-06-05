@@ -20,7 +20,7 @@
 		.first()
 		.then(cong => {
 			if (cong) {
-				window.location.pathname = base + '/app'
+				window.location.pathname = base + '/app/home'
 			}
 		})
 
@@ -72,7 +72,7 @@
 				name_order: name_order_cong
 			})
 
-			window.location.pathname = base + '/app'
+			window.location.pathname = base + '/app/home'
 		} catch (error) {
 			new AlertToast({
 				target: document.querySelector('#toast-container'),
@@ -88,7 +88,7 @@
 
 	async function importData() {
 		await importInto(db, files[0], {clearTablesBeforeImport: true, overwriteValues: true}).then(() => {
-			window.location.pathname = base + '/app'
+			window.location.pathname = base + '/app/home'
 		})
 	}
 
@@ -113,7 +113,7 @@
 <section>
 	<div class="mx-auto flex flex-col items-center justify-center px-6 py-8 md:h-screen lg:py-0">
 		<a href="/" class="mb-6 flex items-center text-2xl font-semibold text-gray-900 dark:text-white">
-			<img class="mr-2 h-8 w-8" src="{base}/favicon.svg" alt="logo" />
+			<img class="mr-2 h-8 w-8" src="/favicon.svg" alt="logo" />
 			PPOC Gen
 		</a>
 		<div
