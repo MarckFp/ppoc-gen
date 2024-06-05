@@ -25,6 +25,7 @@ jobs:
       - run: bun run build
         env:
           NODE_ENV: 'production'
+          PPOCGEN_ENV: 'staging'
       - uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}

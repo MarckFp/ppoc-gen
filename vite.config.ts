@@ -31,8 +31,8 @@ export default defineConfig({
 				config: true,
 			},
 			manifest: {
-				name: 'PPOC Gen',
-				short_name: 'PPOC Gen',
+				name: process.env.PPOCGEN_ENV == 'staging' ? 'Dev PPOC Gen': 'PPOC Gen',
+				short_name: process.env.PPOCGEN_ENV == 'staging' ? 'Dev PPOC Gen': 'PPOC Gen',
 				description: 'Web application in charge of generating dynamic public preaching turns',
 				display: 'standalone',
 				display_override: ["standalone", "fullscreen", "minimal-ui", "window-controls-overlay", "browser"],
@@ -47,7 +47,7 @@ export default defineConfig({
 				handle_links: "preferred",
 				orientation: "natural",
 				scope_extensions: [
-					{origin: "ppocgen.com"}
+					{origin: process.env.PPOCGEN_ENV == 'staging' ? "dev.ppocgen.com" : "ppocgen.com"}
 				],
 				related_applications: [
 					{
