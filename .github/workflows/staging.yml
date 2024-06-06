@@ -7,6 +7,7 @@ on:
 
 jobs:
   deploy-web:
+    name: 'Deploy to Staging 🚀'
     runs-on: ubuntu-latest
     concurrency:
       group: deploy-web-staging
@@ -26,9 +27,10 @@ jobs:
         env:
           NODE_ENV: 'production'
           PPOCGEN_ENV: 'staging'
+          ADAPTER: 'cloudflare'
       - uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: dev-ppoc-gen
-          directory: build
+          directory: .svelte-kit/cloudflare

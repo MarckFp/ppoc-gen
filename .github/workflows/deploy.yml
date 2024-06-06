@@ -7,6 +7,7 @@ on:
 
 jobs:
   deploy-web:
+    name: 'Deploy to Production 🚀'
     runs-on: ubuntu-latest
     concurrency:
       group: deploy-web
@@ -30,13 +31,14 @@ jobs:
         env:
           NODE_ENV: 'production'
           PPOCGEN_ENV: 'production'
+          ADAPTER: 'cloudflare'
       - uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           branch: main
           projectName: ppoc-gen
-          directory: build
+          directory: .svelte-kit/cloudflare
 
   deploy-desktop:
     name: ${{ matrix.settings.name }}
@@ -49,16 +51,16 @@ jobs:
         settings:
           - platform: 'macos-latest'
             args: '--target aarch64-apple-darwin'
-            name: 'MacOS ARM'
+            name: 'MacOS ARM 🍏'
           - platform: 'macos-13'
             args: '--target x86_64-apple-darwin'
-            name: 'MacOS x86_64'
+            name: 'MacOS x86_64 🍏'
           - platform: 'ubuntu-latest'
             args: ''
-            name: 'Linux'
+            name: 'Linux 🐧'
           - platform: 'windows-latest'
             args: ''
-            name: 'Windows x86_64'
+            name: 'Windows x86_64 🪟'
     runs-on: ${{ matrix.settings.platform }}
     steps:
       - uses: actions/checkout@v4
@@ -92,6 +94,7 @@ jobs:
           args: ${{ matrix.args }}
 
   deploy-android:
+    name: 'Deploy to Android 📱'
     needs: deploy-web
     runs-on: ubuntu-latest
     permissions:

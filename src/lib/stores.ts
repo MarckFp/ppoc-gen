@@ -7,7 +7,7 @@ export const genTurnsLoading = writable(false)
 export const genTurnsButtonDisabled = writable(false)
 
 //Congregation
-let week_order = 'monday',
+const week_order = 'monday',
 	name_order = 'firstname'
 
 export const weekOrder = writable(week_order)
