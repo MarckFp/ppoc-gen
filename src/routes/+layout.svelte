@@ -42,4 +42,10 @@
 	{@html webManifestLink}
 </svelte:head>
 
+<div class="fixed bottom-0 right-0 z-50 {$mobile ? 'mb-20' : ''}">
+	{#await import('$lib/components/PWAPrompt.svelte') then { default: PWAPrompt }}
+		<PWAPrompt />
+	{/await}
+</div>
+
 <slot />
