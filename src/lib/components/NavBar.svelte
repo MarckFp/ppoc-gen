@@ -33,7 +33,7 @@
 {#if mobile}
 	<BottomNav {activeUrl} position="fixed" classInner="grid-cols-6">
 		<BottomNavItem href="{base}/app" activeClass="w-full px-3">
-			<img src="{base}/favicon.svg" class="h-6 min-h-6 w-6 min-w-6 shrink-0" alt="PPOC Gen Logo" />
+			<img src="{base}/favicon.ico" class="h-6 min-h-6 w-6 min-w-6 shrink-0" alt="PPOC Gen Logo" />
 		</BottomNavItem>
 		<BottomNavItem href="{base}/app/publishers" data-testid="navbar-publishers">
 			<UsersGroupOutline size="lg" color="red" class="dark:text-primary-400" />
@@ -56,7 +56,7 @@
 	<Navbar let:NavContainer class="dark:bg-gray-700 print:hidden">
 		<NavContainer class="rounded-lg border bg-white px-5 py-2 dark:bg-gray-600">
 			<NavBrand href="{base}/app">
-				<img src="{base}/favicon.svg" class="me-3 h-6 rounded-lg sm:h-9" alt="PPOC Gen Logo" />
+				<img src="{base}/favicon.ico" class="me-3 h-6 rounded-lg sm:h-9" alt="PPOC Gen Logo" />
 				<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white">PPOC Gen</span>
 			</NavBrand>
 			<div class="flex md:order-2">

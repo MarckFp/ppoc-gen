@@ -8,10 +8,30 @@ const file = fileURLToPath(new URL('package.json', import.meta.url))
 const json = readFileSync(file, 'utf8')
 const pkg = JSON.parse(json)
 
+let name: string = 'PPOC Gen',
+	theme_color: string = '#eb4034',
+	origin: string = 'ppocgen.com'
+
+switch (process.env.PPOCGEN_ENV) {
+	case 'production':
+		name = 'PPOC Gen',
+		theme_color = '#eb4034',
+		origin = 'ppocgen.com'
+	  break;
+	case 'staging':
+		name = 'Dev PPOC Gen'
+		theme_color = '#53d4f7'
+		origin = 'dev.ppocgen.com'
+	  break;
+	default:
+		name = 'Localhost PPOC Gen'
+		theme_color = '#34eb64'
+		origin = 'localhost'
+}
+
 export default defineConfig({
 	define: {
-		PKG: pkg,
-		'process.env.NODE_ENV': '"production"',
+		PKG: pkg
 	},
 	build: {
 		minify: 'terser',
@@ -31,12 +51,12 @@ export default defineConfig({
 				config: true,
 			},
 			manifest: {
-				name: process.env.PPOCGEN_ENV == 'staging' ? 'Dev PPOC Gen': 'PPOC Gen',
-				short_name: process.env.PPOCGEN_ENV == 'staging' ? 'Dev PPOC Gen': 'PPOC Gen',
+				name: name,
+				short_name: name,
 				description: 'Web application in charge of generating dynamic public preaching turns',
 				display: 'standalone',
 				display_override: ["standalone", "fullscreen", "minimal-ui", "window-controls-overlay", "browser"],
-				theme_color: '#eb4034',
+				theme_color: theme_color,
 				background_color: "#ffffff",
 				start_url: '/app',
 				scope: '/',
@@ -47,7 +67,7 @@ export default defineConfig({
 				handle_links: "preferred",
 				orientation: "natural",
 				scope_extensions: [
-					{origin: process.env.PPOCGEN_ENV == 'staging' ? "dev.ppocgen.com" : "ppocgen.com"}
+					{origin: origin}
 				],
 				related_applications: [
 					{
