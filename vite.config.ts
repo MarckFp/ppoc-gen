@@ -40,7 +40,7 @@ export default defineConfig({
 		sveltekit(),
 		SvelteKitPWA({
 			devOptions: {
-				enabled: false,
+				enabled: true,
 				type: 'module',
 				navigateFallback: '/',
 				suppressWarnings: true
@@ -58,9 +58,9 @@ export default defineConfig({
 				display_override: ["standalone", "fullscreen", "minimal-ui", "window-controls-overlay", "browser"],
 				theme_color: theme_color,
 				background_color: "#ffffff",
-				start_url: '/app',
-				scope: '/',
-				id: '/',
+				start_url: '/app/',
+				scope: '/app',
+				id: '/app/',
 				lang: "en",
 				dir: "ltr",
 				categories: ["utilities", "productivity"],

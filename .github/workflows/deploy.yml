@@ -26,10 +26,6 @@ jobs:
           git config --global user.name GitHub_Runner
       - run: bun install
       - run: npm --no-git-tag-version version ${{  github.ref_name }}
-      - run: |
-          rm -rf static/favicon.svg
-          mv static/production.svg static/favicon.svg
-          bun run pwa-assets
       - run: bun run build
         env:
           NODE_ENV: 'production'
