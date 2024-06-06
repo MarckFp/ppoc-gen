@@ -41,7 +41,11 @@
 	<Navbar let:NavContainer class="dark:bg-gray-700 print:hidden">
 		<NavContainer class="rounded-lg border bg-white px-5 py-2 dark:bg-gray-600">
 			<NavBrand href="{base}/app">
-				<img src="{base}/favicon.ico" class="me-3 h-6 rounded-lg sm:h-9" alt="PPOC Gen Logo" />
+				<img
+					src="{base}/favicon.ico"
+					class="me-3 h-6 min-h-6 w-6 min-w-6 shrink-0 rounded-lg sm:h-9 sm:w-9"
+					alt="PPOC Gen Logo"
+				/>
 				<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white">PPOC Gen</span>
 			</NavBrand>
 			<div class="flex md:order-2">

@@ -2,7 +2,7 @@ import {db} from '$lib/db'
 
 // listen for messages
 addEventListener('message', async e => {
-	const {type, payload} = e.data
+	const {payload} = e.data
 
 	async function checkPublisherTurn(user_id: number, d: Date) {
 		//Check if user has availability

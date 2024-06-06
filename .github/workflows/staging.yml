@@ -22,6 +22,10 @@ jobs:
         with:
           bun-version: latest
       - run: bun install
+      - run: |
+          rm -rf static/favicon.svg
+          mv static/staging.svg static/favicon.svg
+          bun run pwa-assets
       - run: bun run build
         env:
           NODE_ENV: 'production'
