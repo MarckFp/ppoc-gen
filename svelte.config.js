@@ -9,8 +9,7 @@ const config = {
 		adapter: process.env.ADAPTER == 'cloudflare'
 		? adapterCloudflare({
 			routes: {
-				include: ['/*'],
-				exclude: ['<all>']
+				include: ['/*']
 			},
 			precompress: true,
 			fallback: '404.html'

@@ -39,6 +39,7 @@ jobs:
           branch: main
           projectName: ppoc-gen
           directory: .svelte-kit/cloudflare
+          wranglerVersion: '3'
 
   deploy-desktop:
     name: ${{ matrix.settings.name }}
