@@ -8,10 +8,10 @@
 	import {locale, locales, _} from 'svelte-i18n'
 	import {base} from '$app/paths'
 	import {onMount} from 'svelte'
+	import {nameOrder, weekOrder, mobile} from '$lib/stores'
 
 	let deleteModal: boolean = false,
 		importModal: boolean = false,
-		mobile: boolean = false,
 		files: FileList,
 		langs: {value: string; name: string}[] = [],
 		location: string = '',
@@ -104,6 +104,8 @@
 			})
 			$locale = $congregation?.lang
 			langs = []
+			nameOrder.set($congregation.name_order)
+			weekOrder.set($congregation.week_order)
 			$locales.forEach(lang => {
 				langs.push({value: lang, name: $_('general.' + lang)})
 			})
@@ -158,6 +160,8 @@
 			const importedCong = await db.congregation.orderBy('id').first()
 			if (importedCong) {
 				$locale = importedCong.lang
+				nameOrder.set(importedCong.name_order)
+				weekOrder.set(importedCong.week_order)
 				langs = []
 				$locales.forEach(lang => {
 					langs.push({value: lang, name: $_('general.' + lang)})
@@ -165,21 +169,6 @@
 				window.location.reload()
 			}
 		})
-	}
-
-	//Media Queries for Calendar View
-	const mediaQuery = window.matchMedia('(width <= 640px)')
-	mediaQuery.addEventListener('change', ({matches}) => {
-		if (matches) {
-			mobile = true
-		} else {
-			mobile = false
-		}
-	})
-	if (mediaQuery.matches) {
-		mobile = true
-	} else {
-		mobile = false
 	}
 </script>
 
@@ -223,7 +212,7 @@
 						<span>{$_('settings.country')}:</span>
 						<Input type="text" bind:value={country} />
 					</Label>
-					{#if mobile}
+					{#if $mobile}
 						<Label class="space-y-2 text-center">
 							<span>Mode:</span>
 							<DarkMode class="black ml-2 border dark:border-gray-600 dark:text-primary-200" />

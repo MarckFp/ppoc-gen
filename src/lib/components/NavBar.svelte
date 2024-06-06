@@ -10,27 +10,12 @@
 	} from 'flowbite-svelte-icons'
 	import {_} from 'svelte-i18n'
 	import {page} from '$app/stores'
+	import {mobile} from '$lib/stores'
 
 	$: activeUrl = $page.url.pathname
-	let mobile: boolean = false
-
-	//Media Queries for Calendar View
-	const mediaQuery = window.matchMedia('(width <= 640px)')
-	mediaQuery.addEventListener('change', ({matches}) => {
-		if (matches) {
-			mobile = true
-		} else {
-			mobile = false
-		}
-	})
-	if (mediaQuery.matches) {
-		mobile = true
-	} else {
-		mobile = false
-	}
 </script>
 
-{#if mobile}
+{#if $mobile}
 	<BottomNav {activeUrl} position="fixed" classInner="grid-cols-6">
 		<BottomNavItem href="{base}/app" activeClass="w-full px-3">
 			<img src="{base}/favicon.ico" class="h-6 min-h-6 w-6 min-w-6 shrink-0" alt="PPOC Gen Logo" />

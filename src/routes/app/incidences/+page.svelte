@@ -23,14 +23,13 @@
 	import {liveQuery} from 'dexie'
 	import {_} from 'svelte-i18n'
 	import {onMount} from 'svelte'
+	import {nameOrder, mobile} from '$lib/stores'
 
 	let createModal: boolean = false,
 		deleteModal: boolean = false,
 		edit: boolean = false,
-		mobile: boolean = false,
 		selectedId: number,
 		searchTerm: string = '',
-		name_order: string = 'firstname',
 		modalTitle: string = $_('general.create-btn'),
 		user_id: number = 0,
 		userSelect: {value: number; name: string}[] = [],
@@ -41,23 +40,12 @@
 	let incidences = liveQuery(() => db.incidence.orderBy('start_date').toArray())
 
 	onMount(async () => {
-		let cong = await db.congregation.orderBy('id').first()
-
-		if (cong) {
-			if (cong.name_order) {
-				if (cong.name_order == 'firstname') {
-					name_order = 'firstname'
-				} else if (cong.name_order == 'lastname') {
-					name_order = 'lastname'
-				}
-			}
-		}
 		userSelect.push({value: -1, name: $_('incidences.all-cong')})
-		db.user.orderBy(name_order).each(user => {
-			if (name_order == 'firstname') {
+		db.user.orderBy($nameOrder).each(user => {
+			if ($nameOrder == 'firstname') {
 				userSelect.push({value: user.id, name: user.firstname + ' ' + user.lastname})
 				userList[user.id] = user.firstname + ' ' + user.lastname
-			} else if (name_order == 'lastname') {
+			} else if ($nameOrder == 'lastname') {
 				userSelect.push({value: user.id, name: user.lastname + ' ' + user.firstname})
 				userList[user.id] = user.lastname + ' ' + user.firstname
 			}
@@ -169,27 +157,12 @@
 			props: {alertStatus: 'success', alertMessage: $_('incidences.deleted')}
 		})
 	}
-
-	//Media Queries for Calendar View
-	const mediaQuery = window.matchMedia('(width <= 640px)')
-	mediaQuery.addEventListener('change', ({matches}) => {
-		if (matches) {
-			mobile = true
-		} else {
-			mobile = false
-		}
-	})
-	if (mediaQuery.matches) {
-		mobile = true
-	} else {
-		mobile = false
-	}
 </script>
 
 <section class="mx-auto flex flex-col items-center justify-center px-6 py-8">
 	<Card size="xl">
 		<div class="grid grid-cols-1 gap-3">
-			{#if mobile}
+			{#if $mobile}
 				<div class="mt-1">
 					<Search size="md" bind:value={searchTerm} placeholder={$_('incidences.search-by')} />
 				</div>
@@ -213,7 +186,7 @@
 				<Card size="xl" class="mt-5">
 					<h1 class="text-center dark:text-white">{$_('incidences.no-incidences')}</h1>
 				</Card>
-			{:else if mobile}
+			{:else if $mobile}
 				<div class="grid grid-cols-1 gap-2 sm:grid-cols-4">
 					{#each filteredItems as incidence}
 						<Card padding="none" class="p-2" size="xl">

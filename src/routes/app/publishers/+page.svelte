@@ -27,24 +27,22 @@
 	import {liveQuery} from 'dexie'
 	import {_} from 'svelte-i18n'
 	import {onMount} from 'svelte'
+	import {nameOrder, weekOrder, mobile} from '$lib/stores'
 
 	let createModal: boolean = false,
 		deleteModal: boolean = false,
 		advanced: boolean = false,
 		edit: boolean = false,
-		mobile: boolean = false,
 		selectedId: number,
 		searchTerm: string = '',
 		firstname: string = '',
 		lastname: string = '',
 		gender: string = 'male',
 		advanced_radio: string = 'no',
-		name_order = 'firstname',
 		query_name_order = 'firstname+lastname',
 		weight: number = 1,
 		pubAffinities: number[],
 		availabilities: boolean[] = [],
-		sorter = {},
 		affinityList: {value: number; name: string; color: string}[] = [],
 		modalTitle: string = $_('general.create-btn'),
 		genders: {value: string; name: string}[] = [
@@ -66,39 +64,40 @@
 			}
 		]
 
+	let sunday = 7
+
+	if ($weekOrder == 'monday') {
+		sunday = 7
+	} else if ($weekOrder == 'sunday') {
+		sunday = 0
+	}
+
+	if ($nameOrder == 'firstname') {
+		query_name_order = 'firstname+lastname'
+	} else if ($nameOrder == 'lastname') {
+		query_name_order = 'lastname+firstname'
+	}
+
+	let sorter = {
+		monday: 1,
+		tuesday: 2,
+		wednesday: 3,
+		thursday: 4,
+		friday: 5,
+		saturday: 6,
+		sunday: sunday
+	}
+
 	onMount(async () => {
-		let cong = await db.congregation.orderBy('id').first()
-		let sunday = 7
-
-		if (cong) {
-			if (cong.week_order) {
-				if (cong.week_order == 'monday') {
-					sunday = 7
-				}
-				if (cong.week_order == 'sunday') {
-					sunday = 0
-				}
-			}
-			if (cong.name_order) {
-				if (cong.name_order == 'firstname') {
-					name_order = 'firstname'
-					query_name_order = 'firstname+lastname'
-				} else if (cong.name_order == 'lastname') {
-					name_order = 'lastname'
-					query_name_order = 'lastname+firstname'
-				}
-			}
-		}
-
 		db.user.orderBy(`[${query_name_order}]`).each(user => {
 			if (user.id != undefined) {
-				if (name_order == 'firstname') {
+				if ($nameOrder == 'firstname') {
 					if (user.gender == 'male') {
 						affinityList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'blue'})
 					} else {
 						affinityList.push({value: user.id, name: user.firstname + ' ' + user.lastname, color: 'pink'})
 					}
-				} else if (name_order == 'lastname') {
+				} else if ($nameOrder == 'lastname') {
 					if (user.gender == 'male') {
 						affinityList.push({value: user.id, name: user.lastname + ' ' + user.firstname, color: 'blue'})
 					} else {
@@ -107,23 +106,14 @@
 				}
 			}
 		})
-
-		sorter = {
-			monday: 1,
-			tuesday: 2,
-			wednesday: 3,
-			thursday: 4,
-			friday: 5,
-			saturday: 6,
-			sunday: sunday
-		}
 	})
+
 	$: users = liveQuery(() => db.user.orderBy(`[${query_name_order}]`).toArray())
 	let schedules = liveQuery(() => db.schedule.toArray())
 	let affinities = liveQuery(() => db.affinity.toArray())
 
 	$: filteredItems = $users?.filter(user => {
-		if (name_order == 'firstname') {
+		if ($nameOrder == 'firstname') {
 			return (
 				user.firstname
 					.toLowerCase()
@@ -136,7 +126,7 @@
 							.replace(/\p{Diacritic}/gu, '')
 					) !== -1
 			)
-		} else if (name_order == 'lastname') {
+		} else if ($nameOrder == 'lastname') {
 			return (
 				user.lastname
 					.toLowerCase()
@@ -216,13 +206,13 @@
 				})
 			}
 
-			if (name_order == 'firstname') {
+			if ($nameOrder == 'firstname') {
 				if (gender == 'male') {
 					affinityList.push({value: id, name: firstname + ' ' + lastname, color: 'blue'})
 				} else {
 					affinityList.push({value: id, name: firstname + ' ' + lastname, color: 'pink'})
 				}
-			} else if (name_order == 'lastname') {
+			} else if ($nameOrder == 'lastname') {
 				if (gender == 'male') {
 					affinityList.push({value: id, name: lastname + ' ' + firstname, color: 'blue'})
 				} else {
@@ -299,9 +289,9 @@
 
 		affinityList.forEach(item => {
 			if (item.value == selectedId) {
-				if (name_order == 'firstname') {
+				if ($nameOrder == 'firstname') {
 					item.name = firstname + ' ' + lastname
-				} else if (name_order == 'lastname') {
+				} else if ($nameOrder == 'lastname') {
 					item.name = lastname + ' ' + firstname
 				}
 				if (gender == 'male') {
@@ -381,27 +371,12 @@
 			}
 		}
 	}
-
-	//Media Queries for Calendar View
-	const mediaQuery = window.matchMedia('(width <= 640px)')
-	mediaQuery.addEventListener('change', ({matches}) => {
-		if (matches) {
-			mobile = true
-		} else {
-			mobile = false
-		}
-	})
-	if (mediaQuery.matches) {
-		mobile = true
-	} else {
-		mobile = false
-	}
 </script>
 
 <section class="mx-auto flex flex-col items-center justify-center px-6 py-8">
 	<Card size="xl">
 		<div class="grid grid-cols-1 gap-3">
-			{#if mobile}
+			{#if $mobile}
 				<div class="mt-1">
 					<Search size="md" bind:value={searchTerm} placeholder={$_('publishers.search-inp')} />
 				</div>
@@ -427,7 +402,7 @@
 				<Card size="xl" class="mt-5">
 					<h1 class="text-center dark:text-white">{$_('publishers.no-publishers')}</h1>
 				</Card>
-			{:else if mobile}
+			{:else if $mobile}
 				<div class="grid grid-cols-1 gap-2 sm:grid-cols-4">
 					{#each filteredItems as user}
 						<Card padding="none" class="p-2" size="xl">
@@ -469,7 +444,7 @@
 								</Dropdown>
 							</div>
 							<div class="flex flex-col items-center text-center">
-								{#if name_order == 'lastname'}
+								{#if $nameOrder == 'lastname'}
 									<h5 class="w-full text-xl font-medium text-gray-900 dark:text-white">
 										{user.lastname + ' ' + user.firstname}
 									</h5>
@@ -502,13 +477,13 @@
 				</div>
 			{:else}
 				<TableSearch
-					placeholder={name_order == 'firstname' ? $_('publishers.search-inp') : $_('publishers.search-inp-lastname')}
+					placeholder={$nameOrder == 'firstname' ? $_('publishers.search-inp') : $_('publishers.search-inp-lastname')}
 					striped={true}
 					hoverable={true}
 					bind:inputValue={searchTerm}
 				>
 					<TableHead>
-						{#if name_order == 'lastname'}
+						{#if $nameOrder == 'lastname'}
 							<TableHeadCell>{$_('publishers.lastname')} & {$_('publishers.firstname')}</TableHeadCell>
 						{:else}
 							<TableHeadCell>{$_('publishers.firstname')} & {$_('publishers.lastname')}</TableHeadCell>
@@ -522,7 +497,7 @@
 					<TableBody>
 						{#each filteredItems as user}
 							<TableBodyRow>
-								{#if name_order == 'lastname'}
+								{#if $nameOrder == 'lastname'}
 									<TableBodyCell>{user.lastname + ' ' + user.firstname}</TableBodyCell>
 								{:else}
 									<TableBodyCell>{user.firstname + ' ' + user.lastname}</TableBodyCell>

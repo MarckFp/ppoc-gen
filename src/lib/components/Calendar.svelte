@@ -8,6 +8,7 @@
 	import {onMount} from 'svelte'
 	import {Badge, Button, ButtonGroup} from 'flowbite-svelte'
 	import {fetchWeatherApi} from 'openmeteo'
+	import {nameOrder, weekOrder} from '$lib/stores'
 
 	//Doesn't support typescript yet
 	// eslint-disable-next-line
@@ -122,10 +123,10 @@
 			for (let assiggnment of assiggnments) {
 				const users = await db.user.where('id').equals(assiggnment.user_id).toArray()
 				for (let user of users) {
-					if (cong?.name_order == 'firstname') {
+					if ($nameOrder == 'firstname') {
 						eventUsers.push(`<li class="ml-1">${user.firstname} ${user.lastname}</li>`)
 					}
-					if (cong?.name_order == 'lastname') {
+					if ($nameOrder == 'lastname') {
 						eventUsers.push(`<li class="ml-1">${user.lastname} ${user.firstname}</li>`)
 					}
 				}
@@ -154,13 +155,11 @@
 			weather = ''
 		}
 
-		if (cong && cong.week_order) {
-			if (cong.week_order == 'monday') {
-				week_order = 1
-			}
-			if (cong.week_order == 'sunday') {
-				week_order = 0
-			}
+		if ($weekOrder == 'monday') {
+			week_order = 1
+		}
+		if ($weekOrder == 'sunday') {
+			week_order = 0
 		}
 
 		let options = {

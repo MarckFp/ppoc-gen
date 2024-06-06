@@ -21,15 +21,13 @@
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {liveQuery} from 'dexie'
 	import {_} from 'svelte-i18n'
-	import {onMount} from 'svelte'
+	import {weekOrder, mobile} from '$lib/stores'
 
 	let createModal: boolean = false,
 		deleteModal: boolean = false,
 		edit: boolean = false,
-		mobile: boolean = false,
 		searchTerm: string = '',
 		selected_weekday: string = 'monday',
-		default_weekday: string = 'monday',
 		start_time: string = '00:00',
 		end_time: string = '00:00',
 		modalTitle: string = $_('general.create-btn'),
@@ -48,40 +46,33 @@
 			{value: 'sunday', name: $_('general.sunday')}
 		]
 
-	onMount(async () => {
-		let cong = await db.congregation.orderBy('id').first()
-		let sunday = 7
+	let sunday = 7
 
-		if (cong && cong.week_order) {
-			if (cong.week_order == 'monday') {
-				sunday = 7
-				default_weekday = 'monday'
-			}
-			if (cong.week_order == 'sunday') {
-				sunday = 0
-				default_weekday = 'sunday'
-				weekdays = [
-					{value: 'sunday', name: $_('general.sunday')},
-					{value: 'monday', name: $_('general.monday')},
-					{value: 'tuesday', name: $_('general.tuesday')},
-					{value: 'wednesday', name: $_('general.wednesday')},
-					{value: 'thursday', name: $_('general.thursday')},
-					{value: 'friday', name: $_('general.friday')},
-					{value: 'saturday', name: $_('general.saturday')}
-				]
-			}
-		}
+	if ($weekOrder == 'monday') {
+		sunday = 7
+	}
+	if ($weekOrder == 'sunday') {
+		sunday = 0
+		weekdays = [
+			{value: 'sunday', name: $_('general.sunday')},
+			{value: 'monday', name: $_('general.monday')},
+			{value: 'tuesday', name: $_('general.tuesday')},
+			{value: 'wednesday', name: $_('general.wednesday')},
+			{value: 'thursday', name: $_('general.thursday')},
+			{value: 'friday', name: $_('general.friday')},
+			{value: 'saturday', name: $_('general.saturday')}
+		]
+	}
 
-		sorter = {
-			monday: 1,
-			tuesday: 2,
-			wednesday: 3,
-			thursday: 4,
-			friday: 5,
-			saturday: 6,
-			sunday: sunday
-		}
-	})
+	sorter = {
+		monday: 1,
+		tuesday: 2,
+		wednesday: 3,
+		thursday: 4,
+		friday: 5,
+		saturday: 6,
+		sunday: sunday
+	}
 
 	let schedules = liveQuery(() => db.schedule.toArray())
 	$: filteredItems = $schedules
@@ -106,7 +97,7 @@
 
 	async function createSchedule() {
 		if (location == '' || n_brothers < 1 || n_sisters < 1) {
-			selected_weekday = default_weekday
+			selected_weekday = $weekOrder
 			start_time = '00:00'
 			end_time = '00:00'
 			location = ''
@@ -142,7 +133,7 @@
 				props: {alertStatus: 'error', alertMessage: $_('schedule.failed') + error}
 			})
 		} finally {
-			selected_weekday = default_weekday
+			selected_weekday = $weekOrder
 			start_time = '00:00'
 			end_time = '00:00'
 			location = ''
@@ -175,7 +166,7 @@
 			target: document.querySelector('#toast-container'),
 			props: {alertStatus: 'success', alertMessage: $_('schedule.modified')}
 		})
-		selected_weekday = default_weekday
+		selected_weekday = $weekOrder
 		start_time = '00:00'
 		end_time = '00:00'
 		location = ''
@@ -183,27 +174,12 @@
 		n_sisters = 1
 		edit = false
 	}
-
-	//Media Queries for Calendar View
-	const mediaQuery = window.matchMedia('(width <= 640px)')
-	mediaQuery.addEventListener('change', ({matches}) => {
-		if (matches) {
-			mobile = true
-		} else {
-			mobile = false
-		}
-	})
-	if (mediaQuery.matches) {
-		mobile = true
-	} else {
-		mobile = false
-	}
 </script>
 
 <section class="mx-auto flex flex-col items-center justify-center px-6 py-8">
 	<Card size="xl">
 		<div class="grid grid-cols-1 gap-3">
-			{#if mobile}
+			{#if $mobile}
 				<div class="mt-1">
 					<Search size="md" bind:value={searchTerm} placeholder={$_('schedule.search-inp')} />
 				</div>
@@ -214,7 +190,7 @@
 				data-testid="schedules-create-btn"
 				on:click={() => {
 					createModal = true
-					selected_weekday = default_weekday
+					selected_weekday = $weekOrder
 					start_time = '00:00'
 					end_time = '00:00'
 					location = ''
@@ -230,7 +206,7 @@
 				<Card size="xl" class="mt-5">
 					<h1 class="text-center dark:text-white">{$_('schedule.no-schedules')}</h1>
 				</Card>
-			{:else if mobile}
+			{:else if $mobile}
 				<div class="grid grid-cols-1 gap-2 sm:grid-cols-4">
 					{#each filteredItems as schedule}
 						<Card padding="none" class="p-2" size="xl">

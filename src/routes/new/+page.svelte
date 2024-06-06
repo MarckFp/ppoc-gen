@@ -6,6 +6,7 @@
 	import {importInto} from 'dexie-export-import'
 	import {locale, locales, _} from 'svelte-i18n'
 	import {base} from '$app/paths'
+	import {nameOrder, weekOrder} from '$lib/stores'
 
 	let congregation_name: string,
 		files: FileList,
@@ -71,6 +72,8 @@
 				lon: 0.0,
 				name_order: name_order_cong
 			})
+			nameOrder.set(name_order_cong)
+			weekOrder.set(week_order_cong)
 
 			window.location.pathname = base + '/app'
 		} catch (error) {
@@ -87,7 +90,14 @@
 	}
 
 	async function importData() {
-		await importInto(db, files[0], {clearTablesBeforeImport: true, overwriteValues: true}).then(() => {
+		await importInto(db, files[0], {clearTablesBeforeImport: true, overwriteValues: true}).then(async () => {
+			const importedCong = await db.congregation.orderBy('id').first()
+			if (importedCong) {
+				$locale = importedCong.lang
+				nameOrder.set(importedCong.name_order)
+				weekOrder.set(importedCong.week_order)
+			}
+
 			window.location.pathname = base + '/app'
 		})
 	}
