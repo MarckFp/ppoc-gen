@@ -32,6 +32,7 @@
 	import {_} from 'svelte-i18n'
 	import {onMount} from 'svelte'
 	import {jsPDF} from 'jspdf'
+	import {genTurnsLoading, genTurnsButtonDisabled} from '$lib/stores'
 	import autoTable from 'jspdf-autotable'
 	import ical from 'ical-generator'
 	import genTurnsWorker from '$lib/workers/gen-turns?worker'
@@ -43,7 +44,6 @@
 		printToDate: string,
 		printType: string,
 		userSelect: {value: number; name: string}[] = [],
-		loading: boolean = false,
 		deleteModal: boolean = false,
 		createModal: boolean = false,
 		printModal: boolean = false,
@@ -125,6 +125,8 @@
 					break
 				case 'turns.created':
 					toastMessage = $_('turns.created')
+					genTurnsLoading.update(x => (x = false))
+					genTurnsButtonDisabled.update(x => (x = false))
 					break
 			}
 
@@ -204,13 +206,13 @@
 	)
 
 	async function generateTurns() {
-		loading = true
-		creationDisabled = true
+		genTurnsLoading.update(x => (x = true))
+		genTurnsButtonDisabled.update(x => (x = true))
 		if (fromDate == undefined || toDate == undefined || fromDate == '' || toDate == '') {
 			fromDate = ''
 			toDate = ''
-			loading = false
-			creationDisabled = false
+			genTurnsLoading.update(x => (x = false))
+			genTurnsButtonDisabled.update(x => (x = false))
 
 			new AlertToast({
 				target: document.querySelector('#toast-container'),
@@ -224,8 +226,8 @@
 		if (from > to) {
 			fromDate = ''
 			toDate = ''
-			loading = false
-			creationDisabled = false
+			genTurnsLoading.update(x => (x = false))
+			genTurnsButtonDisabled.update(x => (x = false))
 
 			new AlertToast({
 				target: document.querySelector('#toast-container'),
@@ -241,8 +243,6 @@
 
 		fromDate = ''
 		toDate = ''
-		loading = false
-		creationDisabled = false
 	}
 
 	async function deleteTurn() {
@@ -549,8 +549,13 @@
 				{$_('turns.to')}:
 				<Input type="date" bind:value={toDate} data-testid="turns-date-to" class="mt-2" />
 			</Label>
-			<Button color="green" on:click={generateTurns} disabled={creationDisabled} data-testid="turns-generate-btn">
-				{#if loading}
+			<Button
+				color="green"
+				on:click={generateTurns}
+				disabled={$genTurnsButtonDisabled}
+				data-testid="turns-generate-btn"
+			>
+				{#if $genTurnsLoading}
 					<Spinner class="me-3" size="4" color="white" />
 					{$_('turns.creating')}
 				{:else}

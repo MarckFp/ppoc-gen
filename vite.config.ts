@@ -40,7 +40,7 @@ export default defineConfig({
 		sveltekit(),
 		SvelteKitPWA({
 			devOptions: {
-				enabled: true,
+				enabled: false,
 				type: 'module',
 				navigateFallback: '/',
 				suppressWarnings: true

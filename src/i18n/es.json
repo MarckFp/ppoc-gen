@@ -1,10 +1,10 @@
 {
 	"landing": {
-		"title": "¡La app para hacer mejores turnos de predicación pública!",
+		"title": "¡La app para hacer turnos de predicación pública!",
 		"title-desc": "PPOC Gen ayuda a crear, administrar y automatizar horarios para la predicación pública con exhibidores.",
 		"get-started": "Empezar",
-		"feature-title": "Diseñado para congregaciones de todo tipo de tamaños",
-		"feature-desc": "PPOC Gen se centra en ayudar a congregaciones a automatizar los turnos para invertir más tiempo en predicar y menos en administrar, con multiples funcionalidades como:",
+		"feature-title": "Diseñado para congregaciones de todo tipo de tamaño",
+		"feature-desc": "PPOC Gen se centra en ayudar a congregaciones a automatizar los turnos de Predicación Pública para invertir más tiempo en predicar y menos en administrar, con multiples funcionalidades como:",
 		"free": "Grátis",
 		"free-desc": "Ya que la app no necesita ningún servidor, es totalmente grátis para todos",
 		"performant": "Alto rendimiento",
@@ -53,7 +53,7 @@
 		"welcome": "Bienvenido",
 		"thank-you": "Gracias por usar PPOC Gen",
 		"docs": "Documentación Oficial",
-		"download-btn": "Descargar la App de Escritorio",
+		"download-btn": "Descargar la App",
 		"month-view": "Vista del Mes",
 		"week-view": "Vista de la Semana",
 		"day-view": "Vista del Día",
