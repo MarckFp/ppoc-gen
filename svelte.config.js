@@ -10,9 +10,7 @@ const config = {
 		? adapterCloudflare({
 			routes: {
 				include: ['/*']
-			},
-			precompress: true,
-			fallback: '404.html'
+			}
 		})
 		: adapterStatic({
 			precompress: true,
