@@ -258,7 +258,7 @@
 </div>
 
 {#if cal && shownDate != ''}
-	<Badge border color="red" class="my-2 w-full text-xl print:hidden">
+	<Badge border class="my-2 w-full text-xl print:hidden">
 		{shownDate}
 	</Badge>
 {/if}

@@ -595,7 +595,7 @@
 					}}>{$_('turns.today')}</Button
 				>
 				{#if !$mobile}
-					<Badge border color="red" class="text-lg">
+					<Badge border class="text-lg">
 						{$_('general.' + date.toLocaleString('en', {month: 'long'}).toLowerCase())}
 						{date.getFullYear()}
 					</Badge>
