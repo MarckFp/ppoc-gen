@@ -128,10 +128,10 @@ jobs:
           bubblewrap build
           gh release upload ${{  github.ref_name }} app-release-signed.apk
           gh release upload ${{  github.ref_name }} app-release-bundle.aab
-      - uses: r0adkll/upload-google-play@v1
-        with:
-          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
-          packageName: io.github.marckfp.twa
-          releaseFiles: ./android/app-release-bundle.aab
-          track: production
-          status: completed
+#      - uses: r0adkll/upload-google-play@v1
+#        with:
+#          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+#          packageName: io.github.marckfp.twa
+#          releaseFiles: ./android/app-release-bundle.aab
+#          track: production
+#          status: completed

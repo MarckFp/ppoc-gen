@@ -124,10 +124,14 @@
 				const users = await db.user.where('id').equals(assiggnment.user_id).toArray()
 				for (let user of users) {
 					if ($nameOrder == 'firstname') {
-						eventUsers.push(`<li class="ml-1">${user.firstname} ${user.lastname}</li>`)
+						eventUsers.push(
+							`<li class="text-balance border m-0.5 rounded-lg p-1 border-rose-500">${user.firstname} ${user.lastname}</li>`
+						)
 					}
 					if ($nameOrder == 'lastname') {
-						eventUsers.push(`<li class="ml-1">${user.lastname} ${user.firstname}</li>`)
+						eventUsers.push(
+							`<li class="text-balance border m-0.5 rounded-lg p-1 border-rose-500">${user.lastname} ${user.firstname}</li>`
+						)
 					}
 				}
 			}
@@ -143,7 +147,7 @@
 				start: new Date(turn.date + ' ' + turn.start_time + ':00'),
 				end: new Date(turn.date + ' ' + turn.end_time + ':00'),
 				title: {
-					html: `<strong>${turn.location}</strong> <small>${weather}</small>${eventUsers.join('')}`
+					html: `<strong class="text-balance">${turn.location}</strong> <small>${weather}</small><ul class="grid grid-cols-1 p-0.5 list-disc">${eventUsers.join('')}</ul>`
 				},
 				backgroundColor: backgroundColors[index]
 			})
