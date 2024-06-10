@@ -1,4 +1,4 @@
-name: Staging
+name: 'Staging 🚀'
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy-web:
-    name: 'Deploy to Staging 🚀'
+    name: 'Web 🌐'
     runs-on: ubuntu-latest
     concurrency:
       group: deploy-web-staging

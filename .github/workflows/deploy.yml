@@ -1,4 +1,4 @@
-name: Deploy
+name: 'Deploy 🚀'
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy-web:
-    name: 'Deploy to Production 🚀'
+    name: 'Web 🌐'
     runs-on: ubuntu-latest
     concurrency:
       group: deploy-web
@@ -61,7 +61,7 @@ jobs:
             name: 'Linux 🐧'
           - platform: 'windows-latest'
             args: ''
-            name: 'Windows x86_64 🪟'
+            name: 'Windows 🪟'
     runs-on: ${{ matrix.settings.platform }}
     steps:
       - uses: actions/checkout@v4
@@ -95,7 +95,7 @@ jobs:
           args: ${{ matrix.args }}
 
   deploy-android:
-    name: 'Deploy to Android 📱'
+    name: 'Android 📱'
     needs: deploy-web
     runs-on: ubuntu-latest
     permissions:
