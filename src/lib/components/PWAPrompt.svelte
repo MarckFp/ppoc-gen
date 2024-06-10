@@ -3,6 +3,7 @@
 	import {slide} from 'svelte/transition'
 	import {useRegisterSW} from 'virtual:pwa-register/svelte'
 	import {_} from 'svelte-i18n'
+
 	const {needRefresh, updateServiceWorker, offlineReady} = useRegisterSW({
 		onRegistered(r) {
 			r &&

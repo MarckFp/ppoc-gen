@@ -6,13 +6,12 @@
 	import {importInto} from 'dexie-export-import'
 	import {locale, locales, _} from 'svelte-i18n'
 	import {base} from '$app/paths'
-	import {nameOrder, weekOrder} from '$lib/stores'
+	import {nameOrder, weekOrder, installPrompt, mobile} from '$lib/stores'
 
 	let congregation_name: string,
 		files: FileList,
 		langs: {value: string; name: string}[] = [],
 		currentLang: string,
-		mobile: boolean = false,
 		week_order_cong = 'monday',
 		name_order_cong = 'firstname'
 
@@ -75,6 +74,7 @@
 			nameOrder.set(name_order_cong)
 			weekOrder.set(week_order_cong)
 
+			installPrompt.set('true')
 			window.location.pathname = base + '/app'
 		} catch (error) {
 			new AlertToast({
@@ -98,23 +98,9 @@
 				weekOrder.set(importedCong.week_order)
 			}
 
+			installPrompt.set('true')
 			window.location.pathname = base + '/app'
 		})
-	}
-
-	//Media Queries for Calendar View
-	const mediaQuery = window.matchMedia('(width <= 640px)')
-	mediaQuery.addEventListener('change', ({matches}) => {
-		if (matches) {
-			mobile = true
-		} else {
-			mobile = false
-		}
-	})
-	if (mediaQuery.matches) {
-		mobile = true
-	} else {
-		mobile = false
 	}
 </script>
 

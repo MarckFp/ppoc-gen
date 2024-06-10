@@ -84,7 +84,8 @@
 		"thunderstorm": "🌩️",
 		"thunderstorm_slight_hail": "🌩️",
 		"thunderstorm_heavy_hail": "🌩️",
-		"announcement": "Announcement"
+		"announcement": "Announcement",
+		"web-app": "This is a web application. Do you wish to install it?"
 	},
 	"general": {
 		"edit-btn": "Edit",
