@@ -27,4 +27,8 @@
 		})
 </script>
 
+<svelte:head>
+	<link rel="“canonical”" href="https://ppocgen.com{window.location.pathname}" />
+</svelte:head>
+
 <slot />
