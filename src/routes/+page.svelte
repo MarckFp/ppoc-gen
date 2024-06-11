@@ -29,6 +29,19 @@
 	}
 </script>
 
+<svelte:head>
+	<link
+		rel="preload"
+		as="image"
+		href="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/cta/cta-dashboard-mockup.svg"
+	/>
+	<link
+		rel="preload"
+		as="image"
+		href="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/cta/cta-dashboard-mockup-dark.svg"
+	/>
+</svelte:head>
+
 <div class="grid grid-cols-1 gap-2">
 	<DarkMode class="hidden" />
 	<Heading class="my-10 text-center dark:text-white"><Span gradient>PPOC Gen</Span></Heading>
@@ -37,11 +50,15 @@
 			<svelte:fragment slot="img">
 				<img
 					class="w-full dark:hidden"
+					width="600"
+					height="450"
 					src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/cta/cta-dashboard-mockup.svg"
 					alt="dashboard"
 				/>
 				<img
 					class="hidden w-full dark:block"
+					width="600"
+					height="450"
 					src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/cta/cta-dashboard-mockup-dark.svg"
 					alt="dashboard"
 				/>
