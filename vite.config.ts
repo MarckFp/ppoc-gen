@@ -34,7 +34,7 @@ export default defineConfig({
 		PKG: pkg
 	},
 	build: {
-		minify: 'terser',
+		minify: 'esbuild',
 	},
 	plugins: [
 		sveltekit(),

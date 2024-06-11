@@ -181,19 +181,19 @@
 			<div class="flex flex-col space-y-6">
 				<Label class="space-y-2">
 					<span>{$_('settings.cong-name')}:</span>
-					<Input type="text" name="name" bind:value={$congregation.name} required />
+					<Input type="text" name="name" bind:value={$congregation.name} autocomplete="false" required />
 				</Label>
 				<Label class="space-y-2">
 					<span>{$_('settings.language')}:</span>
-					<Select items={langs} bind:value={$congregation.lang} />
+					<Select items={langs} name="lang" bind:value={$congregation.lang} />
 				</Label>
 				<Label class="space-y-2">
 					<span>{$_('settings.week-start-at')}:</span>
-					<Select items={week_order} bind:value={$congregation.week_order} />
+					<Select items={week_order} name="week-order" bind:value={$congregation.week_order} />
 				</Label>
 				<Label class="space-y-2">
 					<span>{$_('settings.name-order')}:</span>
-					<Select items={name_order} bind:value={$congregation.name_order} />
+					<Select items={name_order} name="name-order" bind:value={$congregation.name_order} />
 				</Label>
 				<Tooltip triggeredBy="#info-latitude" placement="left">{$_('settings.info-latitude')}</Tooltip>
 				<div class="grid grid-cols-1 gap-1 md:grid-cols-3">
@@ -202,15 +202,15 @@
 							<InfoCircleSolid id="info-latitude" class="mr-2" />
 							<span>{$_('settings.city-or-town')}:</span>
 						</div>
-						<Input type="text" bind:value={location} />
+						<Input type="text" name="location" bind:value={location} />
 					</Label>
 					<Label class="space-y-2">
 						<span>{$_('settings.zipcode')}:</span>
-						<Input type="text" bind:value={zipcode} />
+						<Input type="text" name="zipcode" bind:value={zipcode} />
 					</Label>
 					<Label class="space-y-2">
 						<span>{$_('settings.country')}:</span>
-						<Input type="text" bind:value={country} />
+						<Input type="text" name="country" bind:value={country} />
 					</Label>
 					{#if $mobile}
 						<Label class="space-y-2 text-center">
