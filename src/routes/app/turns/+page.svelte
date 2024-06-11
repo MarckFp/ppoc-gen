@@ -558,7 +558,7 @@
 	{#if $turns && $schedules && $assignments && $showUsers}
 		<Card size="xl" class="mt-2">
 			{#if $mobile}
-				<Badge border color="red" class="my-2 text-lg print:hidden">
+				<Badge border class="my-2 text-lg print:hidden">
 					{$_('general.' + date.toLocaleString('en', {month: 'long'}).toLowerCase())}
 					{date.getFullYear()}
 				</Badge>
