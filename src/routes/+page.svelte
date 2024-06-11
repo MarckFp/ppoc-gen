@@ -14,6 +14,8 @@
 	import {base} from '$app/paths'
 	import {db} from '$lib/db'
 	import {_} from 'svelte-i18n'
+	import dashboardMockup from '$lib/images/cta-dashboard-mockup.svg'
+	import dashboardMockupDark from '$lib/images/cta-dashboard-mockup-dark.svg'
 
 	db.congregation
 		.orderBy('id')
@@ -29,39 +31,14 @@
 	}
 </script>
 
-<svelte:head>
-	<link
-		rel="preload"
-		as="image"
-		href="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/cta/cta-dashboard-mockup.svg"
-	/>
-	<link
-		rel="preload"
-		as="image"
-		href="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/cta/cta-dashboard-mockup-dark.svg"
-	/>
-</svelte:head>
-
 <div class="grid grid-cols-1 gap-2">
 	<DarkMode class="hidden" />
 	<Heading class="my-10 text-center dark:text-white"><Span gradient>PPOC Gen</Span></Heading>
 	<Section name="ctawithimg">
 		<Cta ctatype="image">
 			<svelte:fragment slot="img">
-				<img
-					class="w-full dark:hidden"
-					width="600"
-					height="450"
-					src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/cta/cta-dashboard-mockup.svg"
-					alt="dashboard"
-				/>
-				<img
-					class="hidden w-full dark:block"
-					width="600"
-					height="450"
-					src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/cta/cta-dashboard-mockup-dark.svg"
-					alt="dashboard"
-				/>
+				<img class="w-full dark:hidden" width="600" height="450" src={dashboardMockup} alt="dashboard" />
+				<img class="hidden w-full dark:block" width="600" height="450" src={dashboardMockupDark} alt="dashboard" />
 			</svelte:fragment>
 			<svelte:fragment slot="h2">{$_('landing.title')}</svelte:fragment>
 			<p class="mb-6 font-light text-gray-500 dark:text-gray-400 md:text-lg">{$_('landing.title-desc')}</p>
