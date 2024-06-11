@@ -31,6 +31,11 @@
 	}
 </script>
 
+<svelte:head>
+	<link rel="preload" as="image" href={dashboardMockup} />
+	<link rel="preload" as="image" href={dashboardMockupDark} />
+</svelte:head>
+
 <div class="grid grid-cols-1 gap-2">
 	<DarkMode class="hidden" />
 	<Heading class="my-10 text-center dark:text-white"><Span gradient>PPOC Gen</Span></Heading>
