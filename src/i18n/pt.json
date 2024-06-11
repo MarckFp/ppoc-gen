@@ -125,6 +125,8 @@
 		"fr": "Francês",
 		"portuguese": "Português",
 		"pt": "Português",
+		"guerman": "Alemão",
+		"de": "Alemão",
 		"invalid-data": "Dados preenchidos são inválidos ou incompletos",
 		"app-offline": "Aplicativo pronto para funcionar offline",
 		"new-version": "Nova versão disponível, clique no botão de recarregar para atualizar"
