@@ -121,6 +121,8 @@
 		"en": "English",
 		"spanish": "Spanish",
 		"es": "Spanish",
+		"french": "French",
+		"fr": "French",
 		"invalid-data": "Filled data is invalid or incomplete",
 		"app-offline": "App ready to work offline",
 		"new-version": "New version available, click on reload button to update"
