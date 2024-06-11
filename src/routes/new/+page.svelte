@@ -128,6 +128,7 @@
 								id="name"
 								class="mt-2 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-primary-600 focus:ring-primary-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 sm:text-sm"
 								placeholder="Warwick"
+								autocomplete="false"
 								required
 								bind:value={congregation_name}
 								data-testid="create-name"
@@ -139,17 +140,30 @@
 								items={langs}
 								bind:value={currentLang}
 								on:change={changeLang}
+								name="lang"
 								class="mt-2"
 								data-testid="create-lang"
 							/>
 						</Label>
 						<Label class="mb-2">
 							{$_('settings.week-start-at')}:
-							<Select items={week_order} bind:value={week_order_cong} class="mt-2" data-testid="create-weekday" />
+							<Select
+								items={week_order}
+								bind:value={week_order_cong}
+								name="week-order"
+								class="mt-2"
+								data-testid="create-weekday"
+							/>
 						</Label>
 						<Label class="mb-2">
 							{$_('settings.name-order')}:
-							<Select items={name_order} bind:value={name_order_cong} class="mt-2" data-testid="create-name-order" />
+							<Select
+								items={name_order}
+								bind:value={name_order_cong}
+								name="name-order"
+								class="mt-2"
+								data-testid="create-name-order"
+							/>
 						</Label>
 					</div>
 					<Button class="w-full" on:click={createCongregation} data-testid="create-btn"
