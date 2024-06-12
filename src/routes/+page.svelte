@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {DarkMode, GradientButton, Heading, Span} from 'flowbite-svelte'
+	import {DarkMode, GradientButton, Heading, Select, Span} from 'flowbite-svelte'
 	import {Section, Cta, HeroHeader, FeatureDefault, FeatureItem, Faq, FaqItem} from 'flowbite-svelte-blocks'
 	import {
 		ChartPieSolid,
@@ -13,9 +13,12 @@
 	} from 'flowbite-svelte-icons'
 	import {base} from '$app/paths'
 	import {db} from '$lib/db'
-	import {_} from 'svelte-i18n'
+	import {locale, locales, _} from 'svelte-i18n'
 	import dashboardMockup from '$lib/images/cta-dashboard-mockup.svg'
 	import dashboardMockupDark from '$lib/images/cta-dashboard-mockup-dark.svg'
+
+	let langs: {value: string; name: string}[] = [],
+		currentLang: string
 
 	db.congregation
 		.orderBy('id')
@@ -28,6 +31,26 @@
 
 	if (window.__TAURI__) {
 		window.location.pathname = base + '/new'
+	}
+
+	$locales.forEach(lang => {
+		langs.push({value: lang, name: $_('general.' + lang)})
+	})
+
+	langs.sort(function (a, b) {
+		let textA = a.name.toUpperCase(),
+			textB = b.name.toUpperCase()
+		return textA < textB ? -1 : textA > textB ? 1 : 0
+	})
+
+	currentLang = $locale?.split('-')[0]
+
+	function changeLang() {
+		langs = []
+		$locale = currentLang
+		$locales.forEach(lang => {
+			langs.push({value: lang, name: $_('general.' + lang)})
+		})
 	}
 </script>
 
@@ -47,13 +70,16 @@
 			</svelte:fragment>
 			<svelte:fragment slot="h2">{$_('landing.title')}</svelte:fragment>
 			<p class="mb-6 font-light text-gray-500 dark:text-gray-400 md:text-lg">{$_('landing.title-desc')}</p>
-			<a
-				href="{base}/new"
-				class="inline-flex items-center rounded-lg bg-primary-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
-			>
-				{$_('landing.get-started')}
-				<ArrowRightOutline size="md" class="-mr-1 ml-2" />
-			</a>
+			<div class="grid gap-6 sm:grid-cols-2">
+				<Select items={langs} bind:value={currentLang} on:change={changeLang} name="lang" />
+				<a
+					href="{base}/new"
+					class="inline-flex items-center rounded-lg bg-primary-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900 sm:w-8/12"
+				>
+					{$_('landing.get-started')}
+					<ArrowRightOutline size="md" class="-mr-1 ml-2" />
+				</a>
+			</div>
 		</Cta>
 	</Section>
 
