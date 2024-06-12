@@ -214,7 +214,7 @@
 					</Label>
 					{#if $mobile}
 						<Label class="space-y-2 text-center">
-							<span>Mode:</span>
+							<span>{$_('settings.mode')}:</span>
 							<DarkMode class="black ml-2 border dark:border-gray-600 dark:text-primary-200" />
 						</Label>
 					{/if}

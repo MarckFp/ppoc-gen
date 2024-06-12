@@ -253,6 +253,7 @@
 		"name-order": "Trier le proclamateur par",
 		"city-or-town": "Ville ou Village",
 		"zipcode": "Code Postal",
-		"country": "Pays"
+		"country": "Pays",
+		"mode": "Style"
 	}
 }

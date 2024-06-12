@@ -253,6 +253,7 @@
 		"name-order": "Ordonare publicatori după",
 		"city-or-town": "Oraș sau localitate",
 		"zipcode": "Cod poștal",
-		"country": "Țară"
+		"country": "Țară",
+		"mode": "Stil"
 	}
 }

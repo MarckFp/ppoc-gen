@@ -253,6 +253,7 @@
 		"name-order": "按姓名排序发布者",
 		"city-or-town": "城市或镇",
 		"zipcode": "邮政编码",
-		"country": "国家"
+		"country": "国家",
+		"mode": "风格"
 	}
 }

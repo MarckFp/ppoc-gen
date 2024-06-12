@@ -253,6 +253,7 @@
 		"name-order": "Ordenar publicadores por",
 		"city-or-town": "Cidade ou Vila",
 		"zipcode": "Código Postal",
-		"country": "País"
+		"country": "País",
+		"mode": "Estilo"
 	}
 }

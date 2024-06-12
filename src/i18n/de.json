@@ -253,6 +253,7 @@
 		"name-order": "Verkündiger sortieren nach",
 		"city-or-town": "Stadt oder Ort",
 		"zipcode": "Postleitzahl",
-		"country": "Land"
+		"country": "Land",
+		"mode": "Stil"
 	}
 }

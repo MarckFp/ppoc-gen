@@ -253,6 +253,7 @@
 		"name-order": "Order publishers by",
 		"city-or-town": "City or Town",
 		"zipcode": "Zipcode",
-		"country": "Country"
+		"country": "Country",
+		"mode": "Mode"
 	}
 }
