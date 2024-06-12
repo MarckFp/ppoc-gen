@@ -137,6 +137,10 @@
 		"jp": "Japonés",
 		"korean": "Coreano",
 		"ko": "Coreano",
+		"russian": "Ruso",
+		"ru": "Ruso",
+		"arabic": "Árabe",
+		"ar": "Árabe",
 		"invalid-data": "Los datos introducidos son incorrectos o incompletos",
 		"app-offline": "La app está lista para funcionar offline",
 		"new-version": "Nueva versión disponible, haga click en el botón para actualizar"
