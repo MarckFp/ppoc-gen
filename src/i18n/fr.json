@@ -135,6 +135,8 @@
 		"ro": "Roumain",
 		"japanese": "Japonais",
 		"jp": "Japonais",
+		"korean": "Coréen",
+		"ko": "Coréen",
 		"invalid-data": "Les données saisies sont incorrectes ou incomplètes",
 		"app-offline": "L'application est prête à fonctionner hors ligne",
 		"new-version": "Nouvelle version disponible, cliquez sur le bouton pour mettre à jour"
