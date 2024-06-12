@@ -11,6 +11,7 @@ It is built using svelte and tauri and IndexedDB as storage. I made the decision
 - Bun 1.x
 - Tauri 1.x
 - Svelte 4.x
+- SvelteKit 2.x
 
 ## Local Usage
 
@@ -23,12 +24,12 @@ bun install
 
 - Then we can run the development server using
 ```bash
-bun run dev
+bun dev
 ```
 
 - Or we can build the binaries using tauri
 ```bash
-bun run tauri dev
+bun tauri dev
 ```
 
 This last step is in charge of:
