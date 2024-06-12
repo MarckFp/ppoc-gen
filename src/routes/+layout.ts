@@ -8,6 +8,7 @@ import de from '../i18n/de.json'
 import zh from '../i18n/zh.json'
 import hi from '../i18n/hi.json'
 import ro from '../i18n/ro.json'
+import jp from '../i18n/jp.json'
 
 addMessages('en', en)
 addMessages('es', es)
@@ -17,6 +18,7 @@ addMessages('de', de)
 addMessages('zh', zh)
 addMessages('hi', hi)
 addMessages('ro', ro)
+addMessages('jp', jp)
 
 init({
 	fallbackLocale: 'en',

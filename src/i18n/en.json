@@ -133,6 +133,8 @@
 		"hi": "Hindi",
 		"romanian": "Romanian",
 		"ro": "Romanian",
+		"japanese": "Japanese",
+		"jp": "Japanese",
 		"invalid-data": "Filled data is invalid or incomplete",
 		"app-offline": "App ready to work offline",
 		"new-version": "New version available, click on reload button to update"
