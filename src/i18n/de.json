@@ -129,6 +129,8 @@
 		"ko": "Koreanisch",
 		"ru": "Russisch",
 		"ar": "Arabisch",
+		"gr": "Griechisch",
+		"it": "Italienisch",
 		"invalid-data": "Eingegebene Daten sind ungültig oder unvollständig",
 		"app-offline": "App bereit für den Offline-Betrieb",
 		"new-version": "Neue Version verfügbar, klicken Sie auf die Schaltfläche zum Aktualisieren"

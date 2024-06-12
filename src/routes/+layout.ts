@@ -12,6 +12,8 @@ import jp from '../i18n/jp.json'
 import ko from '../i18n/ko.json'
 import ru from '../i18n/ru.json'
 //import ar from '../i18n/ar.json'
+import it from '../i18n/it.json'
+import gr from '../i18n/gr.json'
 
 addMessages('en', en)
 addMessages('es', es)
@@ -25,6 +27,8 @@ addMessages('jp', jp)
 addMessages('ko', ko)
 addMessages('ru', ru)
 //addMessages('ar', ar) //TODO: We need to support to serve the page on a different word order since it's red from left to right instead of right to left
+addMessages('it', it)
+addMessages('gr', gr)
 
 init({
 	fallbackLocale: 'en',
