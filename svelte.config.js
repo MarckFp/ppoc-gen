@@ -48,7 +48,7 @@ const config = {
 				'object-src': ['none'],
 				'style-src': ['self', 'unsafe-inline'],
 				'default-src': ['self'],
-				'script-src': ['self', 'sha256-4N/7e9aYkfuXVBtskvak4XR8lIfkvWsWV0BwGF3wqAk=', 'sha256-FoRaxLZM3x9DoJI4Vz49oRxBvXkiYka+2mQJayc7tsw='],
+				'script-src': ['self', 'sha256-4N/7e9aYkfuXVBtskvak4XR8lIfkvWsWV0BwGF3wqAk=', '/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js'],
 				'worker-src': ['self']
 			}
 		},
