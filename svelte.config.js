@@ -60,7 +60,7 @@ const config = {
 				'object-src': ['none'],
 				'style-src': ['self', 'unsafe-inline'],
 				'default-src': default_src,
-				'script-src': ['self', 'sha256-4N/7e9aYkfuXVBtskvak4XR8lIfkvWsWV0BwGF3wqAk='],
+				'script-src': ['self', 'sha256-4N/7e9aYkfuXVBtskvak4XR8lIfkvWsWV0BwGF3wqAk=', 'https://*.cloudflareinsights.com'],
 				'worker-src': ['self']
 			}
 		},
