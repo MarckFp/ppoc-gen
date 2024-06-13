@@ -3,7 +3,7 @@ import adapterCloudflare from '@sveltejs/adapter-cloudflare'
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte'
 
 let adapter,
-	script_src
+	default_src
 
 switch (process.env.ADAPTER) {
 	case 'cloudflare':
@@ -23,13 +23,13 @@ switch (process.env.ADAPTER) {
 
 switch (process.env.PPOCGEN_ENV) {
 	case 'production':
-		script_src = ['self', 'sha256-4N/7e9aYkfuXVBtskvak4XR8lIfkvWsWV0BwGF3wqAk=', 'https://ppocgen.com/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js']
+		default_src = ['self', 'https://ppocgen.com', 'ws://ppocgen.com']
 	  break
 	case 'staging':
-		script_src = ['self', 'sha256-4N/7e9aYkfuXVBtskvak4XR8lIfkvWsWV0BwGF3wqAk=', 'https://dev.ppocgen.com/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js']
+		default_src = ['self', 'https://dev.ppocgen.com', 'ws://dev.ppocgen.com']
 	  break
 	default:
-		script_src = ['self', 'sha256-4N/7e9aYkfuXVBtskvak4XR8lIfkvWsWV0BwGF3wqAk=']
+		default_src = ['self']
 }
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -59,8 +59,8 @@ const config = {
 				'media-src': ['self', 'data:'],
 				'object-src': ['none'],
 				'style-src': ['self', 'unsafe-inline'],
-				'default-src': ['self'],
-				'script-src': script_src,
+				'default-src': default_src,
+				'script-src': ['self', 'sha256-4N/7e9aYkfuXVBtskvak4XR8lIfkvWsWV0BwGF3wqAk='],
 				'worker-src': ['self']
 			}
 		},
