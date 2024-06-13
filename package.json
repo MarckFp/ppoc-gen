@@ -24,7 +24,7 @@
     "prepare": "husky",
     "pwa-assets": "pwa-assets-generator",
     "desktop-assets": "tauri icon",
-    "cloudflare-headers": "bun ./cd_headers.js"
+    "cloudflare-headers": "bun ./cf_headers.js"
   },
   "devDependencies": {
     "@eslint/js": "^9.4.0",
