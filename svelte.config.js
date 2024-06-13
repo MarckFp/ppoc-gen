@@ -33,9 +33,11 @@ const config = {
 			relative: false
 		},
 		csp: {
+			mode: 'hash',
 			directives: {
 				'base-uri': ['self'],
 				'child-src': ['self'],
+				'connect-src': ['self', 'ws://localhost:*', 'https://api.open-meteo.com', 'https://nominatim.openstreetmap.org'],
 				'img-src': ['self', 'data:'],
 				'font-src': ['self', 'data:'],
 				'form-action': ['self'],
@@ -46,7 +48,7 @@ const config = {
 				'object-src': ['none'],
 				'style-src': ['self', 'unsafe-inline'],
 				'default-src': ['self'],
-				'script-src': ['self'],
+				'script-src': ['self', 'sha256-QeKbcoJxVNPhAE4nXfuBy1GzzT8mxC9j5aBdrsiP7lo=', 'sha256-4N/7e9aYkfuXVBtskvak4XR8lIfkvWsWV0BwGF3wqAk='],
 				'worker-src': ['self']
 			}
 		},
