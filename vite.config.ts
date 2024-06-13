@@ -17,12 +17,12 @@ switch (process.env.PPOCGEN_ENV) {
 		name = 'PPOC Gen',
 		theme_color = '#eb4034',
 		origin = 'ppocgen.com'
-	  break;
+	  break
 	case 'staging':
 		name = 'Dev PPOC Gen'
 		theme_color = '#53d4f7'
 		origin = 'dev.ppocgen.com'
-	  break;
+	  break
 	default:
 		name = 'Localhost PPOC Gen'
 		theme_color = '#34eb64'
