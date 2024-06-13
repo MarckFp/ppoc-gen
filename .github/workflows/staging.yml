@@ -32,6 +32,7 @@ jobs:
           NODE_ENV: 'production'
           PPOCGEN_ENV: 'staging'
           ADAPTER: 'cloudflare'
+      - run: bun run cloudflare-headers
       - uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
