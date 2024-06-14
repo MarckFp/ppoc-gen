@@ -1,5 +1,4 @@
 import * as Sentry from '@sentry/sveltekit'
-import * as Spotlight from '@spotlightjs/spotlight'
 
 const environment = import.meta.env.VITE_PPOCGEN_ENV ? import.meta.env.VITE_PPOCGEN_ENV : 'development'
 const version = PKG.version ?? 'unknown'
@@ -12,14 +11,7 @@ Sentry.init({
 	integrations: [Sentry.replayIntegration(), Sentry.browserProfilingIntegration()],
 	transport: Sentry.makeBrowserOfflineTransport(Sentry.makeFetchTransport),
 	environment: environment,
-	spotlight: environment === 'development',
 	release: version
 })
 
 export const handleError = Sentry.handleErrorWithSentry()
-
-if (environment == 'development') {
-	Spotlight.init({
-		injectImmediately: true
-	})
-}
