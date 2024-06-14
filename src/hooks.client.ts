@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/sveltekit'
 import * as Spotlight from '@spotlightjs/spotlight'
 
-const environment = import.meta.env.PPOCGEN_ENV ? import.meta.env.PPOCGEN_ENV : 'development'
+const environment = import.meta.env.VITE_PPOCGEN_ENV ? import.meta.env.VITE_PPOCGEN_ENV : 'development'
 const version = PKG.version ?? 'unknown'
 
 Sentry.init({
