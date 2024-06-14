@@ -33,7 +33,6 @@ jobs:
           PPOCGEN_ENV: 'staging'
           VITE_PPOCGEN_ENV: 'staging'
           ADAPTER: 'cloudflare'
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 #      - run: bun run cloudflare-headers
       - uses: cloudflare/pages-action@v1
         with:

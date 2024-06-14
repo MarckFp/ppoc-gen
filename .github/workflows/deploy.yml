@@ -33,7 +33,6 @@ jobs:
           PPOCGEN_ENV: 'production'
           VITE_PPOCGEN_ENV: 'production'
           ADAPTER: 'cloudflare'
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 #      - run: bun run cloudflare-headers
       - uses: cloudflare/pages-action@v1
         with:
@@ -88,7 +87,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PPOCGEN_ENV: 'production'
           VITE_PPOCGEN_ENV: 'production'
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           #TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
           #TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
         with:

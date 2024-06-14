@@ -1,4 +1,3 @@
-import { sentrySvelteKit } from "@sentry/sveltekit";
 import { sveltekit } from '@sveltejs/kit/vite'
 import { defineConfig } from 'vite'
 import { SvelteKitPWA } from '@vite-pwa/sveltekit'
@@ -38,13 +37,6 @@ export default defineConfig({
 		minify: 'esbuild',
 	},
 	plugins: [
-        sentrySvelteKit({
-            adapter: 'other',
-            sourceMapsUploadOptions: {
-                org: "z-projects",
-                project: "ppoc-gen"
-            }
-        }),
         sveltekit(),
         SvelteKitPWA({
             devOptions: {
