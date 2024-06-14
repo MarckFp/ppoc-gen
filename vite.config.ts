@@ -4,7 +4,6 @@ import { defineConfig } from 'vite'
 import { SvelteKitPWA } from '@vite-pwa/sveltekit'
 import { readFileSync } from 'fs'
 import { fileURLToPath } from 'url'
-import spotlightSidecar from '@spotlightjs/sidecar/vite-plugin'
 
 const file = fileURLToPath(new URL('package.json', import.meta.url))
 const json = readFileSync(file, 'utf8')
@@ -39,7 +38,6 @@ export default defineConfig({
 		minify: 'esbuild',
 	},
 	plugins: [
-        spotlightSidecar(),
         sentrySvelteKit({
             adapter: 'other',
             sourceMapsUploadOptions: {
