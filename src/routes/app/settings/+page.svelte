@@ -206,11 +206,11 @@
 					</Label>
 					<Label class="space-y-2">
 						<span>{$_('settings.zipcode')}:</span>
-						<Input type="text" name="zipcode" bind:value={zipcode} />
+						<Input type="text" name="zipcode" bind:value={zipcode} autocomplete="postal-code" />
 					</Label>
 					<Label class="space-y-2">
 						<span>{$_('settings.country')}:</span>
-						<Input type="text" name="country" bind:value={country} />
+						<Input type="text" name="country" bind:value={country} autocomplete="country" />
 					</Label>
 					{#if $mobile}
 						<Label class="space-y-2 text-center">

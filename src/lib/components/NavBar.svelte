@@ -20,19 +20,19 @@
 		<BottomNavItem href="{base}/app" activeClass="w-full px-3">
 			<img src="{base}/favicon.ico" class="h-6 min-h-6 w-6 min-w-6 shrink-0" alt="PPOC Gen Logo" />
 		</BottomNavItem>
-		<BottomNavItem href="{base}/app/publishers" data-testid="navbar-publishers">
+		<BottomNavItem href="{base}/app/publishers" data-testid="navbar-publishers" data-sveltekit-preload-data="hover">
 			<UsersGroupOutline size="lg" color="red" class="dark:text-primary-400" />
 		</BottomNavItem>
-		<BottomNavItem href="{base}/app/schedules" data-testid="navbar-schedules">
+		<BottomNavItem href="{base}/app/schedules" data-testid="navbar-schedules" data-sveltekit-preload-data="hover">
 			<CalendarMonthOutline size="lg" color="red" class="dark:text-primary-400" />
 		</BottomNavItem>
-		<BottomNavItem href="{base}/app/turns" data-testid="navbar-turns">
+		<BottomNavItem href="{base}/app/turns" data-testid="navbar-turns" data-sveltekit-preload-data="hover">
 			<EditOutline size="lg" color="red" class="dark:text-primary-400" />
 		</BottomNavItem>
-		<BottomNavItem href="{base}/app/incidences" data-testid="navbar-incidences">
+		<BottomNavItem href="{base}/app/incidences" data-testid="navbar-incidences" data-sveltekit-preload-data="hover">
 			<BellRingOutline size="lg" color="red" class="dark:text-primary-400" />
 		</BottomNavItem>
-		<BottomNavItem href="{base}/app/settings" data-testid="navbar-settings">
+		<BottomNavItem href="{base}/app/settings" data-testid="navbar-settings" data-sveltekit-preload-data="hover">
 			<CogOutline size="lg" color="red" class="dark:text-primary-400" />
 		</BottomNavItem>
 	</BottomNav>
@@ -53,31 +53,31 @@
 				<NavHamburger data-testid="navbar-hamburger" />
 			</div>
 			<NavUl class="order-1">
-				<NavLi href="{base}/app/publishers" data-testid="navbar-publishers">
+				<NavLi href="{base}/app/publishers" data-testid="navbar-publishers" data-sveltekit-preload-data="hover">
 					<div class="flex flex-row dark:text-white">
 						{$_('navbar.publishers')}
 						<UsersGroupOutline size="lg" color="red" class="dark:text-primary-400" />
 					</div>
 				</NavLi>
-				<NavLi href="{base}/app/schedules" data-testid="navbar-schedules">
+				<NavLi href="{base}/app/schedules" data-testid="navbar-schedules" data-sveltekit-preload-data="hover">
 					<div class="flex flex-row dark:text-white">
 						{$_('navbar.schedules')}
 						<CalendarMonthOutline size="lg" color="red" class="dark:text-primary-400" />
 					</div></NavLi
 				>
-				<NavLi href="{base}/app/turns" data-testid="navbar-turns">
+				<NavLi href="{base}/app/turns" data-testid="navbar-turns" data-sveltekit-preload-data="hover">
 					<div class="flex flex-row dark:text-white">
 						{$_('navbar.turns')}
 						<EditOutline size="lg" color="red" class="dark:text-primary-400" />
 					</div></NavLi
 				>
-				<NavLi href="{base}/app/incidences" data-testid="navbar-incidences">
+				<NavLi href="{base}/app/incidences" data-testid="navbar-incidences" data-sveltekit-preload-data="hover">
 					<div class="flex flex-row dark:text-white">
 						{$_('navbar.incidences')}
 						<BellRingOutline size="lg" color="red" class="dark:text-primary-400" />
 					</div></NavLi
 				>
-				<NavLi href="{base}/app/settings" data-testid="navbar-settings">
+				<NavLi href="{base}/app/settings" data-testid="navbar-settings" data-sveltekit-preload-data="hover">
 					<div class="flex flex-row dark:text-white">
 						{$_('navbar.settings')}
 						<CogOutline size="lg" color="red" class="dark:text-primary-400" />
