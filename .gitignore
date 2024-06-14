@@ -15,3 +15,5 @@ dev-dist
 /blob-report/
 /playwright/.cache/
 .wrangler
+# Sentry Config File
+.sentryclirc

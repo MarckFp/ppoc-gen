@@ -44,26 +44,32 @@ const config = {
 			base: '',
 			relative: false
 		},
-		csp: {
-			mode: 'hash',
-			directives: {
-				'base-uri': ['self'],
-				'child-src': ['self'],
-				'connect-src': ['self', 'ws://localhost:*', 'https://api.open-meteo.com', 'https://nominatim.openstreetmap.org'],
-				'img-src': ['self', 'data:'],
-				'font-src': ['self', 'data:'],
-				'form-action': ['self'],
-				'frame-ancestors': ['self'],
-				'frame-src': ['self'],
-				'manifest-src': ['self'],
-				'media-src': ['self', 'data:'],
-				'object-src': ['none'],
-				'style-src': ['self', 'unsafe-inline'],
-				'default-src': default_src,
-				'script-src': ['self', 'sha256-4N/7e9aYkfuXVBtskvak4XR8lIfkvWsWV0BwGF3wqAk=', 'https://*.cloudflareinsights.com'],
-				'worker-src': ['self']
-			}
-		},
+//		csp: {
+//			mode: 'hash',
+//			directives: {
+//				'base-uri': ['self'],
+//				'child-src': ['self'],
+//				'connect-src': ['self', 'ws://localhost:*', 'https://*.open-meteo.com', 'https://*.openstreetmap.org', 'https://*.sentry.io'],
+//				'img-src': ['self', 'data:'],
+//				'font-src': ['self', 'data:'],
+//				'form-action': ['self'],
+//				'frame-ancestors': ['self'],
+//				'frame-src': ['self'],
+//				'manifest-src': ['self'],
+//				'media-src': ['self', 'data:'],
+//				'object-src': ['none'],
+//				'style-src': ['self', 'unsafe-inline'],
+//				'default-src': default_src,
+//				'script-src': ['self', 'sha256-4N/7e9aYkfuXVBtskvak4XR8lIfkvWsWV0BwGF3wqAk=', 'https://*.cloudflareinsights.com', 'https://*.sentry.io'],
+//				'worker-src': ['self', 'localhost']
+//			},
+//			reportOnly: {
+//				'report-to': ['csp-endpoint'],
+//				'report-uri': [
+//				  `https://*.sentry.io/api/*/security/?sentry_key=*`,
+//				],
+//			}
+//		},
 		csrf: {
 			checkOrigin: true
 		},

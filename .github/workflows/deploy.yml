@@ -31,8 +31,9 @@ jobs:
         env:
           NODE_ENV: 'production'
           PPOCGEN_ENV: 'production'
+          VITE_PPOCGEN_ENV: 'production'
           ADAPTER: 'cloudflare'
-      - run: bun run cloudflare-headers
+#      - run: bun run cloudflare-headers
       - uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -85,6 +86,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PPOCGEN_ENV: 'production'
+          VITE_PPOCGEN_ENV: 'production'
           #TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
           #TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
         with:
@@ -102,7 +104,7 @@ jobs:
     permissions:
       contents: write
     env:
-      GHPAGES: https://ppocgen.com
+      WEBISTE: https://ppocgen.com
       BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}
       BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}
       GH_TOKEN: ${{ github.token }}
@@ -125,7 +127,7 @@ jobs:
           echo '{"jdkPath":"'$JAVA_HOME'","androidSdkPath":"'$ANDROID_HOME'"}' > $HOME/.bubblewrap/config.json
           echo "${{ secrets.ANDROID_KEYSTORE }}" > android.keystore.asc
           gpg -d --passphrase "${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}" --batch android.keystore.asc > android.keystore
-          yes '' | bubblewrap init --manifest $GHPAGES"/manifest.webmanifest"
+          yes '' | bubblewrap init --manifest $WEBISTE"/manifest.webmanifest"
           bubblewrap build
           gh release upload ${{  github.ref_name }} app-release-signed.apk
           gh release upload ${{  github.ref_name }} app-release-bundle.aab
