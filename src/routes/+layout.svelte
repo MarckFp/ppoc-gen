@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '../app.css'
-	import {db} from '$lib/db'
 	import {mobile, weekOrder, nameOrder} from '$lib/stores'
+	import {page} from '$app/stores'
 
 	//Media Queries for Calendar View
 	const mediaQuery = window.matchMedia('(width <= 640px)')
@@ -18,13 +18,10 @@
 		mobile.set(false)
 	}
 
-	db.congregation
-		.orderBy('id')
-		.first()
-		.then(congregation => {
-			weekOrder.set(congregation?.week_order)
-			nameOrder.set(congregation?.name_order)
-		})
+	if ($page.data.congregation != undefined) {
+		weekOrder.set($page.data.congregation.week_order)
+		nameOrder.set($page.data.congregation.name_order)
+	}
 </script>
 
 <svelte:head>

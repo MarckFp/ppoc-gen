@@ -19,5 +19,7 @@ export const installPrompt = writable(
 )
 
 installPrompt.subscribe(value => {
-	window.localStorage.setItem('installPrompt', value)
+	if (value != undefined) {
+		window.localStorage.setItem('installPrompt', value)
+	}
 })

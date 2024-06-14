@@ -1,7 +1,4 @@
 <script lang="ts">
-	import '../../app.css'
-	import {liveQuery} from 'dexie'
-	import {db} from '$lib/db'
 	import NavBar from '$lib/components/NavBar.svelte'
 	import {locale, locales} from 'svelte-i18n'
 	import {Footer, Card, Modal, Button} from 'flowbite-svelte'
@@ -11,30 +8,27 @@
 	import {pwaAssetsHead} from 'virtual:pwa-assets/head'
 	import {BadgeCheckSolid} from 'flowbite-svelte-icons'
 	import {_} from 'svelte-i18n'
+	import {page} from '$app/stores'
 
 	$: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : ''
 
 	let modalInstallPrompt: boolean = false,
-		eventInstallPrompt: Event = null
+		eventInstallPrompt: Event
 
 	// eslint-disable-next-line
 	const version = PKG.version ?? 'unknown'
-	const congregation = liveQuery(() => db.congregation.orderBy('id').toArray())
-	db.congregation
-		.orderBy('id')
-		.first()
-		.then(cong => {
-			if (!cong && window.location.pathname != '/new') {
-				window.location.pathname = base + '/new'
+
+	if ($page.data.congregation != undefined) {
+		if ($page.data.congregation.lang != undefined) {
+			$locale = $page.data.congregation.lang
+		} else {
+			if (!$locales.includes($locale?.split('-')[0])) {
+				$locale = 'en'
 			}
-			if (cong?.lang) {
-				$locale = cong.lang
-			} else {
-				if (!$locales.includes($locale?.split('-')[0])) {
-					$locale = 'en'
-				}
-			}
-		})
+		}
+	} else if ($page.data.congregation == undefined && window.location.pathname != '/new') {
+		window.location.pathname = base + '/new'
+	}
 
 	if ($installPrompt == 'true') {
 		window.addEventListener('beforeinstallprompt', event => {
@@ -83,22 +77,20 @@
 	{/await}
 </div>
 
-{#if $congregation}
-	<main>
-		<div id="toast-container" class="fixed bottom-0 right-0 z-50 {$mobile ? 'mb-20' : ''}"></div>
-		{#if $congregation.length > 0}
-			<NavBar />
-			<slot />
-		{/if}
-	</main>
-
-	{#if $congregation.length > 0}
-		<Footer class="flex flex-row justify-center print:hidden">
-			<Card class="mx-5 my-1 text-center dark:text-white {$mobile ? 'mb-20' : ''}" size="xl">
-				PPOC Gen version {version}
-			</Card>
-		</Footer>
+<main>
+	<div id="toast-container" class="fixed bottom-0 right-0 z-50 {$mobile ? 'mb-20' : ''}"></div>
+	{#if $page.data.congregation != undefined}
+		<NavBar />
+		<slot />
 	{/if}
+</main>
+
+{#if $page.data.congregation != undefined}
+	<Footer class="flex flex-row justify-center print:hidden">
+		<Card class="mx-5 my-1 text-center dark:text-white {$mobile ? 'mb-20' : ''}" size="xl">
+			PPOC Gen version {version}
+		</Card>
+	</Footer>
 {/if}
 
 <style lang="postcss">

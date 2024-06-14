@@ -2,13 +2,13 @@
 	import {Card, Button, Label, Input, Modal, Select, Tooltip, DarkMode} from 'flowbite-svelte'
 	import {CloudArrowUpSolid, DownloadSolid, ExclamationCircleOutline, InfoCircleSolid} from 'flowbite-svelte-icons'
 	import {db} from '$lib/db'
-	import {liveQuery} from 'dexie'
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {exportDB, importInto} from 'dexie-export-import'
 	import {locale, locales, _} from 'svelte-i18n'
 	import {base} from '$app/paths'
 	import {onMount} from 'svelte'
 	import {nameOrder, weekOrder, mobile} from '$lib/stores'
+	import {page} from '$app/stores'
 
 	let deleteModal: boolean = false,
 		importModal: boolean = false,
@@ -28,23 +28,27 @@
 		{value: 'lastname', name: $_('publishers.lastname')}
 	]
 
-	const congregation = liveQuery(() => db.congregation.orderBy('id').first())
-
 	onMount(async () => {
-		const congregation = await db.congregation.orderBy('id').first()
-		if (congregation?.lat && congregation?.lon && congregation?.lat != 0.0 && congregation?.lon != 0.0) {
-			const res = await fetch(
-				`https://nominatim.openstreetmap.org/reverse.php?lat=${congregation.lat}&lon=${congregation.lon}&format=jsonv2&zoom=16&accept-language=${$locale}`
-			)
-			if (res.ok) {
-				const json = await res.json()
-				if (json.address.town) {
-					location = json.address.town
-				} else {
-					location = json.address.city
+		if ($page.data.congregation != undefined) {
+			if (
+				$page.data.congregation.lat &&
+				$page.data.congregation.lon &&
+				$page.data.congregation.lat != 0.0 &&
+				$page.data.congregation.lon != 0.0
+			) {
+				const res = await fetch(
+					`https://nominatim.openstreetmap.org/reverse.php?lat=${$page.data.congregation.lat}&lon=${$page.data.congregation.lon}&format=jsonv2&zoom=16&accept-language=${$locale}`
+				)
+				if (res.ok) {
+					const json = await res.json()
+					if (json.address.town) {
+						location = json.address.town
+					} else {
+						location = json.address.city
+					}
+					country = json.address.country
+					zipcode = json.address.postcode
 				}
-				country = json.address.country
-				zipcode = json.address.postcode
 			}
 		}
 	})
@@ -72,8 +76,8 @@
 	}
 
 	async function updateCongregation() {
-		if ($congregation) {
-			if ($congregation?.name == '') {
+		if ($page.data.congregation != undefined) {
+			if ($page.data.congregation.name == '') {
 				new AlertToast({
 					target: document.querySelector('#toast-container'),
 					props: {alertStatus: 'error', alertMessage: $_('general.invalid-data')}
@@ -94,18 +98,18 @@
 					}
 				}
 			}
-			db.congregation.update($congregation?.id, {
-				name: $congregation.name,
-				lang: $congregation.lang,
-				week_order: $congregation.week_order,
-				name_order: $congregation.name_order,
+			db.congregation.update($page.data.congregation.id, {
+				name: $page.data.congregation.name,
+				lang: $page.data.congregation.lang,
+				week_order: $page.data.congregation.week_order,
+				name_order: $page.data.congregation.name_order,
 				lat: lat,
 				lon: lon
 			})
-			$locale = $congregation?.lang
+			$locale = $page.data.congregation.lang
 			langs = []
-			nameOrder.set($congregation.name_order)
-			weekOrder.set($congregation.week_order)
+			nameOrder.set($page.data.congregation.name_order)
+			weekOrder.set($page.data.congregation.week_order)
 			$locales.forEach(lang => {
 				langs.push({value: lang, name: $_('general.' + lang)})
 			})
@@ -173,7 +177,7 @@
 </script>
 
 <section class="m-5 flex flex-col items-center">
-	{#if $congregation}
+	{#if $page.data.congregation != undefined}
 		<Card size="xl">
 			<h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
 				{$_('settings.cong-settings')}
@@ -181,19 +185,19 @@
 			<div class="flex flex-col space-y-6">
 				<Label class="space-y-2">
 					<span>{$_('settings.cong-name')}:</span>
-					<Input type="text" name="name" bind:value={$congregation.name} autocomplete="false" required />
+					<Input type="text" name="name" bind:value={$page.data.congregation.name} autocomplete="false" required />
 				</Label>
 				<Label class="space-y-2">
 					<span>{$_('settings.language')}:</span>
-					<Select items={langs} name="lang" bind:value={$congregation.lang} />
+					<Select items={langs} name="lang" bind:value={$page.data.congregation.lang} />
 				</Label>
 				<Label class="space-y-2">
 					<span>{$_('settings.week-start-at')}:</span>
-					<Select items={week_order} name="week-order" bind:value={$congregation.week_order} />
+					<Select items={week_order} name="week-order" bind:value={$page.data.congregation.week_order} />
 				</Label>
 				<Label class="space-y-2">
 					<span>{$_('settings.name-order')}:</span>
-					<Select items={name_order} name="name-order" bind:value={$congregation.name_order} />
+					<Select items={name_order} name="name-order" bind:value={$page.data.congregation.name_order} />
 				</Label>
 				<Tooltip triggeredBy="#info-latitude" placement="left">{$_('settings.info-latitude')}</Tooltip>
 				<div class="grid grid-cols-1 gap-1 md:grid-cols-3">

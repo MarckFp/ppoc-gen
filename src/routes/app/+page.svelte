@@ -1,6 +1,4 @@
 <script lang="ts">
-	import {liveQuery} from 'dexie'
-	import {db} from '$lib/db'
 	import {Card, Dropdown, DropdownDivider, DropdownItem, GradientButton, Helper, Toast} from 'flowbite-svelte'
 	import {
 		GithubSolid,
@@ -14,8 +12,8 @@
 	} from 'flowbite-svelte-icons'
 	import {_} from 'svelte-i18n'
 	import Calendar from '$lib/components/Calendar.svelte'
+	import {page} from '$app/stores'
 
-	let congregation = liveQuery(() => db.congregation.orderBy('id').first())
 	const announcement = ``
 
 	// eslint-disable-next-line
@@ -23,11 +21,11 @@
 </script>
 
 <section class="m-5 flex flex-col items-center">
-	{#if $congregation}
+	{#if $page.data.congregation != undefined}
 		<Card class="text-center" size="xl" padding="xl">
 			<h1 class="text-3xl font-bold text-gray-900 dark:text-white">
 				{$_('home.welcome')}
-				{$congregation.name}
+				{$page.data.congregation.name}
 			</h1>
 		</Card>
 	{/if}
