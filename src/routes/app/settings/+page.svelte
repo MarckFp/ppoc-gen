@@ -176,6 +176,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>PPOC Gen - {$_('navbar.settings')}</title>
+</svelte:head>
+
 <section class="m-5 flex flex-col items-center">
 	{#if $page.data.congregation != undefined}
 		<Card size="xl">

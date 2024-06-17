@@ -513,6 +513,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>PPOC Gen - {$_('navbar.turns')}</title>
+</svelte:head>
+
 <section class="mx-auto flex flex-col items-center justify-center px-6 py-8">
 	<Card size="xl" class="mb-2 print:hidden">
 		<div class="mb-4 mt-1 grid grid-cols-2 gap-2 sm:grid-cols-4">

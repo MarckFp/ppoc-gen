@@ -159,6 +159,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>PPOC Gen - {$_('navbar.incidences')}</title>
+</svelte:head>
+
 <section class="mx-auto flex flex-col items-center justify-center px-6 py-8">
 	<Card size="xl">
 		<div class="grid grid-cols-1 gap-3">

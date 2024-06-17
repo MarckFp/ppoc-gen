@@ -20,6 +20,10 @@
 	const version = PKG.version ?? 'unknown'
 </script>
 
+<svelte:head>
+	<title>PPOC Gen</title>
+</svelte:head>
+
 <section class="m-5 flex flex-col items-center">
 	{#if $page.data.congregation != undefined}
 		<Card class="text-center" size="xl" padding="xl">

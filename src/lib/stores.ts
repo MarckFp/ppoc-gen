@@ -12,14 +12,3 @@ const week_order = 'monday',
 
 export const weekOrder = writable(week_order)
 export const nameOrder = writable(name_order)
-
-//PWA
-export const installPrompt = writable(
-	window.localStorage.getItem('installPrompt') ? window.localStorage.getItem('installPrompt') : 'false'
-)
-
-installPrompt.subscribe(value => {
-	if (value != undefined) {
-		window.localStorage.setItem('installPrompt', value)
-	}
-})
