@@ -6,7 +6,7 @@
 	import {importInto} from 'dexie-export-import'
 	import {locale, locales, _} from 'svelte-i18n'
 	import {base} from '$app/paths'
-	import {nameOrder, weekOrder, installPrompt, mobile} from '$lib/stores'
+	import {nameOrder, weekOrder, mobile} from '$lib/stores'
 
 	let congregation_name: string,
 		files: FileList,
@@ -74,7 +74,6 @@
 			nameOrder.set(name_order_cong)
 			weekOrder.set(week_order_cong)
 
-			installPrompt.set('true')
 			window.location.pathname = base + '/app'
 		} catch (error) {
 			new AlertToast({
@@ -98,7 +97,6 @@
 				weekOrder.set(importedCong.week_order)
 			}
 
-			installPrompt.set('true')
 			window.location.pathname = base + '/app'
 		})
 	}
