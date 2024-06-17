@@ -59,7 +59,7 @@ export default defineConfig({
                 display_override: ["standalone", "fullscreen", "minimal-ui", "window-controls-overlay", "browser"],
                 theme_color: theme_color,
                 background_color: "#ffffff",
-                start_url: '/app/',
+                start_url: '/',
                 scope: '/',
                 lang: "en",
                 dir: "ltr",
