@@ -60,7 +60,7 @@ export default defineConfig({
                 theme_color: theme_color,
                 background_color: "#ffffff",
                 start_url: '/app/',
-                scope: '/app/',
+                scope: '/',
                 lang: "en",
                 dir: "ltr",
                 categories: ["utilities", "productivity"],
