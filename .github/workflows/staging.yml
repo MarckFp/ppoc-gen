@@ -19,7 +19,7 @@ jobs:
       url: https://dev.ppocgen.com
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
+      - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
       - uses: actions/cache@v4
