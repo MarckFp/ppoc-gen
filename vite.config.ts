@@ -61,6 +61,7 @@ export default defineConfig({
                 background_color: "#ffffff",
                 start_url: '/app/',
                 scope: '/app/',
+                id: '/app/',
                 lang: "en",
                 dir: "ltr",
                 categories: ["utilities", "productivity"],
