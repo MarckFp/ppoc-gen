@@ -1,13 +1,17 @@
 <script lang="ts">
 	import NavBar from '$lib/components/NavBar.svelte'
 	import {locale, locales} from 'svelte-i18n'
-	import {Footer, Card} from 'flowbite-svelte'
+	import {Footer, Card, Modal, Button} from 'flowbite-svelte'
 	import {base} from '$app/paths'
-	import {mobile} from '$lib/stores'
+	import {mobile, installPrompt} from '$lib/stores'
 	import {pwaInfo} from 'virtual:pwa-info'
 	import {pwaAssetsHead} from 'virtual:pwa-assets/head'
+	import {BadgeCheckSolid} from 'flowbite-svelte-icons'
 	import {_} from 'svelte-i18n'
 	import {page} from '$app/stores'
+
+	let modalInstallPrompt: boolean = false,
+		eventInstallPrompt: Event
 
 	$: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : ''
 
@@ -25,6 +29,20 @@
 	} else if ($page.data.congregation == undefined && window.location.pathname != '/new') {
 		window.location.pathname = base + '/new'
 	}
+
+	if ($installPrompt == 'true') {
+		window.addEventListener('beforeinstallprompt', event => {
+			event.preventDefault()
+			eventInstallPrompt = event
+			modalInstallPrompt = true
+		})
+	}
+
+	function installPWA() {
+		eventInstallPrompt.prompt()
+		installPrompt.set('false')
+		modalInstallPrompt = false
+	}
 </script>
 
 <svelte:head>
@@ -37,6 +55,21 @@
 	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 	{@html webManifestLink}
 </svelte:head>
+
+<Modal bind:open={modalInstallPrompt} size="xs" dismissable={false}>
+	<div class="text-center">
+		<BadgeCheckSolid class="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200" />
+		<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">{$_('home.web-app')}</h3>
+		<Button class="me-2" on:click={installPWA}>{$_('general.yes-sure')}</Button>
+		<Button
+			color="alternative"
+			on:click={() => {
+				installPrompt.set('false')
+				modalInstallPrompt = false
+			}}>{$_('general.no-cancel')}</Button
+		>
+	</div>
+</Modal>
 
 <div class="fixed bottom-0 right-0 z-50 {$mobile ? 'mb-20' : ''}">
 	{#await import('$lib/components/PWAPrompt.svelte') then { default: PWAPrompt }}
