@@ -80,7 +80,7 @@ export default defineConfig({
                         url: "https://github.com/MarckFp/ppoc-gen/releases/latest"
                     }
                 ],
-                prefer_related_applications: true,
+                prefer_related_applications: false,
                 launch_handler: {
                     client_mode: ["auto", "navigate-existing"]
                 },
