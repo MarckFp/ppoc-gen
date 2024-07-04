@@ -33,7 +33,7 @@
     "@event-calendar/list": "^3.1.0",
     "@event-calendar/time-grid": "^3.1.0",
     "@faker-js/faker": "^8.4.1",
-    "@playwright/test": "^1.45.0",
+    "@playwright/test": "^1.45.1",
     "@sveltejs/adapter-cloudflare": "^4.6.0",
     "@sveltejs/adapter-static": "^3.0.2",
     "@sveltejs/kit": "^2.5.18",
@@ -67,7 +67,7 @@
     "tslib": "^2.6.3",
     "typescript": "^5.5.3",
     "typescript-eslint": "^7.15.0",
-    "vite": "^5.3.2",
+    "vite": "^5.3.3",
     "workbox-precaching": "^7.1.0"
   },
   "dependencies": {

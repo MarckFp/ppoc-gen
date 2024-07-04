@@ -4,4 +4,5 @@ export interface Turn {
 	start_time: string
 	end_time: string
 	location: string
+	satus: number
 }
