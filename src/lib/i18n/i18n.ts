@@ -1,5 +1,10 @@
 import {addMessages, init, getLocaleFromNavigator} from 'svelte-i18n'
 
+//With all these languages in theory we cover 98% of the population in the world
+//covering second languages, and basic knowledge of some of them
+//most of the translations were created using AI so we may need to correct
+//some mistakes and fine-tune the translations
+
 import en from './en.json'
 import es from './es.json'
 import fr from './fr.json'

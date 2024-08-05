@@ -19,9 +19,10 @@
 		TableHeadCell,
 		TableBody,
 		TableBodyRow,
-		TableBodyCell
+		TableBodyCell,
+		CheckboxButton
 	} from 'flowbite-svelte'
-	import {ArrowRightOutline, ExclamationCircleOutline, InfoCircleSolid} from 'flowbite-svelte-icons'
+	import {ArrowRightOutline, ExclamationCircleOutline, InfoCircleSolid, CheckCircleSolid} from 'flowbite-svelte-icons'
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {db} from '$lib/db'
 	import {liveQuery} from 'dexie'
@@ -33,6 +34,7 @@
 		deleteModal: boolean = false,
 		advanced: boolean = false,
 		edit: boolean = false,
+		bulk: boolean = false,
 		selectedId: number,
 		searchTerm: string = '',
 		firstname: string = '',
@@ -62,7 +64,9 @@
 				value: 3,
 				name: $_('publishers.low')
 			}
-		]
+		],
+		toggleAllCheckboxBtn,
+		bulkDeleteBtnDisabled = true
 
 	let sunday = 7
 
@@ -343,11 +347,12 @@
 				affinityList.splice(index, 1)
 			}
 		})
-
-		new AlertToast({
-			target: document.querySelector('#toast-container'),
-			props: {alertStatus: 'success', alertMessage: $_('publishers.pub-deleted')}
-		})
+		if (bulk == false) {
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'success', alertMessage: $_('publishers.pub-deleted')}
+			})
+		}
 	}
 
 	async function retrieveAvailabilities(user_id: number) {
@@ -371,6 +376,44 @@
 			}
 		}
 	}
+
+	function toggleAllCheckbox(event: Event) {
+		let checkboxName = 'user-checkbox'
+		if ($mobile) {
+			checkboxName = 'user-checkbox-mobile'
+		}
+		let checkboxes = document.getElementsByName(checkboxName)
+		for (let i = 0; i < checkboxes.length; i++) {
+			checkboxes[i].checked = event.target?.checked
+		}
+		if (event.target?.checked) {
+			bulkDeleteBtnDisabled = false
+		} else {
+			bulkDeleteBtnDisabled = true
+		}
+	}
+
+	async function bulkDelete() {
+		let checkboxName = 'user-checkbox',
+			checkboxIdName = 'checkbox-'
+		if ($mobile) {
+			checkboxName = 'user-checkbox-mobile'
+			checkboxIdName = 'checkbox-mobile-'
+		}
+		let checkboxes = document.querySelectorAll(`input[name=${checkboxName}]:checked`)
+		for (let i = 0; i < checkboxes.length; i++) {
+			checkboxes[i].checked = false
+			selectedId = parseInt(checkboxes[i].id.replace(checkboxIdName, ''))
+			await deleteUser()
+		}
+
+		new AlertToast({
+			target: document.querySelector('#toast-container'),
+			props: {alertStatus: 'success', alertMessage: $_('publishers.pub-deleted')}
+		})
+		bulk = false
+		bulkDeleteBtnDisabled = true
+	}
 </script>
 
 <svelte:head>
@@ -387,7 +430,6 @@
 			{/if}
 			<Button
 				color="blue"
-				class="mb-4 mt-1"
 				data-testid="publishers-create-btn"
 				on:click={() => {
 					createModal = true
@@ -400,6 +442,30 @@
 					modalTitle = $_('general.create-btn')
 				}}>{$_('publishers.create-btn')}</Button
 			>
+			{#if $mobile}
+				<div class="mb-2 grid grid-cols-4 gap-4">
+					<CheckboxButton on:change={toggleAllCheckbox}><CheckCircleSolid class="me-2 h-6 w-6" /></CheckboxButton>
+					<Button
+						color="red"
+						class="col-span-3"
+						disabled={bulkDeleteBtnDisabled}
+						on:click={() => {
+							bulk = true
+							deleteModal = true
+						}}>{$_('general.bulk-delete')}</Button
+					>
+				</div>
+			{:else}
+				<Button
+					color="red"
+					class="mb-2"
+					disabled={bulkDeleteBtnDisabled}
+					on:click={() => {
+						bulk = true
+						deleteModal = true
+					}}>{$_('general.bulk-delete')}</Button
+				>
+			{/if}
 		</div>
 		{#if $users}
 			{#if $users.length == 0}
@@ -410,7 +476,21 @@
 				<div class="grid grid-cols-1 gap-2 sm:grid-cols-4">
 					{#each filteredItems as user}
 						<Card padding="none" class="p-2" size="xl">
-							<div class="flex justify-end">
+							<div class="flex justify-between">
+								<Checkbox
+									name="user-checkbox-mobile"
+									id={`checkbox-mobile-${user.id}`}
+									on:change={event => {
+										if (event.target?.checked) {
+											bulkDeleteBtnDisabled = false
+										} else {
+											if (document.querySelectorAll('input[name=user-checkbox]:checked').length == 0) {
+												bulkDeleteBtnDisabled = true
+											}
+										}
+									}}
+								/>
+
 								<Button class="!p-1" pill={true} outline={true}><ArrowRightOutline class="h-4 w-4" /></Button>
 								<Dropdown class="p-1">
 									<DropdownItem
@@ -441,6 +521,7 @@
 										id="delete-{user.id}"
 										on:click={() => {
 											deleteModal = true
+											bulk = false
 											selectedId = user.id
 										}}
 										>{$_('general.delete-btn')}
@@ -487,6 +568,9 @@
 					bind:inputValue={searchTerm}
 				>
 					<TableHead>
+						<TableHeadCell class="!p-4">
+							<Checkbox on:change={toggleAllCheckbox} bind:this={toggleAllCheckboxBtn} />
+						</TableHeadCell>
 						{#if $nameOrder == 'lastname'}
 							<TableHeadCell>{$_('publishers.lastname')} & {$_('publishers.firstname')}</TableHeadCell>
 						{:else}
@@ -501,6 +585,21 @@
 					<TableBody>
 						{#each filteredItems as user}
 							<TableBodyRow>
+								<TableBodyCell class="!p-4">
+									<Checkbox
+										name="user-checkbox"
+										id={`checkbox-${user.id}`}
+										on:change={event => {
+											if (event.target?.checked) {
+												bulkDeleteBtnDisabled = false
+											} else {
+												if (document.querySelectorAll('input[name=user-checkbox]:checked').length == 0) {
+													bulkDeleteBtnDisabled = true
+												}
+											}
+										}}
+									/>
+								</TableBodyCell>
 								{#if $nameOrder == 'lastname'}
 									<TableBodyCell>{user.lastname + ' ' + user.firstname}</TableBodyCell>
 								{:else}
@@ -555,6 +654,7 @@
 										id="delete-{user.id}"
 										on:click={() => {
 											deleteModal = true
+											bulk = false
 											selectedId = user.id
 										}}>{$_('general.delete-btn')}</Button
 									>
@@ -682,7 +782,17 @@
 			<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
 				{$_('publishers.are-you-sure')}
 			</h3>
-			<Button color="red" class="me-2" on:click={deleteUser}>{$_('general.yes-sure')}</Button>
+			<Button
+				color="red"
+				class="me-2"
+				on:click={() => {
+					if (bulk) {
+						bulkDelete()
+					} else {
+						deleteUser()
+					}
+				}}>{$_('general.yes-sure')}</Button
+			>
 			<Button color="alternative">{$_('general.no-cancel')}</Button>
 		</div>
 	</Modal>
