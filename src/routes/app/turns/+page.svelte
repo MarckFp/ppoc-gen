@@ -715,7 +715,7 @@
 							{#if turn.status && turn.status != 'OK'}
 								<Alert color="yellow" rounded={false} class="border-t-4">
 									<InfoCircleSolid slot="icon" class="h-5 w-5" />
-									{$_(turn.status)}
+									{$_(turn.status).replace(':', '')}
 								</Alert>
 							{/if}
 						</Card>
