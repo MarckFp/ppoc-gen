@@ -6,7 +6,7 @@
 	import {db} from '$lib/db'
 	import {locale, _} from 'svelte-i18n'
 	import {onMount} from 'svelte'
-	import {Badge, Button, ButtonGroup} from 'flowbite-svelte'
+	import {Badge, RadioButton, ButtonGroup} from 'flowbite-svelte'
 	import {fetchWeatherApi} from 'openmeteo'
 	import {nameOrder, weekOrder} from '$lib/stores'
 
@@ -18,6 +18,7 @@
 		shownDate: string = '',
 		week_order = 1,
 		viewMode = 'listWeek'
+
 	const WMO = {
 		0: 'clear_sky',
 		1: 'mainly_clear',
@@ -249,10 +250,29 @@
 
 <div class="m-3 print:hidden">
 	<ButtonGroup>
-		<Button outline color="dark" on:click={cal?.setOption('view', 'listDay')}>{$_('home.day-view')}</Button>
-		<Button outline color="dark" on:click={cal?.setOption('view', 'listWeek')}>{$_('home.week-view')}</Button>
+		<RadioButton
+			outline
+			color="dark"
+			bind:group={viewMode}
+			value="listDay"
+			on:click={cal?.setOption('view', 'listDay')}
+			shadow={true}>{$_('home.day-view')}</RadioButton
+		>
+		<RadioButton
+			outline
+			color="dark"
+			bind:group={viewMode}
+			value="listWeek"
+			on:click={cal?.setOption('view', 'listWeek')}>{$_('home.week-view')}</RadioButton
+		>
 		{#if !mobile}
-			<Button outline color="dark" on:click={cal?.setOption('view', 'dayGridMonth')}>{$_('home.month-view')}</Button>
+			<RadioButton
+				outline
+				color="dark"
+				bind:group={viewMode}
+				value="dayGridMonth"
+				on:click={cal?.setOption('view', 'dayGridMonth')}>{$_('home.month-view')}</RadioButton
+			>
 		{/if}
 	</ButtonGroup>
 </div>
