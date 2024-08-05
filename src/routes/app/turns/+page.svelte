@@ -17,14 +17,15 @@
 		Dropdown,
 		DropdownItem,
 		Search,
-		Radio
+		Radio,
+		Alert
 	} from 'flowbite-svelte'
 	import {
 		ExclamationCircleOutline,
 		ArrowLeftOutline,
 		ArrowRightOutline,
 		FileExportSolid,
-		DotsHorizontalOutline
+		InfoCircleSolid
 	} from 'flowbite-svelte-icons'
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {db} from '$lib/db'
@@ -270,7 +271,8 @@
 				date: turnDate,
 				start_time: turnStartTime,
 				end_time: turnEndTime,
-				location: turnLocation
+				location: turnLocation,
+				status: 'OK'
 			})
 
 			turnAssignees.forEach(async assignee => {
@@ -309,7 +311,8 @@
 				date: turnDate,
 				start_time: turnStartTime,
 				end_time: turnEndTime,
-				location: turnLocation
+				location: turnLocation,
+				status: 'OK'
 			})
 
 			const assignments = await db.assignment.where({turn_id: selectedId}).toArray()
@@ -447,7 +450,7 @@
 				body: body,
 				margin: {left: margin, right: margin}
 			})
-			doc.save('ppoc-gen.pdf')
+			doc.save(`${printFromDate}-${printToDate}.pdf`)
 		} else if (printType == 'ics') {
 			const iCal = ical({name: 'PPOC Gen'})
 
@@ -484,7 +487,7 @@
 			var url = window.URL || window.webkitURL
 			let link: string = url.createObjectURL(icsFile),
 				a: HTMLAnchorElement = document.createElement('a')
-			a.setAttribute('download', `ppoc-gen.ics`)
+			a.setAttribute('download', `${printFromDate}-${printToDate}.ics`)
 			a.setAttribute('href', link)
 			a.click()
 		}
@@ -560,7 +563,7 @@
 		</div>
 	</Card>
 	{#if $turns && $schedules && $assignments && $showUsers}
-		<Card size="xl" class="mt-2">
+		<Card size="xl" class="mx-2">
 			{#if $mobile}
 				<Badge border class="my-2 text-lg print:hidden">
 					{$_('general.' + date.toLocaleString('en', {month: 'long'}).toLowerCase())}
@@ -628,6 +631,9 @@
 					<Search size="md" bind:value={searchTerm} placeholder={$_('turns.search-by')} />
 				</div>
 			{/if}
+		</Card>
+
+		<Card size="xl" class="mt-2">
 			{#if $turns.length == 0 || $schedules.length == 0}
 				<Card size="xl" class="mt-5">
 					<h1 class="text-center dark:text-white">{$_('turns.no-turns')}</h1>
@@ -637,7 +643,7 @@
 					{#each filteredItems as turn}
 						<Card padding="none" class="p-2 print:hidden" size="xl">
 							<div class="flex justify-end">
-								<DotsHorizontalOutline />
+								<Button class="!p-1" pill={true} outline={true}><ArrowRightOutline class="h-4 w-4" /></Button>
 								<Dropdown class="p-1">
 									<DropdownItem
 										id="edit-{turn.id}"
@@ -706,6 +712,12 @@
 									{/if}
 								{/each}
 							</div>
+							{#if turn.status && turn.status != 'OK'}
+								<Alert color="yellow" rounded={false} class="border-t-4">
+									<InfoCircleSolid slot="icon" class="h-5 w-5" />
+									{$_(turn.status)}
+								</Alert>
+							{/if}
 						</Card>
 					{/each}
 				</div>
@@ -766,6 +778,11 @@
 											{/each}
 										{/if}
 									{/each}
+									{#if turn.status && turn.status != 'OK'}
+										<Badge color="yellow">
+											{$_(turn.status).replace(':', '')}
+										</Badge>
+									{/if}
 								</TableBodyCell>
 								<TableBodyCell>
 									<Button

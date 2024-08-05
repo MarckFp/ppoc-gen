@@ -89,7 +89,8 @@ addEventListener('message', async e => {
 					date: d.toISOString().split('T')[0],
 					start_time: schedule.start_time,
 					end_time: schedule.end_time,
-					location: schedule.location
+					location: schedule.location,
+					status: 'OK'
 				})
 
 				const availabilities = await db.availability.where({schedule_id: schedule.id}).toArray()
@@ -99,6 +100,7 @@ addEventListener('message', async e => {
 				userList = availabilities.map(availability => availability.user_id)
 				const users = await db.user.where('id').anyOf(userList).sortBy('counter')
 				if (users.length == 0) {
+					await db.turn.update(turn_id, {status: 'turns.no-publishers'})
 					postMessage({
 						type: 'warning',
 						message: {
@@ -193,6 +195,7 @@ addEventListener('message', async e => {
 					}
 				}
 				if (sisters < schedule.n_sisters) {
+					await db.turn.update(turn_id, {status: 'turns.not-enough-sis'})
 					postMessage({
 						type: 'warning',
 						message: {
@@ -207,6 +210,7 @@ addEventListener('message', async e => {
 					})
 				}
 				if (brothers < schedule.n_brothers) {
+					await db.turn.update(turn_id, {status: 'turns.not-enough-bro'})
 					postMessage({
 						type: 'warning',
 						message: {

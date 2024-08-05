@@ -17,7 +17,7 @@
 		DropdownItem,
 		Badge
 	} from 'flowbite-svelte'
-	import {DotsHorizontalOutline, ExclamationCircleOutline} from 'flowbite-svelte-icons'
+	import {ArrowRightOutline, ExclamationCircleOutline} from 'flowbite-svelte-icons'
 	import {db} from '$lib/db'
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {liveQuery} from 'dexie'
@@ -195,7 +195,7 @@
 					{#each filteredItems as incidence}
 						<Card padding="none" class="p-2" size="xl">
 							<div class="flex justify-end">
-								<DotsHorizontalOutline />
+								<Button class="!p-1" pill={true} outline={true}><ArrowRightOutline class="h-4 w-4" /></Button>
 								<Dropdown class="p-1">
 									<DropdownItem
 										id="edit-{incidence.id}"

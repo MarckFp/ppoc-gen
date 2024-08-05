@@ -21,7 +21,7 @@
 		TableBodyRow,
 		TableBodyCell
 	} from 'flowbite-svelte'
-	import {DotsHorizontalOutline, ExclamationCircleOutline, InfoCircleSolid} from 'flowbite-svelte-icons'
+	import {ArrowRightOutline, ExclamationCircleOutline, InfoCircleSolid} from 'flowbite-svelte-icons'
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {db} from '$lib/db'
 	import {liveQuery} from 'dexie'
@@ -411,7 +411,7 @@
 					{#each filteredItems as user}
 						<Card padding="none" class="p-2" size="xl">
 							<div class="flex justify-end">
-								<DotsHorizontalOutline />
+								<Button class="!p-1" pill={true} outline={true}><ArrowRightOutline class="h-4 w-4" /></Button>
 								<Dropdown class="p-1">
 									<DropdownItem
 										id="edit-{user.id}"
