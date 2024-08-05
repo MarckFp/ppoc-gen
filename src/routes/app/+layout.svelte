@@ -9,6 +9,7 @@
 	import {BadgeCheckSolid} from 'flowbite-svelte-icons'
 	import {_} from 'svelte-i18n'
 	import {page} from '$app/stores'
+	import {fly} from 'svelte/transition'
 
 	let modalInstallPrompt: boolean = false,
 		eventInstallPrompt: Event
@@ -81,17 +82,20 @@
 	<div id="toast-container" class="fixed bottom-0 right-0 z-50 {$mobile ? 'mb-20' : ''}"></div>
 	{#if $page.data.congregation != undefined}
 		<NavBar />
-		<slot />
+		{#key $page.url.pathname}
+			<div in:fly={{x: -200, duration: 250, delay: 250}} out:fly={{x: 200, duration: 150}}>
+				<slot />
+				{#if $page.data.congregation != undefined}
+					<Footer class="flex flex-row justify-center print:hidden">
+						<Card class="mx-5 my-1 text-center dark:text-white {$mobile ? 'mb-20' : ''}" size="xl">
+							PPOC Gen version {version}
+						</Card>
+					</Footer>
+				{/if}
+			</div>
+		{/key}
 	{/if}
 </main>
-
-{#if $page.data.congregation != undefined}
-	<Footer class="flex flex-row justify-center print:hidden">
-		<Card class="mx-5 my-1 text-center dark:text-white {$mobile ? 'mb-20' : ''}" size="xl">
-			PPOC Gen version {version}
-		</Card>
-	</Footer>
-{/if}
 
 <style lang="postcss">
 	main {
