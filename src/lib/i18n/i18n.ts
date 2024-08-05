@@ -11,10 +11,22 @@ import zh from './zh.json'
 import jp from './jp.json'
 import ko from './ko.json'
 import ru from './ru.json'
-//import ar from './ar.json'
+import ar from './ar.json'
 import it from './it.json'
 import gr from './gr.json'
 import pl from './pl.json'
+import bg from './bg.json'
+import no from './no.json'
+import fi from './fi.json'
+import se from './se.json'
+import tr from './tr.json'
+import th from './th.json'
+import ur from './ur.json'
+import cz from './cz.json'
+import bn from './bn.json'
+import vn from './vn.json'
+import id from './id.json'
+import fa from './fa.json'
 
 addMessages('en', en)
 addMessages('es', es)
@@ -27,10 +39,22 @@ addMessages('zh', zh)
 addMessages('jp', jp)
 addMessages('ko', ko)
 addMessages('ru', ru)
-//addMessages('ar', ar) //TODO: We need to support to serve the page on a different word order since it's red from left to right instead of right to left
+addMessages('ar', ar)
 addMessages('it', it)
 addMessages('gr', gr)
 addMessages('pl', pl)
+addMessages('bg', bg)
+addMessages('no', no)
+addMessages('fi', fi)
+addMessages('se', se)
+addMessages('tr', tr)
+addMessages('th', th)
+addMessages('ur', ur)
+addMessages('cz', cz)
+addMessages('bn', bn)
+addMessages('vn', vn)
+addMessages('id', id)
+addMessages('fa', fa)
 
 export function initLocale() {
 	init({

@@ -58,8 +58,14 @@
 	})
 
 	langs.sort(function (a, b) {
-		let textA = a.name.toUpperCase(),
-			textB = b.name.toUpperCase()
+		let textA = a.name
+				.normalize('NFD')
+				.replace(/[\u0300-\u036f]/g, '')
+				.toUpperCase(),
+			textB = b.name
+				.normalize('NFD')
+				.replace(/[\u0300-\u036f]/g, '')
+				.toUpperCase()
 		return textA < textB ? -1 : textA > textB ? 1 : 0
 	})
 
@@ -112,6 +118,18 @@
 			weekOrder.set($page.data.congregation.week_order)
 			$locales.forEach(lang => {
 				langs.push({value: lang, name: $_('general.' + lang)})
+			})
+
+			langs.sort(function (a, b) {
+				let textA = a.name
+						.normalize('NFD')
+						.replace(/[\u0300-\u036f]/g, '')
+						.toUpperCase(),
+					textB = b.name
+						.normalize('NFD')
+						.replace(/[\u0300-\u036f]/g, '')
+						.toUpperCase()
+				return textA < textB ? -1 : textA > textB ? 1 : 0
 			})
 
 			fetch(

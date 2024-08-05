@@ -38,8 +38,14 @@
 	})
 
 	langs.sort(function (a, b) {
-		let textA = a.name.toUpperCase(),
-			textB = b.name.toUpperCase()
+		let textA = a.name
+				.normalize('NFD')
+				.replace(/[\u0300-\u036f]/g, '')
+				.toUpperCase(),
+			textB = b.name
+				.normalize('NFD')
+				.replace(/[\u0300-\u036f]/g, '')
+				.toUpperCase()
 		return textA < textB ? -1 : textA > textB ? 1 : 0
 	})
 
@@ -53,8 +59,14 @@
 		})
 
 		langs.sort(function (a, b) {
-			let textA = a.name.toUpperCase(),
-				textB = b.name.toUpperCase()
+			let textA = a.name
+					.normalize('NFD')
+					.replace(/[\u0300-\u036f]/g, '')
+					.toUpperCase(),
+				textB = b.name
+					.normalize('NFD')
+					.replace(/[\u0300-\u036f]/g, '')
+					.toUpperCase()
 			return textA < textB ? -1 : textA > textB ? 1 : 0
 		})
 	}
