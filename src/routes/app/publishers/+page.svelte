@@ -321,7 +321,7 @@
 		edit = false
 	}
 
-	async function deleteUser() {
+	async function deleteUser(alert = true) {
 		await db.user.delete(selectedId)
 		const availability_list = await db.availability.where({user_id: selectedId}).toArray()
 		availability_list.forEach(async availability => {
@@ -347,7 +347,7 @@
 				affinityList.splice(index, 1)
 			}
 		})
-		if (bulk == false) {
+		if (alert) {
 			new AlertToast({
 				target: document.querySelector('#toast-container'),
 				props: {alertStatus: 'success', alertMessage: $_('publishers.pub-deleted')}
@@ -395,23 +395,25 @@
 
 	async function bulkDelete() {
 		let checkboxName = 'user-checkbox',
-			checkboxIdName = 'checkbox-'
+			ids = []
 		if ($mobile) {
 			checkboxName = 'user-checkbox-mobile'
-			checkboxIdName = 'checkbox-mobile-'
 		}
 		let checkboxes = document.querySelectorAll(`input[name=${checkboxName}]:checked`)
 		for (let i = 0; i < checkboxes.length; i++) {
 			checkboxes[i].checked = false
-			selectedId = parseInt(checkboxes[i].id.replace(checkboxIdName, ''))
-			await deleteUser()
+			ids.push(parseInt(checkboxes[i].id.replace(checkboxName + '-', '')))
+		}
+
+		for (let el of ids) {
+			selectedId = el
+			await deleteUser(false)
 		}
 
 		new AlertToast({
 			target: document.querySelector('#toast-container'),
 			props: {alertStatus: 'success', alertMessage: $_('publishers.pub-deleted')}
 		})
-		bulk = false
 		bulkDeleteBtnDisabled = true
 	}
 </script>
@@ -479,12 +481,12 @@
 							<div class="flex justify-between">
 								<Checkbox
 									name="user-checkbox-mobile"
-									id={`checkbox-mobile-${user.id}`}
+									id={`user-checkbox-mobile-${user.id}`}
 									on:change={event => {
 										if (event.target?.checked) {
 											bulkDeleteBtnDisabled = false
 										} else {
-											if (document.querySelectorAll('input[name=user-checkbox]:checked').length == 0) {
+											if (document.querySelectorAll('input[name=user-checkbox-mobile]:checked').length == 0) {
 												bulkDeleteBtnDisabled = true
 											}
 										}
@@ -588,7 +590,7 @@
 								<TableBodyCell class="!p-4">
 									<Checkbox
 										name="user-checkbox"
-										id={`checkbox-${user.id}`}
+										id={`user-checkbox-${user.id}`}
 										on:change={event => {
 											if (event.target?.checked) {
 												bulkDeleteBtnDisabled = false

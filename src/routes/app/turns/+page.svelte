@@ -18,14 +18,17 @@
 		DropdownItem,
 		Search,
 		Radio,
-		Alert
+		Alert,
+		Checkbox,
+		CheckboxButton
 	} from 'flowbite-svelte'
 	import {
 		ExclamationCircleOutline,
 		ArrowLeftOutline,
 		ArrowRightOutline,
 		FileExportSolid,
-		InfoCircleSolid
+		InfoCircleSolid,
+		CheckCircleSolid
 	} from 'flowbite-svelte-icons'
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {db} from '$lib/db'
@@ -49,6 +52,8 @@
 		createModal: boolean = false,
 		printModal: boolean = false,
 		edit: boolean = false,
+		bulkDeleteBtnDisabled: boolean = true,
+		bulk: boolean = false,
 		userList: string[] = [],
 		searchTerm: string = '',
 		query_name_order = 'firstname+lastname',
@@ -60,7 +65,8 @@
 		turnLocation: string,
 		turnAssignees: number[],
 		turnAssigneesList: {value: number; name: string; color: string}[] = [],
-		TurnsWorker: Worker
+		TurnsWorker: Worker,
+		toggleAllCheckboxBtn
 
 	if ($nameOrder == 'firstname') {
 		query_name_order = 'firstname+lastname'
@@ -167,10 +173,13 @@
 			.where('date')
 			.between(
 				new Date(date.getFullYear(), date.getMonth(), 2).toISOString().split('T')[0],
-				new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0]
+				new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0],
+				true,
+				true
 			)
 			.toArray()
 	)
+
 	let assignments = liveQuery(() => db.assignment.toArray())
 	let showUsers = liveQuery(() => db.user.toArray())
 	let schedules = liveQuery(() => db.schedule.toArray())
@@ -236,7 +245,7 @@
 		toDate = ''
 	}
 
-	async function deleteTurn() {
+	async function deleteTurn(alert = true) {
 		await db.turn.delete(selectedId)
 		const assignments = await db.assignment.where({turn_id: selectedId}).toArray()
 		for (let assignment of assignments) {
@@ -248,10 +257,12 @@
 			await db.assignment.delete(assignment.id)
 		}
 
-		new AlertToast({
-			target: document.querySelector('#toast-container'),
-			props: {alertStatus: 'success', alertMessage: $_('turns.deleted')}
-		})
+		if (alert) {
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'success', alertMessage: $_('turns.deleted')}
+			})
+		}
 	}
 
 	async function createTurns() {
@@ -409,7 +420,9 @@
 				.where('date')
 				.between(
 					new Date(date.getFullYear(), date.getMonth(), 2).toISOString().split('T')[0],
-					new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0]
+					new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0],
+					true,
+					true
 				)
 				.toArray()
 			for (let turn of printTurns) {
@@ -458,7 +471,9 @@
 				.where('date')
 				.between(
 					new Date(date.getFullYear(), date.getMonth(), 2).toISOString().split('T')[0],
-					new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0]
+					new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0],
+					true,
+					true
 				)
 				.toArray()
 			for (let turn of printTurns) {
@@ -513,6 +528,48 @@
 				db.turn.delete(turn.id)
 			}
 		}
+	}
+
+	function toggleAllCheckbox(event: Event) {
+		let checkboxName = 'turn-checkbox'
+		if ($mobile) {
+			checkboxName = 'turn-checkbox-mobile'
+		}
+		let checkboxes = document.getElementsByName(checkboxName)
+		for (let i = 0; i < checkboxes.length; i++) {
+			checkboxes[i].checked = event.target?.checked
+		}
+		if (event.target?.checked) {
+			bulkDeleteBtnDisabled = false
+		} else {
+			bulkDeleteBtnDisabled = true
+		}
+	}
+
+	async function bulkDelete() {
+		let checkboxName = 'turn-checkbox',
+			ids = []
+		if ($mobile) {
+			checkboxName = 'turn-checkbox-mobile'
+		}
+		let checkboxes = document.querySelectorAll(`input[name=${checkboxName}]:checked`)
+
+		for (let i = 0; i < checkboxes.length; i++) {
+			checkboxes[i].checked = false
+			ids.push(parseInt(checkboxes[i].id.replace(checkboxName + '-', '')))
+		}
+
+		for (let el of ids) {
+			selectedId = el
+			await deleteTurn(false)
+		}
+
+		new AlertToast({
+			target: document.querySelector('#toast-container'),
+			props: {alertStatus: 'success', alertMessage: $_('turns.deleted')}
+		})
+		bulk = false
+		bulkDeleteBtnDisabled = true
 	}
 </script>
 
@@ -570,7 +627,7 @@
 					{date.getFullYear()}
 				</Badge>
 			{/if}
-			<div class="my-2 grid {$mobile ? 'grid-cols-4' : 'grid-cols-5'} gap-4 print:hidden">
+			<div class="my-2 grid {$mobile ? 'grid-cols-4' : 'grid-cols-7'} gap-4 print:hidden">
 				<Button
 					aria-label="Previous Month"
 					on:click={() => {
@@ -580,7 +637,9 @@
 								.where('date')
 								.between(
 									new Date(date.getFullYear(), date.getMonth(), 2).toISOString().split('T')[0],
-									new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0]
+									new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0],
+									true,
+									true
 								)
 								.toArray()
 						)
@@ -595,14 +654,16 @@
 								.where('date')
 								.between(
 									new Date(date.getFullYear(), date.getMonth(), 2).toISOString().split('T')[0],
-									new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0]
+									new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0],
+									true,
+									true
 								)
 								.toArray()
 						)
 					}}>{$_('turns.today')}</Button
 				>
 				{#if !$mobile}
-					<Badge border class="text-lg">
+					<Badge border class="text-2xl {$mobile ? '' : 'col-span-3'}">
 						{$_('general.' + date.toLocaleString('en', {month: 'long'}).toLowerCase())}
 						{date.getFullYear()}
 					</Badge>
@@ -619,7 +680,9 @@
 								.where('date')
 								.between(
 									new Date(date.getFullYear(), date.getMonth(), 2).toISOString().split('T')[0],
-									new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0]
+									new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString().split('T')[0],
+									true,
+									true
 								)
 								.toArray()
 						)
@@ -627,9 +690,33 @@
 				>
 			</div>
 			{#if $mobile}
+				<hr />
 				<div class="my-2 print:hidden">
 					<Search size="md" bind:value={searchTerm} placeholder={$_('turns.search-by')} />
 				</div>
+				<hr />
+				<div class="my-2 grid grid-cols-4 gap-4 print:hidden">
+					<CheckboxButton on:change={toggleAllCheckbox}><CheckCircleSolid class="me-2 h-6 w-6" /></CheckboxButton>
+					<Button
+						color="red"
+						class="col-span-3"
+						disabled={bulkDeleteBtnDisabled}
+						on:click={() => {
+							bulk = true
+							deleteModal = true
+						}}>{$_('general.bulk-delete')}</Button
+					>
+				</div>
+			{:else}
+				<Button
+					color="red"
+					class="mb-2 print:hidden"
+					disabled={bulkDeleteBtnDisabled}
+					on:click={() => {
+						bulk = true
+						deleteModal = true
+					}}>{$_('general.bulk-delete')}</Button
+				>
 			{/if}
 		</Card>
 
@@ -642,7 +729,20 @@
 				<div class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-4">
 					{#each filteredItems as turn}
 						<Card padding="none" class="p-2 print:hidden" size="xl">
-							<div class="flex justify-end">
+							<div class="flex justify-between">
+								<Checkbox
+									name="turn-checkbox-mobile"
+									id={`turn-checkbox-mobile-${turn.id}`}
+									on:change={event => {
+										if (event.target?.checked) {
+											bulkDeleteBtnDisabled = false
+										} else {
+											if (document.querySelectorAll('input[name=turn-checkbox-mobile]:checked').length == 0) {
+												bulkDeleteBtnDisabled = true
+											}
+										}
+									}}
+								/>
 								<Button class="!p-1" pill={true} outline={true}><ArrowRightOutline class="h-4 w-4" /></Button>
 								<Dropdown class="p-1">
 									<DropdownItem
@@ -665,6 +765,7 @@
 										id="delete-{turn.id}"
 										on:click={() => {
 											deleteModal = true
+											bulk = false
 											selectedId = turn.id
 										}}
 										>{$_('general.delete-btn')}
@@ -730,6 +831,9 @@
 					innerDivClass="p-4 print:hidden"
 				>
 					<TableHead>
+						<TableHeadCell class="!p-4">
+							<Checkbox on:change={toggleAllCheckbox} bind:this={toggleAllCheckboxBtn} />
+						</TableHeadCell>
 						<TableHeadCell>{$_('turns.day')}</TableHeadCell>
 						<TableHeadCell>{$_('turns.time')}</TableHeadCell>
 						<TableHeadCell>{$_('schedule.location')}</TableHeadCell>
@@ -741,6 +845,21 @@
 					<TableBody>
 						{#each filteredItems as turn}
 							<TableBodyRow>
+								<TableBodyCell class="!p-4">
+									<Checkbox
+										name="turn-checkbox"
+										id={`turn-checkbox-${turn.id}`}
+										on:change={event => {
+											if (event.target?.checked) {
+												bulkDeleteBtnDisabled = false
+											} else {
+												if (document.querySelectorAll('input[name=turn-checkbox]:checked').length == 0) {
+													bulkDeleteBtnDisabled = true
+												}
+											}
+										}}
+									/>
+								</TableBodyCell>
 								<TableBodyCell
 									>{$_(
 										'general.' +
@@ -807,6 +926,7 @@
 										id="delete-{turn.id}"
 										on:click={() => {
 											deleteModal = true
+											bulk = false
 											selectedId = turn.id
 										}}>{$_('general.delete-btn')}</Button
 									>
@@ -866,7 +986,17 @@
 				<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
 					{$_('turns.are-you-sure')}
 				</h3>
-				<Button color="red" class="me-2" on:click={deleteTurn}>{$_('general.yes-sure')}</Button>
+				<Button
+					color="red"
+					class="me-2"
+					on:click={() => {
+						if (bulk) {
+							bulkDelete()
+						} else {
+							deleteTurn()
+						}
+					}}>{$_('general.yes-sure')}</Button
+				>
 				<Button color="alternative">{$_('general.no-cancel')}</Button>
 			</div>
 		</Modal>
