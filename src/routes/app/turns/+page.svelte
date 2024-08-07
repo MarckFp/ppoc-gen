@@ -710,7 +710,7 @@
 			{:else}
 				<Button
 					color="red"
-					class="mb-2 print:hidden"
+					class="my-2 print:hidden"
 					disabled={bulkDeleteBtnDisabled}
 					on:click={() => {
 						bulk = true

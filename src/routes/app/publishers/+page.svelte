@@ -367,7 +367,7 @@
 		})
 	}
 
-	//TODO: Apparently this have a bug. Flowbite Svelte Multiselect doesn't allow bing:items so the items don't change even if we delete a user
+	//TODO: Apparently this have a bug. Flowbite Svelte Multiselect doesn't allow bind:items so the items don't change even if we delete a user
 	function getAffinities(user_id: number) {
 		pubAffinities = []
 		for (let affinity of $affinities) {
