@@ -4,8 +4,6 @@
 	import {Footer, Card, Modal, Button} from 'flowbite-svelte'
 	import {base} from '$app/paths'
 	import {mobile, installPrompt} from '$lib/stores'
-	import {pwaInfo} from 'virtual:pwa-info'
-	import {pwaAssetsHead} from 'virtual:pwa-assets/head'
 	import {BadgeCheckSolid} from 'flowbite-svelte-icons'
 	import {_} from 'svelte-i18n'
 	import {page} from '$app/stores'
@@ -13,8 +11,6 @@
 
 	let modalInstallPrompt: boolean = false,
 		eventInstallPrompt: Event
-
-	$: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : ''
 
 	// eslint-disable-next-line
 	const version = PKG.version ?? 'unknown'
@@ -45,17 +41,6 @@
 		modalInstallPrompt = false
 	}
 </script>
-
-<svelte:head>
-	{#if pwaAssetsHead.themeColor}
-		<meta name="theme-color" content={pwaAssetsHead.themeColor.content} />
-	{/if}
-	{#each pwaAssetsHead.links as link}
-		<link {...link} />
-	{/each}
-	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-	{@html webManifestLink}
-</svelte:head>
 
 <Modal bind:open={modalInstallPrompt} size="xs" dismissable={false}>
 	<div class="text-center">

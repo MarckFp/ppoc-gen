@@ -187,6 +187,7 @@
 					<p class="text-gray-500 dark:text-gray-400">
 						{$_('landing.faq-error-answer')}<a
 							href="https://github.com/MarckFp/ppoc-gen/issues"
+							rel="“nofollow”"
 							class="font-medium text-primary-600 underline hover:no-underline dark:text-primary-500">Github issues</a
 						>{$_('landing.faq-error-answer-2')}
 					</p>
@@ -196,6 +197,7 @@
 					<p class="text-gray-500 dark:text-gray-400">
 						{$_('landing.faq-support-answer')}<a
 							href="https://donate.jw.org"
+							rel="“nofollow”"
 							class="font-medium text-primary-600 underline hover:no-underline dark:text-primary-500">Donate JW</a
 						>
 					</p>
@@ -208,8 +210,11 @@
 		</Faq>
 		<h3 class="my-5 font-bold tracking-tight text-gray-900 dark:text-white">
 			{$_('landing.you-can-also')}
-			<GradientButton color="teal" class="ml-2" href="https://github.com/MarckFp/ppoc-gen/blob/main/docs/README.md"
-				>{$_('home.docs')} <BookSolid class="ms-1" /></GradientButton
+			<GradientButton
+				color="teal"
+				class="ml-2"
+				href="https://github.com/MarckFp/ppoc-gen/blob/main/docs/README.md"
+				rel="“nofollow”">{$_('home.docs')} <BookSolid class="ms-1" /></GradientButton
 			>
 		</h3>
 	</Section>
