@@ -3,6 +3,9 @@ import { defineConfig } from 'vite'
 import { SvelteKitPWA } from '@vite-pwa/sveltekit'
 import { readFileSync } from 'fs'
 import { fileURLToPath } from 'url'
+import tailwindcss from 'tailwindcss'
+import autoprefixer from 'autoprefixer'
+import cssnano from 'cssnano'
 
 const file = fileURLToPath(new URL('package.json', import.meta.url))
 const json = readFileSync(file, 'utf8')
@@ -30,6 +33,15 @@ switch (process.env.PPOCGEN_ENV) {
 }
 
 export default defineConfig({
+    css: {
+        postcss: {
+            plugins: [
+                tailwindcss(),
+                autoprefixer(),
+                cssnano({preset: 'default'})
+            ]
+        }
+    },
 	define: {
 		PKG: pkg
 	},
