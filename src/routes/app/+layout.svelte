@@ -69,9 +69,7 @@
 		<NavBar />
 		{#key $page.url.pathname}
 			<div in:fly={{x: -200, duration: 250, delay: 250}} out:fly={{x: 200, duration: 150}}>
-				<div key="$page.url.pathname">
-					<slot />
-				</div>
+				<slot />
 				{#if $page.data.congregation != undefined}
 					<Footer class="flex flex-row justify-center print:hidden">
 						<Card class="mx-5 my-1 text-center dark:text-white {$mobile ? 'mb-20' : ''}" size="xl">

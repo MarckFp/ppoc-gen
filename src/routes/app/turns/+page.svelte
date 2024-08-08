@@ -696,7 +696,13 @@
 				</div>
 				<hr />
 				<div class="my-2 grid grid-cols-4 gap-4 print:hidden">
-					<CheckboxButton on:change={toggleAllCheckbox}><CheckCircleSolid class="me-2 h-6 w-6" /></CheckboxButton>
+					{#if !$turns || $turns.length == 0}
+						<CheckboxButton on:change={toggleAllCheckbox} color="alternative" disabled
+							><CheckCircleSolid class="me-2 h-6 w-6" /></CheckboxButton
+						>
+					{:else}
+						<CheckboxButton on:change={toggleAllCheckbox}><CheckCircleSolid class="me-2 h-6 w-6" /></CheckboxButton>
+					{/if}
 					<Button
 						color="red"
 						class="col-span-3"

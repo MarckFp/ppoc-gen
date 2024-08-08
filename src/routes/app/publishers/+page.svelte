@@ -446,7 +446,13 @@
 			>
 			{#if $mobile}
 				<div class="mb-2 grid grid-cols-4 gap-4">
-					<CheckboxButton on:change={toggleAllCheckbox}><CheckCircleSolid class="me-2 h-6 w-6" /></CheckboxButton>
+					{#if !$users || $users.length == 0}
+						<CheckboxButton on:change={toggleAllCheckbox} color="alternative" disabled
+							><CheckCircleSolid class="me-2 h-6 w-6" /></CheckboxButton
+						>
+					{:else}
+						<CheckboxButton on:change={toggleAllCheckbox}><CheckCircleSolid class="me-2 h-6 w-6" /></CheckboxButton>
+					{/if}
 					<Button
 						color="red"
 						class="col-span-3"
