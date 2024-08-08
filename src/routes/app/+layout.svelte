@@ -7,7 +7,6 @@
 	import {BadgeCheckSolid} from 'flowbite-svelte-icons'
 	import {_} from 'svelte-i18n'
 	import {page} from '$app/stores'
-	import {fly} from 'svelte/transition'
 
 	let modalInstallPrompt: boolean = false,
 		eventInstallPrompt: Event
