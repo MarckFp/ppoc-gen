@@ -6,10 +6,11 @@
 
 	const {needRefresh, updateServiceWorker, offlineReady} = useRegisterSW({
 		onRegistered(r) {
-			r &&
+			if (r) {
 				setInterval(() => {
 					r.update()
 				}, 10000 /* 10s */)
+			}
 		},
 		onRegisterError(error) {
 			console.log('SW registration error', error)
