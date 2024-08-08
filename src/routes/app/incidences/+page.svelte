@@ -15,9 +15,11 @@
 		Search,
 		Dropdown,
 		DropdownItem,
-		Badge
+		Badge,
+		CheckboxButton,
+		Checkbox
 	} from 'flowbite-svelte'
-	import {ArrowRightOutline, ExclamationCircleOutline} from 'flowbite-svelte-icons'
+	import {ArrowRightOutline, CheckCircleSolid, ExclamationCircleOutline} from 'flowbite-svelte-icons'
 	import {db} from '$lib/db'
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {liveQuery} from 'dexie'
@@ -28,6 +30,7 @@
 	let createModal: boolean = false,
 		deleteModal: boolean = false,
 		edit: boolean = false,
+		bulk: boolean = false,
 		selectedId: number,
 		searchTerm: string = '',
 		modalTitle: string = $_('general.create-btn'),
@@ -35,7 +38,9 @@
 		userSelect: {value: number; name: string}[] = [],
 		userList: string[] = [],
 		start_date: string = new Date().toISOString().split('T')[0],
-		end_date: string = new Date().toISOString().split('T')[0]
+		end_date: string = new Date().toISOString().split('T')[0],
+		toggleAllCheckboxBtn,
+		bulkDeleteBtnDisabled = true
 
 	let incidences = liveQuery(() => db.incidence.orderBy('start_date').toArray())
 
@@ -150,12 +155,54 @@
 		edit = false
 	}
 
-	async function deleteIncidence() {
+	async function deleteIncidence(alert = true) {
 		await db.incidence.delete(selectedId)
+		if (alert) {
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'success', alertMessage: $_('incidences.deleted')}
+			})
+		}
+	}
+
+	function toggleAllCheckbox(event: Event) {
+		let checkboxName = 'incidence-checkbox'
+		if ($mobile) {
+			checkboxName = 'incidence-checkbox-mobile'
+		}
+		let checkboxes = document.getElementsByName(checkboxName)
+		for (let i = 0; i < checkboxes.length; i++) {
+			checkboxes[i].checked = event.target?.checked
+		}
+		if (event.target?.checked) {
+			bulkDeleteBtnDisabled = false
+		} else {
+			bulkDeleteBtnDisabled = true
+		}
+	}
+
+	async function bulkDelete() {
+		let checkboxName = 'incidence-checkbox',
+			ids = []
+		if ($mobile) {
+			checkboxName = 'incidence-checkbox-mobile'
+		}
+		let checkboxes = document.querySelectorAll(`input[name=${checkboxName}]:checked`)
+		for (let i = 0; i < checkboxes.length; i++) {
+			checkboxes[i].checked = false
+			ids.push(parseInt(checkboxes[i].id.replace(checkboxName + '-', '')))
+		}
+
+		for (let el of ids) {
+			selectedId = el
+			await deleteIncidence(false)
+		}
+
 		new AlertToast({
 			target: document.querySelector('#toast-container'),
 			props: {alertStatus: 'success', alertMessage: $_('incidences.deleted')}
 		})
+		bulkDeleteBtnDisabled = true
 	}
 </script>
 
@@ -173,7 +220,7 @@
 			{/if}
 			<Button
 				color="blue"
-				class="mb-4 mt-1"
+				class="my-2 mt-1"
 				data-testid="incidences-create-btn"
 				on:click={() => {
 					createModal = true
@@ -184,6 +231,30 @@
 					modalTitle = $_('general.create-btn')
 				}}>{$_('incidences.create-btn')}</Button
 			>
+			{#if $mobile}
+				<div class="my-2 grid grid-cols-4 gap-4">
+					<CheckboxButton on:change={toggleAllCheckbox}><CheckCircleSolid class="me-2 h-6 w-6" /></CheckboxButton>
+					<Button
+						color="red"
+						class="col-span-3"
+						disabled={bulkDeleteBtnDisabled}
+						on:click={() => {
+							bulk = true
+							deleteModal = true
+						}}>{$_('general.bulk-delete')}</Button
+					>
+				</div>
+			{:else}
+				<Button
+					color="red"
+					class="mb-2"
+					disabled={bulkDeleteBtnDisabled}
+					on:click={() => {
+						bulk = true
+						deleteModal = true
+					}}>{$_('general.bulk-delete')}</Button
+				>
+			{/if}
 		</div>
 		{#if $incidences}
 			{#if $incidences.length == 0}
@@ -194,7 +265,20 @@
 				<div class="grid grid-cols-1 gap-2 sm:grid-cols-4">
 					{#each filteredItems as incidence}
 						<Card padding="none" class="p-2" size="xl">
-							<div class="flex justify-end">
+							<div class="flex justify-between">
+								<Checkbox
+									name="incidence-checkbox-mobile"
+									id={`incidence-checkbox-mobile-${incidence.id}`}
+									on:change={event => {
+										if (event.target?.checked) {
+											bulkDeleteBtnDisabled = false
+										} else {
+											if (document.querySelectorAll('input[name=incidence-checkbox-mobile]:checked').length == 0) {
+												bulkDeleteBtnDisabled = true
+											}
+										}
+									}}
+								/>
 								<Button class="!p-1" pill={true} outline={true}><ArrowRightOutline class="h-4 w-4" /></Button>
 								<Dropdown class="p-1">
 									<DropdownItem
@@ -215,6 +299,7 @@
 										id="delete-{incidence.id}"
 										on:click={() => {
 											deleteModal = true
+											bulk = false
 											selectedId = incidence.id
 										}}
 										>{$_('general.delete-btn')}
@@ -246,6 +331,9 @@
 					bind:inputValue={searchTerm}
 				>
 					<TableHead>
+						<TableHeadCell class="!p-4">
+							<Checkbox on:change={toggleAllCheckbox} bind:this={toggleAllCheckboxBtn} />
+						</TableHeadCell>
 						<TableHeadCell>{$_('incidences.publisher')}</TableHeadCell>
 						<TableHeadCell>{$_('incidences.start-date')}</TableHeadCell>
 						<TableHeadCell>{$_('incidences.end-date')}</TableHeadCell>
@@ -256,6 +344,21 @@
 					<TableBody>
 						{#each filteredItems as incidence}
 							<TableBodyRow>
+								<TableBodyCell class="!p-4">
+									<Checkbox
+										name="incidence-checkbox"
+										id={`incidence-checkbox-${incidence.id}`}
+										on:change={event => {
+											if (event.target?.checked) {
+												bulkDeleteBtnDisabled = false
+											} else {
+												if (document.querySelectorAll('input[name=incidence-checkbox]:checked').length == 0) {
+													bulkDeleteBtnDisabled = true
+												}
+											}
+										}}
+									/>
+								</TableBodyCell>
 								{#if incidence.user_id == -1}
 									<TableBodyCell>{$_('incidences.all-cong')}</TableBodyCell>
 								{:else}
@@ -284,6 +387,7 @@
 										id="delete-{incidence.id}"
 										on:click={() => {
 											deleteModal = true
+											bulk = false
 											selectedId = incidence.id
 										}}>{$_('general.delete-btn')}</Button
 									>
@@ -333,7 +437,17 @@
 			<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
 				{$_('incidences.are-you-sure')}
 			</h3>
-			<Button color="red" class="me-2" on:click={deleteIncidence}>{$_('general.yes-sure')}</Button>
+			<Button
+				color="red"
+				class="me-2"
+				on:click={() => {
+					if (bulk) {
+						bulkDelete()
+					} else {
+						deleteIncidence()
+					}
+				}}>{$_('general.yes-sure')}</Button
+			>
 			<Button color="alternative">{$_('general.no-cancel')}</Button>
 		</div>
 	</Modal>

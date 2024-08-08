@@ -14,9 +14,11 @@
 		TableHead,
 		Search,
 		Dropdown,
-		DropdownItem
+		DropdownItem,
+		Checkbox,
+		CheckboxButton
 	} from 'flowbite-svelte'
-	import {ArrowRightOutline, ExclamationCircleOutline} from 'flowbite-svelte-icons'
+	import {ArrowRightOutline, CheckCircleSolid, ExclamationCircleOutline} from 'flowbite-svelte-icons'
 	import {db} from '$lib/db'
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {liveQuery} from 'dexie'
@@ -26,6 +28,7 @@
 	let createModal: boolean = false,
 		deleteModal: boolean = false,
 		edit: boolean = false,
+		bulk: boolean = false,
 		searchTerm: string = '',
 		selected_weekday: string = 'monday',
 		start_time: string = '00:00',
@@ -44,7 +47,9 @@
 			{value: 'friday', name: $_('general.friday')},
 			{value: 'saturday', name: $_('general.saturday')},
 			{value: 'sunday', name: $_('general.sunday')}
-		]
+		],
+		toggleAllCheckboxBtn,
+		bulkDeleteBtnDisabled = true
 
 	let sunday = 7
 
@@ -142,15 +147,17 @@
 		}
 	}
 
-	async function deleteSchedule() {
+	async function deleteSchedule(alert = true) {
 		await db.schedule.delete(selectedId)
 		await db.availability.where({schedule_id: selectedId}).each(user_availability => {
 			db.availability.delete(user_availability.id)
 		})
-		new AlertToast({
-			target: document.querySelector('#toast-container'),
-			props: {alertStatus: 'success', alertMessage: $_('schedule.deleted')}
-		})
+		if (alert) {
+			new AlertToast({
+				target: document.querySelector('#toast-container'),
+				props: {alertStatus: 'success', alertMessage: $_('schedule.deleted')}
+			})
+		}
 	}
 
 	function editSchedule() {
@@ -173,6 +180,46 @@
 		n_brothers = 1
 		n_sisters = 1
 		edit = false
+	}
+
+	function toggleAllCheckbox(event: Event) {
+		let checkboxName = 'schedule-checkbox'
+		if ($mobile) {
+			checkboxName = 'schedule-checkbox-mobile'
+		}
+		let checkboxes = document.getElementsByName(checkboxName)
+		for (let i = 0; i < checkboxes.length; i++) {
+			checkboxes[i].checked = event.target?.checked
+		}
+		if (event.target?.checked) {
+			bulkDeleteBtnDisabled = false
+		} else {
+			bulkDeleteBtnDisabled = true
+		}
+	}
+
+	async function bulkDelete() {
+		let checkboxName = 'schedule-checkbox',
+			ids = []
+		if ($mobile) {
+			checkboxName = 'schedule-checkbox-mobile'
+		}
+		let checkboxes = document.querySelectorAll(`input[name=${checkboxName}]:checked`)
+		for (let i = 0; i < checkboxes.length; i++) {
+			checkboxes[i].checked = false
+			ids.push(parseInt(checkboxes[i].id.replace(checkboxName + '-', '')))
+		}
+
+		for (let el of ids) {
+			selectedId = el
+			await deleteSchedule(false)
+		}
+
+		new AlertToast({
+			target: document.querySelector('#toast-container'),
+			props: {alertStatus: 'success', alertMessage: $_('schedule.deleted')}
+		})
+		bulkDeleteBtnDisabled = true
 	}
 </script>
 
@@ -204,6 +251,30 @@
 					edit = false
 				}}>{$_('schedule.create-btn')}</Button
 			>
+			{#if $mobile}
+				<div class="my-2 grid grid-cols-4 gap-4">
+					<CheckboxButton on:change={toggleAllCheckbox}><CheckCircleSolid class="me-2 h-6 w-6" /></CheckboxButton>
+					<Button
+						color="red"
+						class="col-span-3"
+						disabled={bulkDeleteBtnDisabled}
+						on:click={() => {
+							bulk = true
+							deleteModal = true
+						}}>{$_('general.bulk-delete')}</Button
+					>
+				</div>
+			{:else}
+				<Button
+					color="red"
+					class="mb-2"
+					disabled={bulkDeleteBtnDisabled}
+					on:click={() => {
+						bulk = true
+						deleteModal = true
+					}}>{$_('general.bulk-delete')}</Button
+				>
+			{/if}
 		</div>
 		{#if $schedules}
 			{#if $schedules.length == 0}
@@ -214,7 +285,20 @@
 				<div class="grid grid-cols-1 gap-2 sm:grid-cols-4">
 					{#each filteredItems as schedule}
 						<Card padding="none" class="p-2" size="xl">
-							<div class="flex justify-end">
+							<div class="flex justify-between">
+								<Checkbox
+									name="schedule-checkbox-mobile"
+									id={`schedule-checkbox-mobile-${schedule.id}`}
+									on:change={event => {
+										if (event.target?.checked) {
+											bulkDeleteBtnDisabled = false
+										} else {
+											if (document.querySelectorAll('input[name=schedule-checkbox-mobile]:checked').length == 0) {
+												bulkDeleteBtnDisabled = true
+											}
+										}
+									}}
+								/>
 								<Button class="!p-1" pill={true} outline={true}><ArrowRightOutline class="h-4 w-4" /></Button>
 								<Dropdown class="p-1">
 									<DropdownItem
@@ -238,6 +322,7 @@
 										id="delete-{schedule.id}"
 										on:click={() => {
 											deleteModal = true
+											bulk = false
 											selectedId = schedule.id
 										}}
 										>{$_('general.delete-btn')}
@@ -267,6 +352,9 @@
 					bind:inputValue={searchTerm}
 				>
 					<TableHead>
+						<TableHeadCell class="!p-4">
+							<Checkbox on:change={toggleAllCheckbox} bind:this={toggleAllCheckboxBtn} />
+						</TableHeadCell>
 						<TableHeadCell>{$_('schedule.weekday')}</TableHeadCell>
 						<TableHeadCell>{$_('schedule.start-time')}</TableHeadCell>
 						<TableHeadCell>{$_('schedule.end-time')}</TableHeadCell>
@@ -280,6 +368,21 @@
 					<TableBody>
 						{#each filteredItems as schedule}
 							<TableBodyRow>
+								<TableBodyCell class="!p-4">
+									<Checkbox
+										name="schedule-checkbox"
+										id={`schedule-checkbox-${schedule.id}`}
+										on:change={event => {
+											if (event.target?.checked) {
+												bulkDeleteBtnDisabled = false
+											} else {
+												if (document.querySelectorAll('input[name=schedule-checkbox]:checked').length == 0) {
+													bulkDeleteBtnDisabled = true
+												}
+											}
+										}}
+									/>
+								</TableBodyCell>
 								<TableBodyCell>{$_('general.' + schedule.weekday)}</TableBodyCell>
 								<TableBodyCell>{schedule.start_time}</TableBodyCell>
 								<TableBodyCell>{schedule.end_time}</TableBodyCell>
@@ -310,6 +413,7 @@
 										id="delete-{schedule.id}"
 										on:click={() => {
 											deleteModal = true
+											bulk = false
 											selectedId = schedule.id
 										}}>{$_('general.delete-btn')}</Button
 									>
@@ -387,7 +491,17 @@
 			<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
 				{$_('schedule.are-you-sure')}
 			</h3>
-			<Button color="red" class="me-2" on:click={deleteSchedule}>{$_('general.yes-sure')}</Button>
+			<Button
+				color="red"
+				class="me-2"
+				on:click={() => {
+					if (bulk) {
+						bulkDelete()
+					} else {
+						deleteSchedule()
+					}
+				}}>{$_('general.yes-sure')}</Button
+			>
 			<Button color="alternative">{$_('general.no-cancel')}</Button>
 		</div>
 	</Modal>
