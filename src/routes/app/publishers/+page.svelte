@@ -423,7 +423,7 @@
 </svelte:head>
 
 <section class="mx-auto flex flex-col items-center justify-center px-6 py-8">
-	<Card size="xl">
+	<Card size="xl" class="mb-2">
 		<div class="grid grid-cols-1 gap-3">
 			{#if $mobile}
 				<div class="mt-1">
@@ -469,6 +469,8 @@
 				>
 			{/if}
 		</div>
+	</Card>
+	<Card size="xl" class="my-2">
 		{#if $users}
 			{#if $users.length == 0}
 				<Card size="xl" class="mt-5">

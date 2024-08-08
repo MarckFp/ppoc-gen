@@ -69,7 +69,7 @@
 		<NavBar />
 		{#key $page.url.pathname}
 			<div in:fly={{x: -200, duration: 250, delay: 250}} out:fly={{x: 200, duration: 150}}>
-				<div>
+				<div key="$page.url.pathname">
 					<slot />
 				</div>
 				{#if $page.data.congregation != undefined}

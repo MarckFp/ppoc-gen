@@ -620,7 +620,7 @@
 		</div>
 	</Card>
 	{#if $turns && $schedules && $assignments && $showUsers}
-		<Card size="xl" class="mx-2">
+		<Card size="xl" class="my-2">
 			{#if $mobile}
 				<Badge border class="my-2 text-lg print:hidden">
 					{$_('general.' + date.toLocaleString('en', {month: 'long'}).toLowerCase())}
@@ -720,7 +720,7 @@
 			{/if}
 		</Card>
 
-		<Card size="xl" class="mt-2">
+		<Card size="xl" class="my-2">
 			{#if $turns.length == 0 || $schedules.length == 0}
 				<Card size="xl" class="mt-5">
 					<h1 class="text-center dark:text-white">{$_('turns.no-turns')}</h1>
