@@ -68,8 +68,8 @@
 		<NavBar />
 		<slot />
 		{#if $page.data.congregation != undefined}
-			<Footer class="flex flex-row justify-center print:hidden">
-				<Card class="mx-5 my-1 text-center dark:text-white {$mobile ? 'mb-20' : ''}" size="xl">
+			<Footer class="flex flex-row justify-center px-4 pb-4 print:hidden">
+				<Card class="text-center dark:text-white {$mobile ? 'mb-20' : ''}" size="xl">
 					PPOC Gen version {version}
 				</Card>
 			</Footer>

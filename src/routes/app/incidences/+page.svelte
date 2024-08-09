@@ -210,17 +210,16 @@
 	<title>PPOC Gen - {$_('navbar.incidences')}</title>
 </svelte:head>
 
-<section class="mx-auto flex flex-col items-center justify-center px-6 py-8">
+<section class="mx-auto flex flex-col items-center justify-center p-4">
 	<Card size="xl" class="mb-2">
 		<div class="grid grid-cols-1 gap-3">
 			{#if $mobile}
-				<div class="mt-1">
+				<div class="my-2">
 					<Search size="md" bind:value={searchTerm} placeholder={$_('incidences.search-by')} />
 				</div>
 			{/if}
 			<Button
 				color="blue"
-				class="my-2 mt-1"
 				data-testid="incidences-create-btn"
 				on:click={() => {
 					createModal = true
@@ -253,7 +252,7 @@
 			{:else}
 				<Button
 					color="red"
-					class="mb-2"
+					class="my-2"
 					disabled={bulkDeleteBtnDisabled}
 					on:click={() => {
 						bulk = true

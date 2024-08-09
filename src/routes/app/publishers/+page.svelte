@@ -422,11 +422,11 @@
 	<title>PPOC Gen - {$_('navbar.publishers')}</title>
 </svelte:head>
 
-<section class="mx-auto flex flex-col items-center justify-center px-6 py-8">
+<section class="mx-auto flex flex-col items-center justify-center p-4">
 	<Card size="xl" class="mb-2">
 		<div class="grid grid-cols-1 gap-3">
 			{#if $mobile}
-				<div class="mt-1">
+				<div class="my-2">
 					<Search size="md" bind:value={searchTerm} placeholder={$_('publishers.search-inp')} />
 				</div>
 			{/if}
@@ -445,7 +445,7 @@
 				}}>{$_('publishers.create-btn')}</Button
 			>
 			{#if $mobile}
-				<div class="mb-2 grid grid-cols-4 gap-4">
+				<div class="my-2 grid grid-cols-4 gap-4">
 					{#if !$users || $users.length == 0}
 						<CheckboxButton on:change={toggleAllCheckbox} color="alternative" disabled
 							><CheckCircleSolid class="me-2 h-6 w-6" /></CheckboxButton
@@ -466,7 +466,7 @@
 			{:else}
 				<Button
 					color="red"
-					class="mb-2"
+					class="my-2"
 					disabled={bulkDeleteBtnDisabled}
 					on:click={() => {
 						bulk = true

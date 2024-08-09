@@ -376,6 +376,6 @@
 	<h2>Contact Us</h2>
 	<p>If you have any questions about this Privacy Policy, You can contact us:</p>
 	<ul>
-		<li>By email: marcosfernandezperez9@gmail.com</li>
+		<li>By email: admin@ppocgen.com</li>
 	</ul>
 </div>

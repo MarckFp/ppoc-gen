@@ -577,9 +577,9 @@
 	<title>PPOC Gen - {$_('navbar.turns')}</title>
 </svelte:head>
 
-<section class="mx-auto flex flex-col items-center justify-center px-6 py-8">
+<section class="mx-auto flex flex-col items-center justify-center px-4 py-4">
 	<Card size="xl" class="mb-2 print:hidden">
-		<div class="mb-4 mt-1 grid grid-cols-2 gap-2 sm:grid-cols-4">
+		<div class="my-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
 			<Label>
 				{$_('turns.from')}:
 				<Input type="date" bind:value={fromDate} data-testid="turns-date-from" class="mt-2" />
@@ -691,7 +691,7 @@
 			</div>
 			{#if $mobile}
 				<hr />
-				<div class="my-2 print:hidden">
+				<div class="my-4 print:hidden">
 					<Search size="md" bind:value={searchTerm} placeholder={$_('turns.search-by')} />
 				</div>
 				<hr />
