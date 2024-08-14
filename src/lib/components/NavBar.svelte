@@ -6,7 +6,7 @@
 		CalendarMonthOutline,
 		BellRingOutline,
 		CogOutline,
-		EditOutline
+		RectangleListOutline
 	} from 'flowbite-svelte-icons'
 	import {_} from 'svelte-i18n'
 	import {page} from '$app/stores'
@@ -27,7 +27,7 @@
 			<CalendarMonthOutline size="lg" color="red" class="dark:text-primary-400" />
 		</BottomNavItem>
 		<BottomNavItem href="{base}/app/turns" data-testid="navbar-turns" data-sveltekit-preload-data="hover">
-			<EditOutline size="lg" color="red" class="dark:text-primary-400" />
+			<RectangleListOutline size="lg" color="red" class="dark:text-primary-400" />
 		</BottomNavItem>
 		<BottomNavItem href="{base}/app/incidences" data-testid="navbar-incidences" data-sveltekit-preload-data="hover">
 			<BellRingOutline size="lg" color="red" class="dark:text-primary-400" />
@@ -68,7 +68,7 @@
 				<NavLi href="{base}/app/turns" data-testid="navbar-turns" data-sveltekit-preload-data="hover">
 					<div class="flex flex-row dark:text-white">
 						{$_('navbar.turns')}
-						<EditOutline size="lg" color="red" class="dark:text-primary-400" />
+						<RectangleListOutline size="lg" color="red" class="dark:text-primary-400" />
 					</div></NavLi
 				>
 				<NavLi href="{base}/app/incidences" data-testid="navbar-incidences" data-sveltekit-preload-data="hover">

@@ -13,12 +13,10 @@
 		TableSearch,
 		TableHead,
 		Search,
-		Dropdown,
-		DropdownItem,
 		Checkbox,
 		CheckboxButton
 	} from 'flowbite-svelte'
-	import {ArrowRightOutline, CheckCircleSolid, ExclamationCircleOutline} from 'flowbite-svelte-icons'
+	import {CheckCircleSolid, EditOutline, ExclamationCircleOutline, TrashBinOutline} from 'flowbite-svelte-icons'
 	import {db} from '$lib/db'
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {liveQuery} from 'dexie'
@@ -306,9 +304,11 @@
 										}
 									}}
 								/>
-								<Button class="!p-1" pill={true} outline={true}><ArrowRightOutline class="h-4 w-4" /></Button>
-								<Dropdown class="p-1">
-									<DropdownItem
+								<div class="grid grid-cols-2 gap-5">
+									<Button
+										class="!p-1.5"
+										pill={true}
+										color="green"
 										id="edit-{schedule.id}"
 										on:click={() => {
 											createModal = true
@@ -321,27 +321,27 @@
 											start_time = schedule.start_time
 											end_time = schedule.end_time
 											modalTitle = $_('general.edit-btn')
-										}}
+										}}><EditOutline class="h-5 w-5" /></Button
 									>
-										{$_('general.edit-btn')}
-									</DropdownItem>
-									<DropdownItem
+									<Button
+										class="!p-1.5"
+										pill={true}
+										color="red"
 										id="delete-{schedule.id}"
 										on:click={() => {
 											deleteModal = true
 											bulk = false
 											selectedId = schedule.id
-										}}
-										>{$_('general.delete-btn')}
-									</DropdownItem>
-								</Dropdown>
+										}}><TrashBinOutline class="h-5 w-5" /></Button
+									>
+								</div>
 							</div>
-							<div class="my-4 grid w-full grid-cols-2 gap-2 text-center text-gray-900 dark:text-white">
+							<div class="my-4 grid w-full grid-cols-2 gap-2 p-2 text-center text-gray-900 dark:text-white">
 								<div>🗓️ {$_('general.' + schedule.weekday)}</div>
 								<div>🕑 {schedule.start_time} - {schedule.end_time}</div>
 							</div>
 							<hr />
-							<div class="my-4 grid grid-cols-2 gap-2 text-center text-gray-900 dark:text-white">
+							<div class="my-4 grid grid-cols-2 gap-2 p-2 text-center text-gray-900 dark:text-white">
 								<div>📍 {schedule.location}</div>
 								<div class="grid grid-cols-2">
 									<div>👔 {schedule.n_brothers}</div>

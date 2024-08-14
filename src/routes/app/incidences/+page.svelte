@@ -13,13 +13,11 @@
 		TableHead,
 		TableHeadCell,
 		Search,
-		Dropdown,
-		DropdownItem,
 		Badge,
 		CheckboxButton,
 		Checkbox
 	} from 'flowbite-svelte'
-	import {ArrowRightOutline, CheckCircleSolid, ExclamationCircleOutline} from 'flowbite-svelte-icons'
+	import {CheckCircleSolid, EditOutline, ExclamationCircleOutline, TrashBinOutline} from 'flowbite-svelte-icons'
 	import {db} from '$lib/db'
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {liveQuery} from 'dexie'
@@ -286,9 +284,11 @@
 										}
 									}}
 								/>
-								<Button class="!p-1" pill={true} outline={true}><ArrowRightOutline class="h-4 w-4" /></Button>
-								<Dropdown class="p-1">
-									<DropdownItem
+								<div class="grid grid-cols-2 gap-5">
+									<Button
+										class="!p-1.5"
+										pill={true}
+										color="green"
 										id="edit-{incidence.id}"
 										on:click={() => {
 											createModal = true
@@ -298,26 +298,26 @@
 											end_date = incidence.end_date
 											modalTitle = $_('general.edit-btn')
 											edit = true
-										}}
+										}}><EditOutline class="h-5 w-5" /></Button
 									>
-										{$_('general.edit-btn')}
-									</DropdownItem>
-									<DropdownItem
+									<Button
+										class="!p-1.5"
+										pill={true}
+										color="red"
 										id="delete-{incidence.id}"
 										on:click={() => {
 											deleteModal = true
 											bulk = false
 											selectedId = incidence.id
-										}}
-										>{$_('general.delete-btn')}
-									</DropdownItem>
-								</Dropdown>
+										}}><TrashBinOutline class="h-5 w-5" /></Button
+									>
+								</div>
 							</div>
-							<div class="flex flex-col items-center text-center">
+							<div class="flex flex-col items-center p-4 text-center">
 								{#if incidence.user_id == -1}
-									<h4 class="w-full text-xl font-medium text-gray-900 dark:text-white">{$_('incidences.all-cong')}</h4>
+									<h4 class="w-full text-2xl font-medium text-gray-900 dark:text-white">{$_('incidences.all-cong')}</h4>
 								{:else}
-									<h4 class="w-full text-xl font-medium text-gray-900 dark:text-white">
+									<h4 class="w-full text-2xl font-medium text-gray-900 dark:text-white">
 										{userList[incidence.user_id]}
 									</h4>
 								{/if}

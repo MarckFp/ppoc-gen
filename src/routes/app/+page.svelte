@@ -56,7 +56,7 @@
 			>
 			<GradientButton
 				color="cyanToBlue"
-				disabled={version != 'unknown' && !version.includes('beta') ? 'false' : 'true'}
+				disabled={version != 'unknown' || !version.includes('beta') ? 'false' : 'true'}
 			>
 				{$_('home.download-btn')}
 				<GithubSolid class="ms-1" />

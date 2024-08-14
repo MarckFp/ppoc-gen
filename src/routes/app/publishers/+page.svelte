@@ -11,9 +11,7 @@
 		Radio,
 		Badge,
 		Tooltip,
-		Dropdown,
 		Search,
-		DropdownItem,
 		TableSearch,
 		TableHead,
 		TableHeadCell,
@@ -22,7 +20,13 @@
 		TableBodyCell,
 		CheckboxButton
 	} from 'flowbite-svelte'
-	import {ArrowRightOutline, ExclamationCircleOutline, InfoCircleSolid, CheckCircleSolid} from 'flowbite-svelte-icons'
+	import {
+		ExclamationCircleOutline,
+		InfoCircleSolid,
+		CheckCircleSolid,
+		EditOutline,
+		TrashBinOutline
+	} from 'flowbite-svelte-icons'
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {db} from '$lib/db'
 	import {liveQuery} from 'dexie'
@@ -501,10 +505,12 @@
 									}}
 								/>
 
-								<Button class="!p-1" pill={true} outline={true}><ArrowRightOutline class="h-4 w-4" /></Button>
-								<Dropdown class="p-1">
-									<DropdownItem
+								<div class="grid grid-cols-2 gap-5">
+									<Button
+										class="!p-1.5"
+										pill={true}
 										id="edit-{user.id}"
+										color="green"
 										data-testid="publishers-edit-btn"
 										on:click={() => {
 											createModal = true
@@ -523,28 +529,28 @@
 											getAffinities(user.id)
 											retrieveAvailabilities(user.id)
 											edit = true
-										}}
+										}}><EditOutline class="h-5 w-5" /></Button
 									>
-										{$_('general.edit-btn')}
-									</DropdownItem>
-									<DropdownItem
+									<Button
+										class="!p-1.5"
+										pill={true}
+										color="red"
 										id="delete-{user.id}"
 										on:click={() => {
 											deleteModal = true
 											bulk = false
 											selectedId = user.id
-										}}
-										>{$_('general.delete-btn')}
-									</DropdownItem>
-								</Dropdown>
+										}}><TrashBinOutline class="h-5 w-5" /></Button
+									>
+								</div>
 							</div>
 							<div class="flex flex-col items-center text-center">
 								{#if $nameOrder == 'lastname'}
-									<h5 class="w-full text-xl font-medium text-gray-900 dark:text-white">
+									<h5 class="w-full p-4 text-2xl font-medium text-gray-900 dark:text-white">
 										{user.lastname + ' ' + user.firstname}
 									</h5>
 								{:else}
-									<h5 class="w-full text-xl font-medium text-gray-900 dark:text-white">
+									<h5 class="w-full p-4 text-2xl font-medium text-gray-900 dark:text-white">
 										{user.firstname + ' ' + user.lastname}
 									</h5>
 								{/if}

@@ -14,8 +14,6 @@
 		TableSearch,
 		TableHead,
 		Modal,
-		Dropdown,
-		DropdownItem,
 		Search,
 		Radio,
 		Alert,
@@ -28,7 +26,9 @@
 		ArrowRightOutline,
 		FileExportSolid,
 		InfoCircleSolid,
-		CheckCircleSolid
+		CheckCircleSolid,
+		EditOutline,
+		TrashBinOutline
 	} from 'flowbite-svelte-icons'
 	import AlertToast from '$lib/components/AlertToast.svelte'
 	import {db} from '$lib/db'
@@ -749,9 +749,11 @@
 										}
 									}}
 								/>
-								<Button class="!p-1" pill={true} outline={true}><ArrowRightOutline class="h-4 w-4" /></Button>
-								<Dropdown class="p-1">
-									<DropdownItem
+								<div class="grid grid-cols-2 gap-5">
+									<Button
+										class="!p-1.5"
+										pill={true}
+										color="green"
 										id="edit-{turn.id}"
 										on:click={async () => {
 											createModal = true
@@ -763,35 +765,37 @@
 											selectedId = turn.id
 											modalTitle = $_('general.edit-btn')
 											await getAssignees(turn.id)
-										}}
+										}}><EditOutline class="h-5 w-5" /></Button
 									>
-										{$_('general.edit-btn')}
-									</DropdownItem>
-									<DropdownItem
+									<Button
+										class="!p-1.5"
+										pill={true}
+										color="red"
 										id="delete-{turn.id}"
 										on:click={() => {
 											deleteModal = true
 											bulk = false
 											selectedId = turn.id
-										}}
-										>{$_('general.delete-btn')}
-									</DropdownItem>
-								</Dropdown>
-							</div>
-							<div class="my-2 grid grid-cols-2 gap-2 text-center">
-								<div>
-									🗓️ {$_(
-										'general.' +
-											['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][
-												new Date(turn.date).getDay()
-											]
-									) +
-										' ' +
-										new Date(turn.date).getDate()}
+										}}><TrashBinOutline class="h-5 w-5" /></Button
+									>
 								</div>
-								<div>🕑 {turn.start_time + ' - ' + turn.end_time}</div>
 							</div>
-							<div class="my-2 text-center">📍 {turn.location}</div>
+							<div class="p-4">
+								<div class="my-2 grid grid-cols-2 gap-2 text-center">
+									<div>
+										🗓️ {$_(
+											'general.' +
+												['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][
+													new Date(turn.date).getDay()
+												]
+										) +
+											' ' +
+											new Date(turn.date).getDate()}
+									</div>
+									<div>🕑 {turn.start_time + ' - ' + turn.end_time}</div>
+								</div>
+								<div class="my-2 text-center">📍 {turn.location}</div>
+							</div>
 							<hr />
 							<div class="my-2 grid grid-cols-2 text-center text-gray-900 dark:text-white sm:grid-cols-4">
 								{#each $assignments as assignment}
