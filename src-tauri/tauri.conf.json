@@ -38,12 +38,11 @@
       "deb": {
         "depends": []
       }
-    },
-    "createUpdaterArtifacts": "v1Compatible"
+    }
   },
   "productName": "PPOC Gen",
   "version": "../package.json",
-  "identifier": "com.ppocgen.dev",
+  "identifier": "com.ppocgen",
   "plugins": {},
   "app": {
     "withGlobalTauri": true,

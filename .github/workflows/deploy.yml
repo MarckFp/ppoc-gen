@@ -64,25 +64,52 @@ jobs:
           - platform: 'windows-latest'
             args: ''
             name: 'Windows 🪟'
+          - platform: 'ubuntu-latest'
+            args: '--target aarch64-linux-android'
+            name: 'Android aarch64📱'
+          - platform: 'ubuntu-latest'
+            args: '--target armv7-linux-androideabi'
+            name: 'Android armv7📱'
+          - platform: 'ubuntu-latest'
+            args: '--target i686-linux-android'
+            name: 'Android i686📱'
+          - platform: 'ubuntu-latest'
+            args: '--target x86_64-linux-android'
+            name: 'Android x86_64📱'
     runs-on: ${{ matrix.settings.platform }}
     steps:
       - uses: actions/checkout@v4
       - if: matrix.settings.platform == 'ubuntu-latest'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
-      - uses: dtolnay/rust-toolchain@stable
+          sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
+      - if: matrix.settings.platform == 'macos-latest' || matrix.settings.platform == 'macos-13'
+        uses: dtolnay/rust-toolchain@stable
         with:
-          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+          targets: 'aarch64-apple-darwin,x86_64-apple-darwin'
+      - if: contains(matrix.settings.name, 'Android')
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: 'aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android'
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
+      - if: contains(matrix.settings.name, 'Android')
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - if: contains(matrix.settings.name, 'Android')
+        uses: android-actions/setup-android@v3
+      - if: contains(matrix.settings.name, 'Android')
+        run: sdkmanager ndk-bundle
       - run: |
           git config --global user.email ${{ secrets.GH_EMAIL }}
           git config --global user.name GitHub_Runner
       - run: bun install
       - run: npm --no-git-tag-version version ${{  github.ref_name }}
-      - uses: tauri-apps/tauri-action@v0
+      - if: "!contains(matrix.settings.name, 'Android')"
+        uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PPOCGEN_ENV: 'production'
@@ -96,45 +123,19 @@ jobs:
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
-
-  deploy-android:
-    name: 'Android 📱'
-    needs: deploy-web
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    env:
-      WEBISTE: https://ppocgen.com
-      BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}
-      BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}
-      GH_TOKEN: ${{ github.token }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 'latest'
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'adopt'
-          java-version: '11'
-      - uses: android-actions/setup-android@v3
-        with:
-          cmdline-tools-version: 9123335
-      - run: |
-          npm i -g @bubblewrap/cli
-          mkdir android && cd android
-          mkdir $HOME/.bubblewrap
-          echo '{"jdkPath":"'$JAVA_HOME'","androidSdkPath":"'$ANDROID_HOME'"}' > $HOME/.bubblewrap/config.json
-          echo "${{ secrets.ANDROID_KEYSTORE }}" > android.keystore.asc
-          gpg -d --passphrase "${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}" --batch android.keystore.asc > android.keystore
-          yes '' | bubblewrap init --manifest $WEBISTE"/manifest.webmanifest"
-          bubblewrap build
-          gh release upload ${{  github.ref_name }} app-release-signed.apk
-          gh release upload ${{  github.ref_name }} app-release-bundle.aab
+      - if: "contains(matrix.settings.name, 'Android')"
+        run: |
+          bun tauri android build
+          mv ./src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-signed.apk ./src-tauri/gen/android/app/build/outputs/apk/universal/release/ppocgen-${{ github.ref_name }}.apk
+          mv ./src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-signed.apk ./src-tauri/gen/android/app/build/outputs/apk/universal/release/ppocgen-${{ github.ref_name }}.aab
+          gh release upload ${{  github.ref_name }} ./src-tauri/gen/android/app/build/outputs/apk/universal/release/ppocgen-${{ github.ref_name }}.apk
+          gh release upload ${{  github.ref_name }} ./src-tauri/gen/android/app/build/outputs/apk/universal/release/ppocgen-${{ github.ref_name }}.aab
+        env:
+          NDK_HOME: $ANDROID_HOME/ndk/$(ls -1 $ANDROID_HOME/ndk)
 #      - uses: r0adkll/upload-google-play@v1
 #        with:
 #          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
-#          packageName: io.github.marckfp.twa
-#          releaseFiles: ./android/app-release-bundle.aab
+#          packageName: com.ppocgen
+#          releaseFiles: ./src-tauri/gen/android/app/build/outputs/apk/universal/release/ppocgen-${{ github.ref_name }}.aab
 #          track: production
 #          status: completed
