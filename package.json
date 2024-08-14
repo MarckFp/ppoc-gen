@@ -39,7 +39,7 @@
     "@sveltejs/kit": "^2.5.22",
     "@sveltejs/vite-plugin-svelte": "^3.1.1",
     "@tailwindcss/forms": "^0.5.7",
-    "@tauri-apps/cli": "^1.6.0",
+    "@tauri-apps/cli": "^2.0.0-rc.3",
     "@types/eslint": "^9.6.0",
     "@types/node": "^22.3.0",
     "@vite-pwa/assets-generator": "^0.2.4",
@@ -72,7 +72,7 @@
     "workbox-precaching": "^7.1.0"
   },
   "dependencies": {
-    "@tauri-apps/api": "^1.6.0",
+    "@tauri-apps/api": "^2.0.0-rc.0",
     "dexie": "^4.0.8",
     "dexie-export-import": "^4.1.2",
     "ical-generator": "^7.2.0",
