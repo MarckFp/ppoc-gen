@@ -16,6 +16,7 @@
 	import {locale, locales, _} from 'svelte-i18n'
 	import dashboardMockup from '$lib/images/cta-dashboard-mockup.svg'
 	import dashboardMockupDark from '$lib/images/cta-dashboard-mockup-dark.svg'
+	import {onMount} from 'svelte'
 
 	let langs: {value: string; name: string}[] = [],
 		currentLang: string
@@ -70,6 +71,13 @@
 			return textA < textB ? -1 : textA > textB ? 1 : 0
 		})
 	}
+
+	onMount(() => {
+		const script = document.querySelector('script:not([nonce=""])')
+		if (script) {
+			script.remove()
+		}
+	})
 </script>
 
 <svelte:head>

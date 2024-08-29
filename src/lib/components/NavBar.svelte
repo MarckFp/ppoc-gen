@@ -11,8 +11,16 @@
 	import {_} from 'svelte-i18n'
 	import {page} from '$app/stores'
 	import {mobile} from '$lib/stores'
+	import {onMount} from 'svelte'
 
 	$: activeUrl = $page.url.pathname
+
+	onMount(() => {
+		const script = document.querySelector('script:not([nonce=""])')
+		if (script) {
+			script.remove()
+		}
+	})
 </script>
 
 {#if $mobile}

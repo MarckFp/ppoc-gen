@@ -46,8 +46,14 @@ const config = {
 		},
 		csp: {
 			directives: {
-				'script-src': ['self']
-			},
+			  'default-src': ["'self'"],
+			  'script-src': ["'self'"],
+			  'style-src': ["'self'", "'unsafe-inline'"],
+			  'img-src': ["'self'", 'data:'],
+			  'connect-src': ["'self'", 'https://api.open-meteo.com', 'https://nominatim.openstreetmap.org'],
+			  'font-src': ["'self'"],
+			  'frame-src': ["'none'"],
+			}
 		},
 		csrf: {
 			checkOrigin: true
