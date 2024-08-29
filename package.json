@@ -38,7 +38,7 @@
     "@sveltejs/adapter-static": "^3.0.4",
     "@sveltejs/kit": "^2.5.25",
     "@sveltejs/vite-plugin-svelte": "^3.1.2",
-    "@tailwindcss/forms": "^0.5.7",
+    "@tailwindcss/forms": "^0.5.8",
     "@tauri-apps/cli": "^1.6.1",
     "@types/eslint": "^9.6.1",
     "@types/node": "^22.5.1",
