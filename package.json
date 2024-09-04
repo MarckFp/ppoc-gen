@@ -32,7 +32,7 @@
     "@event-calendar/day-grid": "^3.4.0",
     "@event-calendar/list": "^3.4.0",
     "@event-calendar/time-grid": "^3.4.0",
-    "@faker-js/faker": "^8.4.1",
+    "@faker-js/faker": "^9.0.0",
     "@playwright/test": "^1.46.1",
     "@sveltejs/adapter-cloudflare": "^4.7.2",
     "@sveltejs/adapter-static": "^3.0.4",
