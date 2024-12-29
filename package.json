@@ -55,7 +55,7 @@
     "flowbite-svelte-icons": "^2.0.0",
     "flowbite-typography": "^1.0.4",
     "husky": "^9.1.6",
-    "node-html-parser": "^6.1.13",
+    "node-html-parser": "^7.0.0",
     "postcss": "^8.4.47",
     "prettier": "^3.3.3",
     "prettier-plugin-svelte": "^3.2.7",
