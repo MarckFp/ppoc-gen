@@ -22,7 +22,7 @@ jobs:
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           key: bun-cache
           path: ~/.bun/install/cache
