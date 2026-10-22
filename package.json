@@ -50,7 +50,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-svelte": "^2.46.0",
     "flowbite": "^2.5.2",
-    "flowbite-svelte": "^0.47.1",
+    "flowbite-svelte": "^0.48.0",
     "flowbite-svelte-blocks": "^1.1.4",
     "flowbite-svelte-icons": "^2.0.0",
     "flowbite-typography": "^1.0.4",
